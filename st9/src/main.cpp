@@ -42,6 +42,8 @@ int Main(int argc, char**argv) {
 				break;
 			}
 		}
+		window.clear();
+		window.display();
 	}
 	return 0;
 }
