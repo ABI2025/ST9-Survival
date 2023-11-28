@@ -38,7 +38,7 @@ int Main(int argc, char** argv)
     for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i] )? arr[i] : max;
     LOG_ERROR("max: {}", max);
     int8_t s = 65;
-    LOG_INFO("{0} {0} {0} ", s);
+    LOG_INFO("{0} {0} {0} {0} ", s);
     sf::Event event{};
     LOG_INFO("Hallo welt");
     sf::RenderWindow window(sf::VideoMode(720, 480), "window", sf::Style::Close);
