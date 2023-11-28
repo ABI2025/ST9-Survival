@@ -40,20 +40,8 @@ int Main(int argc, char** argv)
     int8_t s = 65;
     LOG_INFO("{0} {0} {0} {0} {0}", s);
     sf::Event event{};
-    LOG_INFO("Hallo welt");
-    std::vector<uint32_t> arr;
-    arr.reserve(10);
-    for (int i = 0; i < 100; i++)
-        arr.push_back(Blank::Random::UInt());
-    for (int i = 0; i < 100; i++)
-	    LOG_INFO("arr[{}]: {}", i, arr[i]);
-    uint32_t max = 0;
-    for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i] )? arr[i] : max;
-    LOG_ERROR("max: {}", max);
-    int8_t s = 65;
-    LOG_INFO("{0} {0} {0} ", s);
-    sf::Event event{};
-    LOG_INFO("Hallo welt");
+	LOG_INFO("Hallo welt");
+
     sf::RenderWindow window(sf::VideoMode(720, 480), "window", sf::Style::Close);
 
 
