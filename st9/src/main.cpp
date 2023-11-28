@@ -1,11 +1,11 @@
 #include <chrono>
-#include <random>
-#include <array>
+#include <execution>
 #include <SFML/Graphics.hpp>
 #include "Random.h"
-#include "Log.h"
+#include "Log.h"//Max ist hier
 
 int Main(int argc, char** argv);
+
 
 #if (defined(_WIN32) || defined (_WIN64)) && defined(DIST)
 
@@ -24,12 +24,31 @@ int main(int argc, char** argv)
 
 #endif
 
-int Main(int argc, char** argv) {
-    sf::Event event{};
+int Main(int argc, char** argv)
+{
     Blank::Log::Init();
     Blank::Random::Init();
-    LOG_ERROR("Hallo welt");
+    std::vector<uint32_t> arr;
+    arr.reserve(10);
+    for (int i = 0; i < 100; i++)
+        arr.push_back(Blank::Random::UInt());
+    for (int i = 0; i < 100; i++)
+	    LOG_INFO("arr[{}]: {}", i, arr[i]);
+    uint32_t max = 0;
+    for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i] )? arr[i] : max;
+    LOG_ERROR("max: {}", max);
+    int8_t s = 65;
+    LOG_INFO("{0} {0} {0} ", s);
+    sf::Event event{};
+    LOG_INFO("Hallo welt");
     sf::RenderWindow window(sf::VideoMode(720, 480), "window", sf::Style::Close);
+
+
+    std::for_each(std::execution::par,arr.begin(),arr.end(),[](uint32_t z)
+    {
+            LOG_INFO("{}", z);
+    });
+
 
     while (window.isOpen())
     {
@@ -40,7 +59,11 @@ int Main(int argc, char** argv) {
             case sf::Event::Closed:
                 window.close();
                 break;
+            case sf::Event::Resized:
+                Blank::Random::Float();
+                break;
             default:
+                
                 break;
             }
         }
