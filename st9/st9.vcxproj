@@ -27,13 +27,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Utils\Pathfinding.cpp" />
+    <ClCompile Include="src\Utils\Log.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\Utils\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Log.h" />
-    <ClInclude Include="src\Random.h" />
+    <ClInclude Include="src\Utils\Pathfinding.h" />
+    <ClInclude Include="src\Utils\Log.h" />
+    <ClInclude Include="src\Utils\Random.h" />
+    <ClInclude Include="src\Utils\Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

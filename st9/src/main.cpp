@@ -1,8 +1,8 @@
 #include <chrono>
 #include <execution>
 #include <SFML/Graphics.hpp>
-#include "Random.h"
-#include "Log.h"//Max ist hier
+#include "Utils/Log.h"
+#include "Utils/Random.h"
 
 int Main(int argc, char** argv);
 
@@ -26,12 +26,12 @@ int main(int argc, char** argv)
 
 int Main(int argc, char** argv)
 {
-    Blank::Log::Init();
-    Blank::Random::Init();
+    Utils::Log::Init();
+    Utils::Random::Init();
     std::vector<uint32_t> arr;
     arr.reserve(10);
     for (int i = 0; i < 100; i++)
-        arr.push_back(Blank::Random::UInt());
+        arr.push_back(Utils::Random::UInt());
     for (int i = 0; i < 100; i++)
 	    LOG_INFO("arr[{}]: {}", i, arr[i]);
     uint32_t max = 0;
@@ -61,7 +61,7 @@ int Main(int argc, char** argv)
                 window.close();
                 break;
             case sf::Event::Resized:
-                Blank::Random::Float();
+                Utils::Random::Float();
                 break;
             default:
                 

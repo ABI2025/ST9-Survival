@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Blank
+namespace Utils
 {
 
 	class Random
