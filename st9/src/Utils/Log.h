@@ -7,7 +7,7 @@
 
 
 
-namespace Blank
+namespace Utils
 {
 	class Log
 	{
@@ -29,10 +29,10 @@ namespace Blank
 	#ifdef DEBUG
 	#define LEVEL trace
 	#endif
-#define LOG_TRACE(...)         ::Blank::Log::GetLogger()->trace(__VA_ARGS__)
-#define LOG_INFO(...)          ::Blank::Log::GetLogger()->info(__VA_ARGS__)
-#define LOG_WARN(...)          ::Blank::Log::GetLogger()->warn(__VA_ARGS__)
-#define LOG_ERROR(...)         ::Blank::Log::GetLogger()->error(__VA_ARGS__)
-#define LOG_CRITICAL(...)      ::Blank::Log::GetLogger()->critical(__VA_ARGS__)
+#define LOG_TRACE(...)         ::Utils::Log::GetLogger()->trace(__VA_ARGS__)
+#define LOG_INFO(...)          ::Utils::Log::GetLogger()->info(__VA_ARGS__)
+#define LOG_WARN(...)          ::Utils::Log::GetLogger()->warn(__VA_ARGS__)
+#define LOG_ERROR(...)         ::Utils::Log::GetLogger()->error(__VA_ARGS__)
+#define LOG_CRITICAL(...)      ::Utils::Log::GetLogger()->critical(__VA_ARGS__)
 #endif
 
