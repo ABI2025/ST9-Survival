@@ -1,7 +1,7 @@
 #include "Pathfinding.h"
 
 namespace Utils {
-	Utils::Pathfinding::Pathfinding()
+	Pathfinding::Pathfinding()
 	{
 	}
 
