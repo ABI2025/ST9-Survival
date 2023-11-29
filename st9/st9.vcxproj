@@ -36,6 +36,7 @@
     <ClInclude Include="src\Utils\Pathfinding.h" />
     <ClInclude Include="src\Utils\Log.h" />
     <ClInclude Include="src\Utils\Random.h" />
+    <ClInclude Include="src\Utils\Timer.h" />
     <ClInclude Include="src\Utils\Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

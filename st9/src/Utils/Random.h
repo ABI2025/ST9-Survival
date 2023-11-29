@@ -32,6 +32,10 @@ namespace Utils
 		{
 			return static_cast<float>(s_Distribution(s_RandomEngine)) / static_cast<float>(std::numeric_limits<uint32_t>::max());
 		}
+		static float Float(float min, float max)
+		{
+			return Float() * (max - min) + min;
+		}
 
 		static glm::vec3 Vec3()
 		{
@@ -40,7 +44,7 @@ namespace Utils
 
 		static glm::vec3 Vec3(float min, float max)
 		{
-			return {Float() * (max - min) + min, Float() * (max - min) + min, Float() * (max - min) + min};
+			return {Float(min,max),Float(min,max) ,Float(min,max) };
 		}
 
 		static glm::vec3 InUnitSphere()

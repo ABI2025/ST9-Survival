@@ -26,9 +26,6 @@ namespace Utils
 #define LOG_ERROR(...)      
 #define LOG_CRITICAL(...)   
 #else
-	#ifdef DEBUG
-	#define LEVEL trace
-	#endif
 #define LOG_TRACE(...)         ::Utils::Log::GetLogger()->trace(__VA_ARGS__)
 #define LOG_INFO(...)          ::Utils::Log::GetLogger()->info(__VA_ARGS__)
 #define LOG_WARN(...)          ::Utils::Log::GetLogger()->warn(__VA_ARGS__)
