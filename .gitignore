@@ -367,8 +367,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
-/st9/src/Player.h
-/st9/src/Player.cpp
-/st9/src/Entity.h
-/st9/src/Entity.cpp
