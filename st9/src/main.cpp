@@ -80,6 +80,7 @@ int Main(int argc, char** argv)
 	sf::RectangleShape rect ({2560,1440});
     rect.setFillColor(sf::Color::White);
     sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster", sf::Style::Fullscreen);
+    window.setFramerateLimit(60);
     Utils::Timer t;
     while (window.isOpen())
     {

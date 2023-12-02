@@ -76,14 +76,33 @@ namespace Utils {
 				}
 			}
 		}
-
+		m_cellmap[start.z][start.y][start.x].dist = 0;
+		auto comp = [](const cell* c1,const cell* c2)->bool
+		{
+			return c1 > c2;
+		};
+		while (!q_vector.empty())
+		{
+			std::sort(q_vector.begin(), q_vector.end(), comp);
+			cell* u = q_vector.back();
+			q_vector.pop_back();
+			for(cell* v : get_neighbours(u,q_vector))
+			{
+				const double dist = u->dist + get_dist(u,v);
+				if (dist < m_cellmap[u->pos.z - 1][u->pos.y][u->pos.x].dist)
+				{
+					m_cellmap[u->pos.z - 1][u->pos.y][u->pos.x].dist = dist;
+					m_cellmap[u->pos.z - 1][u->pos.y][u->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];
+				}
+			}
+		}
 
 	}
 
 
 
 
-	bool Pathfinding::is_valid(glm::vec3 pos)
+	bool Pathfinding::is_valid(glm::vec3 pos) const
 	{
 		if (
 			pos.z < m_map.size() && pos.z >= 0 &&
@@ -114,10 +133,14 @@ namespace Utils {
 	{
 		switch (m_map[dest->pos.z][dest->pos.y][dest->pos.x])
 		{
-		case Cell::NOTHING: break;
-		case Cell::WALL: break;
-		case Cell::DEFENSE: break;
-		case Cell::STAIR: break;
+		case Cell::NOTHING:
+			break;
+		case Cell::WALL: 
+			break;
+		case Cell::DEFENSE: 
+			break;
+		case Cell::STAIR: 
+			break;
 		default:
 				return 1;
 		}

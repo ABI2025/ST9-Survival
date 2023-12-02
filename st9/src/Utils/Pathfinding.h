@@ -1,13 +1,13 @@
 #pragma once
-#include "Random.h"
+
+
 #include <glm/glm.hpp>
 
 #include "Utils.h"
 
 class Player;
 
-enum class Cell;
-enum class Priority;
+
 //nicht benutzen ist nicht fertig warte auf die Implementation von Player (soweit, dass ich mir wichtige daten holen kann)
 
 namespace Utils
@@ -55,7 +55,7 @@ namespace Utils
 					
 	private:
 		void dijkstra(const glm::vec3& dest, const glm::vec3& start);
-		bool is_valid(glm::vec3);
+		bool is_valid(glm::vec3) const;
 		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&);
 		double get_dist(cell *, const cell *);
 

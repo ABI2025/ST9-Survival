@@ -40,7 +40,7 @@ namespace Utils
 		~ScopedTimer()
 		{
 			float time = m_Timer.ElapsedMillis();
-			LOG_INFO("[TIMER] {} - {} ms", m_Name, time);
+			LOG_INFO("[TIMER] {} - {} ms",m_Name, time);
 		}
 	private:
 		std::string m_Name;
