@@ -27,6 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Utils\Pathfinding.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="src\Utils\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Utils\Pathfinding.h" />
