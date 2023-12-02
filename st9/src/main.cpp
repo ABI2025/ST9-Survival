@@ -27,7 +27,7 @@ int Main(int argc, char** argv)
 {
     
     Utils::Init();
-    Utils::ScopedTimer scoped_timer("scoped_tt");
+    Utils::ScopedTimer scoped_timer("scoped");
   //std::vector<uint32_t> arr;
   //arr.reserve(10);
   //for (int i = 0; i < 100; i++)
@@ -79,7 +79,7 @@ int Main(int argc, char** argv)
     shader.loadFromMemory(fragmentShader, sf::Shader::Type::Fragment);
 	sf::RectangleShape rect ({2560,1440});
     rect.setFillColor(sf::Color::White);
-    sf::RenderWindow window(sf::VideoMode(2560, 1440), "window", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster", sf::Style::Fullscreen);
     Utils::Timer t;
     while (window.isOpen())
     {
