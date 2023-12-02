@@ -1,5 +1,5 @@
 #include "camera.h"
-//#include "Player.h"
+#include "Player.h"
 
 camera::camera(sf::RenderWindow* w) {
 	wPtr = w;
