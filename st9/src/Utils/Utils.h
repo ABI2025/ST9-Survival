@@ -5,6 +5,17 @@
 #include "Pathfinding.h"
 namespace Utils
 {
+
+	enum class Cell
+	{
+		NOTHING = 0,
+		WALL,
+		DEFENSE,
+		STAIR,
+
+
+
+	};
 	enum class Priority
 	{
 		nothing, player, tower

@@ -28,21 +28,21 @@ int Main(int argc, char** argv)
     
     Utils::Init();
     Utils::ScopedTimer scoped_timer("scoped_tt");
-  //  std::vector<uint32_t> arr;
-  //  arr.reserve(10);
-  //  for (int i = 0; i < 100; i++)
+  //std::vector<uint32_t> arr;
+  //arr.reserve(10);
+  //for (int i = 0; i < 100; i++)
   //      arr.push_back(Utils::Random::UInt());
-  //  for (int i = 0; i < 100; i++)
+  //for (int i = 0; i < 100; i++)
   //      LOG_INFO("arr[{}]: {}", i, arr[i]);
-  //  uint32_t max = 0;
-  //  for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i]) ? arr[i] : max;
-  //  LOG_ERROR("max: {}", max);
-  //  int8_t s = 65;
-  //  LOG_INFO("{0} {0} {0} {0} {0}", s);
-  //  std::for_each(std::execution::par, arr.begin(), arr.end(), [](uint32_t z)
-  //  {
+  //uint32_t max = 0;
+  //for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i]) ? arr[i] : max;
+  //LOG_ERROR("max: {}", max);
+  //int8_t s = 65;
+  //LOG_INFO("{0} {0} {0} {0} {0}", s);
+  //std::for_each(std::execution::par, arr.begin(), arr.end(), [](uint32_t z)
+  //{
   //    LOG_INFO("{}", z);
-  //  });
+  //});
 
     sf::Event event{};
     std::string vertexShader =
@@ -80,7 +80,7 @@ int Main(int argc, char** argv)
 	sf::RectangleShape rect ({2560,1440});
     rect.setFillColor(sf::Color::White);
     sf::RenderWindow window(sf::VideoMode(2560, 1440), "window", sf::Style::Fullscreen);
-     Utils::Timer t;
+    Utils::Timer t;
     while (window.isOpen())
     {
         while (window.pollEvent(event))
