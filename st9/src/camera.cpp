@@ -1,32 +1,49 @@
-#include "camera.h"
+#include "Camera.h"
 #include "Player.h"
 
-camera::camera(sf::RenderWindow* w) {
-	wPtr = w;
-	pPtr = nullptr;
+Camera::Camera(sf::RenderWindow* w)
+{
+	m_window = w;
+	m_player = nullptr;
 }
-camera::camera(sf::RenderWindow* w, Player* p) {
-	wPtr = w;
-	pPtr = p;
+
+Camera::Camera(sf::RenderWindow* w, Player* p)
+{
+	m_window = w;
+	m_player = p;
 }
-camera::~camera() {
+
+Camera::~Camera()
+{
 
 }
-void camera::setPlayer(Player* p) {
-	pPtr = p;
+
+void Camera::set_player(Player* p)
+{
+	m_player = p;
 }
-Player* camera::getPlayer() {
-	return pPtr;
+
+Player* Camera::get_player()
+{
+	return m_player;
 }
-void camera::moveCamToPlayer() {
-	wPtr->setView(sf::View(sf::Vector2f(pPtr->get_pos()[0], pPtr->get_pos()[1]), sf::Vector2f(1920, 1080)));	//Methode um die Player Position zu bekommen unbekant 
+
+void Camera::move_cam_to_player()
+{
+	m_window->setView(sf::View(sf::Vector2f(m_player->get_pos().x, m_player->get_pos().y), sf::Vector2f(1920, 1080)));	//Methode um die Player Position zu bekommen unbekant 
 }
-void camera::moveToPos(int x, int y) {
-	wPtr->setView(sf::View(sf::Vector2f(x, y), sf::Vector2f(1920, 1080)));
+
+void Camera::move_to_pos(int x, int y)
+{
+	m_window->setView(sf::View(sf::Vector2f(x, y), sf::Vector2f(1920, 1080)));
 }
-void camera::moveToPos(sf::Vector2f v) {
-	wPtr->setView(sf::View(v, sf::Vector2f(1920, 1080)));
+
+void Camera::move_to_pos(sf::Vector2f v)
+{
+	m_window->setView(sf::View(v, sf::Vector2f(1920, 1080)));
 }
-void camera::moveToPos(sf::View v) {
-	wPtr->setView(v);
+
+void Camera::move_to_pos(sf::View v)
+{
+	m_window->setView(v);
 }

@@ -5,19 +5,19 @@
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
 class Player;
-class camera
+class Camera
 {
 private:
-	Player* pPtr;
-	sf::RenderWindow* wPtr;
+	Player* m_player;
+	sf::RenderWindow* m_window;
 public:
-	camera(sf::RenderWindow* window);
-	camera(sf::RenderWindow* window, Player* player);
-	~camera();
-	void setPlayer(Player* player);
-	Player* getPlayer();
-	void moveCamToPlayer();
-	void moveToPos(int x, int y);
-	void moveToPos(sf::Vector2f vec);
-	void moveToPos(sf::View view);
+	Camera(sf::RenderWindow* window);
+	Camera(sf::RenderWindow* window, Player* player);
+	~Camera();
+	void set_player(Player* player);
+	Player* get_player();
+	void move_cam_to_player();
+	void move_to_pos(int x, int y);
+	void move_to_pos(sf::Vector2f vec);
+	void move_to_pos(sf::View view);
 };
