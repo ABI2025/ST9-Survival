@@ -19,7 +19,7 @@ Player* camera::getPlayer() {
 	return pPtr;
 }
 void camera::moveCamToPlayer() {
-	wPtr->setView(sf::View(sf::Vector2f(pPtr->getPosX,pPtr->getPosY), sf::Vector2f(1920, 1080)));	//Methode um die Player Position zu bekommen unbekant 
+	wPtr->setView(sf::View(sf::Vector2f(pPtr->get_pos()[0], pPtr->get_pos()[1]), sf::Vector2f(1920, 1080)));	//Methode um die Player Position zu bekommen unbekant 
 }
 void camera::moveToPos(int x, int y) {
 	wPtr->setView(sf::View(sf::Vector2f(x, y), sf::Vector2f(1920, 1080)));
