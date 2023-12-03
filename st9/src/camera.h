@@ -8,8 +8,8 @@ class Player;
 class Camera
 {
 private:
-	Player* pPtr;
-	sf::RenderWindow* wPtr;
+	Player* m_player;
+	sf::RenderWindow* m_window;
 public:
 	Camera(sf::RenderWindow* window);
 	Camera(sf::RenderWindow* window, Player* player);
