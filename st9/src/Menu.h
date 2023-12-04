@@ -6,7 +6,7 @@ class Menu
 {
 public:
 	Menu(const Menu&) = delete;
-
+	//test
 	static Menu& get()
 	{
 		return s_Instance;
