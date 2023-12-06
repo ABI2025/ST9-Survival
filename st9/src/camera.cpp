@@ -1,16 +1,16 @@
 #include "Camera.h"
 #include "Player.h"
 
-Camera::Camera(sf::RenderWindow* w)
+Camera::Camera(sf::RenderWindow* window) 
 {
-	m_window = w;
+	m_window = window;
 	m_player = nullptr;
 }
 
-Camera::Camera(sf::RenderWindow* w, Player* p)
+Camera::Camera(sf::RenderWindow* window, Player* player)
 {
-	m_window = w;
-	m_player = p;
+	m_window = window;
+	m_player = player;
 }
 
 Camera::~Camera()
@@ -18,9 +18,9 @@ Camera::~Camera()
 
 }
 
-void Camera::set_player(Player* p)
+void Camera::set_player(Player* player)
 {
-	m_player = p;
+	m_player = player;
 }
 
 Player* Camera::get_player()

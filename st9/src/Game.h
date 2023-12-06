@@ -1,15 +1,16 @@
 #pragma once
 #include <vector>
-#include "src/Utils/Utils.h"
+#include "Utils/Utils.h"
 class Game
 {
+public:
 	static Game* erstelleGame();
-	inline static Game *game;
 	void setMap(Utils::Cell& , int , int , int ); // Cell x,y,z
-	std::vector<std::vector<std::vector<Utils::Cell>>>& getMap();
+	std::vector<std::vector<std::vector<Utils::Cell>>>& get_map();
 private:
+	inline static Game* s_game;
 	Game() = default;
 	Game(Game&) = delete;
-	std::vector<std::vector<std::vector<Utils::Cell>>> map;
+	std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 };
 
