@@ -8,7 +8,7 @@ protected:
 	glm::vec3 m_pos{};
 	sf::Sprite m_sprite;
 	//Utils::Priority m_priority; //für die gegner klasse
-	
+	glm::vec4 m_hitbox; // x relativ to m_pos , y relativ to m_pos, width , height
 public:
 	Entity();
 	~Entity() override;
