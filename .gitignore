@@ -5,9 +5,13 @@
 
 # Directories
 .vs/
-bin/
 bin-int/
+*.exe
+#exclude
 
+!bin/Debug-x64/st9/Openal32.dll
+!bin/Release-x64/st9/Openal32.dll
+!bin/Dist-x64/st9/Openal32.dll
 
 # User-specific files
 *.rsuser
@@ -33,7 +37,6 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
