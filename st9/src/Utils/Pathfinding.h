@@ -7,18 +7,17 @@
 
 class Player;
 
-
 //nicht benutzen ist nicht fertig warte auf die Implementation von Player (soweit, dass ich mir wichtige daten holen kann)
 
 namespace Utils
 {
+	enum class Priority;
+	enum class Cell;
 	
 
 	class Pathfinding  
 	{
 		// Kunstruktor / destruktor
-
-		
 		Pathfinding(Player*, std::vector<std::vector<std::vector<Cell>>>& map);
 	public:
 		Pathfinding() = delete;

@@ -2,6 +2,7 @@
 #include "Random.h"
 #include "Log.h"
 #include "Timer.h"
+#include "Pathfinding.h"
 
 #include <SFML/Graphics.hpp>
 
