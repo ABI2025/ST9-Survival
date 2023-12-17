@@ -97,11 +97,12 @@ int Main(int argc, char** argv)
     sf::Sprite backgroundSprite;
     backgroundSprite.setTexture(backgroundTexture);
 
-
-
-
+    c.move_cam_to_player();
+    p.set_pos({ window.getSize().x / 2.0f -50.0f, window.getSize().y / 2.0f - 50.0f, 0 });
     while (window.isOpen())
     {
+		//LOG_INFO("window view x:{} y:{}",window.getView().getCenter().x, window.getView().getCenter().y);
+		//LOG_INFO("player center x:{} y:{}",p.get_pos().x,p.get_pos().y);
         while (window.pollEvent(event))
         {
             switch (event.type)
@@ -134,7 +135,7 @@ int Main(int argc, char** argv)
         {
             dir += glm::vec3(0, 1, 0);
         }
-        if(dir != glm::vec3{0,0,0})
+        if(dir != glm::vec3{0,0,0}) //um undefiniertes verhalten zu verhindern und zur optimierung
         {
            
         	/*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
@@ -152,8 +153,8 @@ int Main(int argc, char** argv)
         shader.setUniform("iTime", t.Elapsed());
 		c.move_cam_to_player();
         window.clear();
+        window.draw(rect);
         window.draw(backgroundSprite);
-        //window.draw(rect,&shader);
         window.draw(p, &shader);
 
         window.display();
