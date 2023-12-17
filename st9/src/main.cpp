@@ -2,9 +2,10 @@
 #include <execution>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
-#include <SFML/OpenGL.hpp>
+#include <imgui.h>
 
 #include "Camera.h"
+#include "imgui-SFML.h"
 #include "Player.h"
 
 int Main(int argc, char** argv);
@@ -83,7 +84,25 @@ int Main(int argc, char** argv)
     shader.loadFromMemory(fragmentShader, sf::Shader::Type::Fragment);
 	sf::RectangleShape rect ({2560,1440});
     rect.setFillColor(sf::Color::White);
-    sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster");
+    if (!ImGui::SFML::Init(window)) return -1;
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
     window.setFramerateLimit(60);
     Utils::Timer t;
     Player p;
@@ -96,19 +115,28 @@ int Main(int argc, char** argv)
     }
     sf::Sprite backgroundSprite;
     backgroundSprite.setTexture(backgroundTexture);
-
+    
     c.move_cam_to_player();
     p.set_pos({ window.getSize().x / 2.0f -50.0f, window.getSize().y / 2.0f - 50.0f, 0 });
+    float speed_scalar = 1;
+    sf::Clock deltaClock;
+    int x = 0, y = 0;
     while (window.isOpen())
     {
 		//LOG_INFO("window view x:{} y:{}",window.getView().getCenter().x, window.getView().getCenter().y);
 		//LOG_INFO("player center x:{} y:{}",p.get_pos().x,p.get_pos().y);
         while (window.pollEvent(event))
         {
+            ImGui::SFML::ProcessEvent(window, event);
             switch (event.type)
             {
             case sf::Event::Closed:
                 window.close();
+                break;
+            case sf::Event::Resized:
+                x = event.size.width;
+                y = event.size.height;
+                c.set_window_size(x, y);
                 break;
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Escape)
@@ -118,7 +146,9 @@ int Main(int argc, char** argv)
                 break;
             }
         }
+        ImGui::SFML::Update(window, deltaClock.restart());
         glm::vec3 dir (0);
+    
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
             dir += glm::vec3(-1,0,0);
@@ -141,7 +171,7 @@ int Main(int argc, char** argv)
         	/*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
             dir = glm::normalize(dir);
             /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
-            dir *= 5;
+            dir *= speed_scalar;
            /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
 
         }
@@ -152,12 +182,28 @@ int Main(int argc, char** argv)
         shader.setUniform("iResolution", sf::Glsl::Vec2{ 2560,1440 });
         shader.setUniform("iTime", t.Elapsed());
 		c.move_cam_to_player();
+
+        ImGui::Begin("Hello, world!");
+        ImGui::SliderFloat("scale",&speed_scalar,1,50);
+        ImGui::End();
+    	ImGui::Begin("Hello, world2!");
+        ImGui::SliderFloat("scale2",&speed_scalar,1,50);
+        ImGui::End();
+        LOG_TRACE("x:{:03.2f} y:{:03.2f} z:{:03.2f}", p.get_pos().x, p.get_pos().y, p.get_pos().z);
+
         window.clear();
         window.draw(rect);
         window.draw(backgroundSprite);
         window.draw(p, &shader);
 
+        ImGui::SFML::Render(window);
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+        }
         window.display();
     }
+    ImGui::SFML::Shutdown();
+
     return 0;
 }

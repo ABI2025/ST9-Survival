@@ -144,6 +144,6 @@ namespace Utils {
 		default:
 				return 1;
 		}
-		
+		return 0;
 	}
 }
