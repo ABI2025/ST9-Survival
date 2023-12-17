@@ -16,9 +16,7 @@ Camera::Camera(sf::RenderWindow* window, Player* player)
 }
 
 Camera::~Camera()
-	:m_player(nullptr), m_window(nullptr)
 {
-	m_view = sf::View({ 0,0 }, {1920,1080});
 }
 
 void Camera::set_player(Player* player)
