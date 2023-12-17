@@ -89,10 +89,10 @@ namespace Utils {
 			for(cell* v : get_neighbours(u,q_vector))
 			{
 				const double dist = u->dist + get_dist(u,v);
-				if (dist < m_cellmap[u->pos.z - 1][u->pos.y][u->pos.x].dist)
+				if (dist < m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist)
 				{
-					m_cellmap[u->pos.z - 1][u->pos.y][u->pos.x].dist = dist;
-					m_cellmap[u->pos.z - 1][u->pos.y][u->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];
+					m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist = dist;
+					m_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];
 				}
 			}
 		}

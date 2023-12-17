@@ -9,6 +9,7 @@ class Camera
 private:
 	Player* m_player;
 	sf::RenderWindow* m_window;
+	sf::View m_view;
 public:
 	Camera(sf::RenderWindow* window);
 	Camera(sf::RenderWindow* window, Player* player);

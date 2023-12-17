@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
-class Entity : sf::Drawable
+class Entity : public sf::Drawable
 {
 protected:
 	glm::vec3 m_pos{};
@@ -13,6 +13,7 @@ public:
 	Entity();
 	~Entity() override;
 	glm::vec3 get_pos();
+	void set_pos(glm::vec3 i_pos);
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states)const override;
 

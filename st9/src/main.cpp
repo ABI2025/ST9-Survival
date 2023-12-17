@@ -3,6 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
 #include <SFML/OpenGL.hpp>
+
+#include "Camera.h"
+#include "Player.h"
+
 int Main(int argc, char** argv);
 
 
@@ -82,6 +86,20 @@ int Main(int argc, char** argv)
     sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster", sf::Style::Fullscreen);
     window.setFramerateLimit(60);
     Utils::Timer t;
+    Player p;
+    Camera c(&window,&p);
+    //Utils::Log::GetLogger()->set_level(spdlog::level::info);
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("Resources/background__r172093591.jpg")) {
+        // Handle loading failure
+        return -1;
+    }
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+
+
+
+
     while (window.isOpen())
     {
         while (window.pollEvent(event))
@@ -92,19 +110,52 @@ int Main(int argc, char** argv)
                 window.close();
                 break;
             case sf::Event::KeyPressed:
-                if(event.key.code == sf::Keyboard::Escape)
+                if (event.key.code == sf::Keyboard::Escape)
                     window.close();
             default:
-                
+
                 break;
             }
         }
-    
+        glm::vec3 dir (0);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        {
+            dir += glm::vec3(-1,0,0);
+        }
+    	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            dir += glm::vec3(1, 0, 0);
+        }
+    	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        {
+            dir += glm::vec3(0, -1, 0);
+        }
+    	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        {
+            dir += glm::vec3(0, 1, 0);
+        }
+        if(dir != glm::vec3{0,0,0})
+        {
+           
+        	/*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+            dir = glm::normalize(dir);
+            /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+            dir *= 5;
+           /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+
+        }
+
+        glm::vec3 newpos = dir + p.get_pos();
+    	p.set_pos(newpos);
+        p.update();
         shader.setUniform("iResolution", sf::Glsl::Vec2{ 2560,1440 });
         shader.setUniform("iTime", t.Elapsed());
-
+		c.move_cam_to_player();
         window.clear();
-        window.draw(rect,&shader);
+        window.draw(backgroundSprite);
+        //window.draw(rect,&shader);
+        window.draw(p, &shader);
+
         window.display();
     }
     return 0;
