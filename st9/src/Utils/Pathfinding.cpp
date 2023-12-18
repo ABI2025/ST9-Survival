@@ -23,7 +23,14 @@ namespace Utils {
 	{
 		switch (i_priority)
 		{
-		case Priority::nothing: break;
+		case Priority::nothing:
+			glm::vec3 pos1 = glm::abs(m_player->get_pos() - start);
+			glm::vec3 pos2 = glm::abs(glm::vec3{ 1,1,1 } - start);
+			glm::vec3 min_dist = 2 ? glm::vec3(1) : glm::vec3(1);
+
+
+			return min_dist;
+			break;
 		case Priority::player:
 			return m_player->get_pos();
 			break;

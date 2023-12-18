@@ -6,7 +6,13 @@
 # Directories
 .vs/
 bin-int/
-*.exe
+bin/Debug-x64/st9/*.exe
+bin/Release-x64/st9/*.exe
+bin/Dist-x64/st9/*.exe
+bin/Dist-windows-x86_64/st9/*.exe
+bin/Debug-windows-x86_64/st9/*.exe
+bin/Release-windows-x86_64/st9/*.exe
+
 #exclude
 
 !bin/Debug-x64/st9/Openal32.dll
