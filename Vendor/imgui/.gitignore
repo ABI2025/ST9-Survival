@@ -59,14 +59,12 @@ examples/example_sdl_opengl2/example_sdl_opengl2
 examples/example_sdl_opengl3/example_sdl_opengl3
 examples/example_sdl_sdlrenderer/example_sdl_sdlrenderer
 
-# Hazel-specific
 # Directories
 bin/
 bin-int/
-
+examples/
  # Files
 Makefile 
 
 # Visual Studio files and folder
-*.sln
-*.vcxproj*
+

@@ -6,19 +6,21 @@
 # Directories
 .vs/
 bin-int/
-bin/Debug-x64/st9/*.exe
-bin/Release-x64/st9/*.exe
-bin/Dist-x64/st9/*.exe
+bin/Debug-x64/
+bin/Release-x64/
+bin/Dist-x64/
 bin/Dist-windows-x86_64/st9/*.exe
 bin/Debug-windows-x86_64/st9/*.exe
 bin/Release-windows-x86_64/st9/*.exe
+Vendor/SFML/SFML-2.6.0/examples/
 
 #exclude
 
-!bin/Debug-x64/st9/Openal32.dll
-!bin/Release-x64/st9/Openal32.dll
-!bin/Dist-x64/st9/Openal32.dll
 
+
+!bin/Dist-windows-x86_64/st9/Openal32.dll
+!bin/Debug-windows-x86_64/st9/Openal32.dll
+!bin/Release-windows-x86_64/st9/Openal32.dll
 # User-specific files
 *.rsuser
 *.suo
