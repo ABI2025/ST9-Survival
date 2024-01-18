@@ -27,6 +27,7 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\Gui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
@@ -45,5 +46,9 @@
     </ClCompile>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Gui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Graphisches programmieren\Walnut_app_try\Walnut\Walnut\src\Walnut\ImGui\Roboto-Regular.embed" />
   </ItemGroup>
 </Project>
