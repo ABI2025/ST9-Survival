@@ -3,7 +3,7 @@
 #include <iostream>
 
 Player::Player()
-	: Entity(2)
+	: Entity()
 
 {
 	m_pos = {720, 720, 0};

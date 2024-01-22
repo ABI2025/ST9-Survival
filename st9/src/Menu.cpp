@@ -4,28 +4,71 @@
 
 constexpr int NUM_BUTTONS = 3;
 
-void Menu::show_menu()
-{
-	Game::erstelleGame(m_window);
-    //kommt noch
-    while (m_window.isOpen())
-    {
-	    switch (0)
-	    {
-	    case 0: //start knopf
-			Game::get_game()->runGame(0);
-			break;
-		case 1: //optionen oder so 
-			LOG_ERROR("irgendwas ist schrecklich");
-			break;
-		case 2: //schlieﬂen
-			LOG_ERROR("das darfst du nicht");
-			m_window.close();
-			break;
-	    default:
-			LOG_ERROR("bro how dafuq");
-			break;
-	    }
+Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
+    // Initialisiere Buttons direkt im Konstruktor
+    buttons[0] = sf::FloatRect(100, 100, 200, 50); // Start-Button
+    buttons[1] = sf::FloatRect(100, 200, 200, 50); // Optionen
+    buttons[2] = sf::FloatRect(100, 300, 200, 50); // Schlieﬂen
+}
+
+void Menu::show_menu() {
+    while (m_window.isOpen()) {
+        sf::Event event;
+        while (m_window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                m_window.close();
+        }
+
+        sf::FloatRect mouse = { sf::Vector2f(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))), {1, 1} };
+
+        int buttonIndex = -1;
+        for (int i = 0; i < NUM_BUTTONS; ++i) {
+            if (buttons[i].contains(mouse.left, mouse.top)) {
+                buttonIndex = i;
+                break;
+            }
+        }
+
+        if (buttonIndex != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            switch (buttonIndex) {
+            case 0: // Start-Button
+                Game::get_game()->runGame(0);
+                break;
+            case 1: // Optionen
+                LOG_ERROR("irgendwas ist schrecklich");
+                break;
+            case 2: // Schlieﬂen
+                LOG_ERROR("das darfst du nicht");
+                m_window.close();
+                break;
+            }
+        }
+
+        m_window.clear();
+
+        // Zeichne sichtbare Buttons und Labels
+        for (const auto& button : buttons) {
+            sf::RectangleShape buttonShape(sf::Vector2f(button.width, button.height));
+            buttonShape.setPosition(button.left, button.top);
+            buttonShape.setFillColor(sf::Color::Red); // Farbe der Buttons
+            m_window.draw(buttonShape);
+        }
+        drawButtonLabels(m_window, buttons, font, NUM_BUTTONS);
+
+        m_window.display();
+    }
+}
+
+void Menu::drawButtonLabels(sf::RenderWindow& window, const sf::FloatRect* buttons, const sf::Font& font, int numButtons) {
+    for (int i = 0; i < numButtons; i++) {
+        sf::Text buttonText;
+        buttonText.setFont(font); // Stelle sicher, dass die Schriftart geladen ist
+        buttonText.setString("Button " + std::to_string(i + 1)); // Setze den Button-Text
+        buttonText.setCharacterSize(24); // W‰hle eine Textgrˆﬂe
+        buttonText.setPosition(buttons[i].left + 20, buttons[i].top + 10); // Positioniere den Text innerhalb des Buttons
+        buttonText.setFillColor(sf::Color::White); // Textfarbe
+
+        window.draw(buttonText);
     }
 }
 
