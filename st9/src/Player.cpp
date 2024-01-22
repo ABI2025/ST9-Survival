@@ -13,20 +13,22 @@ Player::Player()
         t.resize(3);
     }
 
-    textures[0][0].loadFromFile("resources/charackter_L");
-    textures[0][1].loadFromFile("resources/charackter_L1");
-    textures[0][2].loadFromFile("resources/charackter_L2");
-
-    textures[1][0].loadFromFile("resources/charackter_R");
-    textures[1][1].loadFromFile("resources/charackter_R1");
-    textures[1][2].loadFromFile("resources/charackter_R2");
-
-    textures[2][0].loadFromFile("resources/charackter_H");
-    textures[2][1].loadFromFile("resources/charackter_H1");
-    textures[2][2].loadFromFile("resources/charackter_H2");
+    textures[0][0].loadFromFile("Resources/charakter_L.png");
+    textures[0][1].loadFromFile("Resources/charakter_L1.png");
+    textures[0][2].loadFromFile("Resources/charakter_L2.png");
+                                            
+    textures[1][0].loadFromFile("Resources/charakter_R.png");
+    textures[1][1].loadFromFile("Resources/charakter_R1.png");
+    textures[1][2].loadFromFile("Resources/charakter_R2.png");
+                                            
+    textures[2][0].loadFromFile("Resources/charakter_H.png");
+    textures[2][1].loadFromFile("Resources/charakter_H1.png");
+    textures[2][2].loadFromFile("Resources/charakter_H2.png");
+    m_sprite.setTexture(textures[0][0]);
 	
 }
 static int i = 0;
+static int previndex = 0;
 void Player::update()
 {
     int index = -1;
@@ -50,6 +52,7 @@ void Player::update()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         dir += glm::vec3(0, 1, 0);
+        index = previndex < 2 ? previndex : 0;
     }
     if (dir != glm::vec3{ 0,0,0 }) //um undefiniertes verhalten zu verhindern und zur optimierung
     {
@@ -61,6 +64,8 @@ void Player::update()
         m_pos += dir;
         /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
         i++;
+        if (i == 1000)
+            i = 0;
         if(i % 20 < 10)
         {
             m_sprite.setTexture(textures[index][1]);
@@ -69,10 +74,11 @@ void Player::update()
         {
             m_sprite.setTexture(textures[index][2]);
         }
+		previndex = index;
     }
     else
     {
-        m_sprite.setTexture(textures[index][0]);
+        m_sprite.setTexture(textures[previndex][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
 }

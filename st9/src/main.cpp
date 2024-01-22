@@ -9,6 +9,7 @@
 #include "imgui-SFML.h"
 #include "Player.h"
 #include "Game.h"
+#include "Menu.h"
 
 int Main(int argc, char** argv);
 
@@ -32,8 +33,11 @@ int main(int argc, char** argv)
 
 int Main(int argc, char** argv)
 {
-    Game *game = Game::erstelleGame();
-    game->runGame(0);
+    Utils::Init();
+    Menu::get()->show_menu();
+
+
+
   //  Utils::Init();
   //  Utils::ScopedTimer scoped_timer("scoped");
   //std::vector<uint32_t> arr;
