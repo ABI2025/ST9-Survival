@@ -27,6 +27,7 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\Gui.h" />
     <ClInclude Include="src\GameWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Gui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\GameWindow.cpp" />
   </ItemGroup>
 </Project>
