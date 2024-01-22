@@ -6,6 +6,7 @@
 constexpr int NUM_BUTTONS = 3;
 
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
+    nameButton = { "Start","Options","Exit" };
     init_sfml_imgui(m_window);
     font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
     // Initialisiere Buttons direkt im Konstruktor
@@ -67,7 +68,7 @@ void Menu::drawButtonLabels(sf::RenderWindow& window, const sf::FloatRect* butto
     for (int i = 0; i < numButtons; i++) {
         sf::Text buttonText;
         buttonText.setFont(font); // Stelle sicher, dass die Schriftart geladen ist
-        buttonText.setString("Button " + std::to_string(i + 1)); // Setze den Button-Text
+        buttonText.setString(nameButton[i]); // Setze den Button-Text
         buttonText.setCharacterSize(24); // Wähle eine Textgröße
         buttonText.setPosition(buttons[i].left + 20, buttons[i].top + 10); // Positioniere den Text innerhalb des Buttons
         buttonText.setFillColor(sf::Color::White); // Textfarbe
