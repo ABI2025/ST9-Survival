@@ -5,6 +5,7 @@
 #include <imgui.h>
 
 #include "Camera.h"
+#include "Game.h"
 #include "imgui-SFML.h"
 #include "Player.h"
 
@@ -86,7 +87,7 @@ int Main(int argc, char** argv)
     rect.setFillColor(sf::Color::White);
     sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster");
     if (!ImGui::SFML::Init(window)) return -1;
-
+    int k = Game::erstelleGame()->renderMap(window);
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
