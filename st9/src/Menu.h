@@ -20,9 +20,13 @@ public:
 	void button_events();
 
 private:
-	Menu(): m_window(sf::VideoMode(1920, 1080), "Game") {}
+	//Menu(): m_window(sf::VideoMode(1920, 1080), "Game") {}
+	Menu();
+	void drawButtonLabels(sf::RenderWindow& , const sf::FloatRect* , const sf::Font& , int );
 	sf::RenderWindow m_window;
 	std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	inline static Menu* s_Instance = nullptr;
+	sf::FloatRect buttons[3];
+	sf::Font font;
 };
 

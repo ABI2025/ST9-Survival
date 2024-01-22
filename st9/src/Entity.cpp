@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-Entity::Entity(int id) {
+Entity::Entity() {
     //std::ifstream file("Stats.txt");
     //std::string line;
     //int currentLine = 0;
