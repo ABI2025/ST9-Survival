@@ -1,9 +1,37 @@
 ﻿#include "Entity.h"
+#include <fstream>
+#include <iostream>
 
-Entity::Entity()
-{
+Entity::Entity(int id) {
+    std::ifstream file("Stats.txt");
+    std::string line;
+    int currentLine = 0;
+    std::string texturePath;
+
+    if (file.is_open()) {
+        while (std::getline(file, line)) {
+            ++currentLine;
+            if (currentLine == id) {
+                texturePath = line; // Speichert den Pfad aus der Datei
+                break;
+            }
+        }
+        file.close();
+
+        if (!texturePath.empty()) {
+            sf::Texture texture;
+            if (texture.loadFromFile(texturePath)) {
+                m_sprite.setTexture(texture);
+            }
+            else {
+                std::cerr << "Failed to load texture: " << texturePath << std::endl;
+            }
+        }
+    }
+    else {
+        std::cerr << "Unable to open file: " << id << std::endl;
+    }
 }
-
 Entity::~Entity()
 {
 

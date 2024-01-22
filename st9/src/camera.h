@@ -17,7 +17,6 @@ public:
 	void set_player(Player* player);
 	Player* get_player();
 	void move_cam_to_player();
-	void render();
 
 
 	void set_window_size(int x, int y);

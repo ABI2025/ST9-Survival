@@ -1,6 +1,4 @@
 #include "Game.h"
-#include <chrono>
-#include <execution>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
 #include <imgui.h>
@@ -22,6 +20,7 @@ Game::Game()
     background_sprites[3].setTexture(background_textures[3]);
 
 }
+
 Game* Game::erstelleGame() {
     if (!s_game) 
         s_game = new Game();
@@ -73,4 +72,22 @@ std::vector<std::vector<uint8_t[2]>> erstelleMap()
         KARTE.emplace_back(inner_map);
     }
     return KARTE;
+}
+}
+
+void Game::runGame(int) {
+
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Game", sf::Style::Fullscreen);
+    window.setFramerateLimit(60);
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+        window.display();
+    }
 }

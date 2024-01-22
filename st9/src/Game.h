@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
 #include <SFML/Graphics.hpp>
 
@@ -12,6 +13,7 @@ public:
 	static Game* erstelleGame();
 	void setMap(Utils::Cell& , int , int , int ); // Cell x,y,z
 	std::vector<std::vector<std::vector<Utils::Cell>>>& get_map();
+	void runGame(int);
 private:
 	inline static Game* s_game;
 	Game();
@@ -23,4 +25,3 @@ private:
 
 	
 };
-
