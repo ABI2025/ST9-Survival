@@ -24,6 +24,7 @@ private:
 	Menu();
 	void drawButtonLabels(sf::RenderWindow& , const sf::FloatRect* , const sf::Font& , int );
 	sf::RenderWindow m_window;
+	std::vector<std::string> nameButton;
 	std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	inline static Menu* s_Instance = nullptr;
 	sf::FloatRect buttons[3];
