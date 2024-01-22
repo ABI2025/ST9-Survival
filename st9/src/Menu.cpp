@@ -9,9 +9,9 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
     init_sfml_imgui(m_window);
     font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
     // Initialisiere Buttons direkt im Konstruktor
-    buttons[0] = sf::FloatRect(100, 100, 200, 50); // Start-Button
-    buttons[1] = sf::FloatRect(100, 200, 200, 50); // Optionen
-    buttons[2] = sf::FloatRect(100, 300, 200, 50); // Schlieﬂen
+    buttons[0] = sf::FloatRect(1920/2-100, 1080/2-200, 200, 50); // Start-Button
+    buttons[1] = sf::FloatRect(1920/2-100, 1080/2-100, 200, 50); // Optionen
+    buttons[2] = sf::FloatRect(1920/2-100, 1080/2-0, 200, 50); // Schlieﬂen
 }
 
 void Menu::show_menu() {
