@@ -1,10 +1,13 @@
 #include "Menu.h"
 #include "Utils/Utils.h"
 #include "Game.h"
-
+#include "Gui.h"
+#include "../Resources/Roboto-Regular.embed"
 constexpr int NUM_BUTTONS = 3;
 
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
+    init_sfml_imgui(m_window);
+    font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
     // Initialisiere Buttons direkt im Konstruktor
     buttons[0] = sf::FloatRect(100, 100, 200, 50); // Start-Button
     buttons[1] = sf::FloatRect(100, 200, 200, 50); // Optionen
@@ -39,7 +42,7 @@ void Menu::show_menu() {
                 LOG_ERROR("irgendwas ist schrecklich");
                 break;
             case 2: // Schlieﬂen
-                LOG_ERROR("das darfst du nicht");
+                LOG_DEBUG("das darfst du nicht");
                 m_window.close();
                 break;
             }
