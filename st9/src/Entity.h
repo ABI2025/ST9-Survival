@@ -2,15 +2,18 @@
 #include <glm/glm.hpp>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
+
 class Entity : public sf::Drawable
 {
 protected:
 	glm::vec3 m_pos{};
 	sf::Sprite m_sprite;
+	std::vector<std::vector<sf::Texture>> textures;
 	//Utils::Priority m_priority; //für die gegner klasse
 	glm::vec4 m_hitbox; // x relativ to m_pos , y relativ to m_pos, width , height
 public:
-	Entity();
+	Entity() = delete;
+	Entity(int id);
 	~Entity() override;
 	glm::vec3 get_pos();
 	void set_pos(glm::vec3 i_pos);

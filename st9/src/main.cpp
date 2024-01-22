@@ -5,8 +5,11 @@
 #include <imgui.h>
 
 #include "Camera.h"
+#include "Game.h"
 #include "imgui-SFML.h"
 #include "Player.h"
+#include "Game.h"
+#include "Menu.h"
 
 int Main(int argc, char** argv);
 
@@ -30,9 +33,13 @@ int main(int argc, char** argv)
 
 int Main(int argc, char** argv)
 {
-    
     Utils::Init();
-    Utils::ScopedTimer scoped_timer("scoped");
+    Menu::get()->show_menu();
+
+
+
+  //  Utils::Init();
+  //  Utils::ScopedTimer scoped_timer("scoped");
   //std::vector<uint32_t> arr;
   //arr.reserve(10);
   //for (int i = 0; i < 100; i++)
@@ -49,7 +56,7 @@ int Main(int argc, char** argv)
   //    LOG_INFO("{}", z);
   //});
 
-    sf::Event event{};
+   /* sf::Event event{};
     std::string vertexShader =
         "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
@@ -86,7 +93,7 @@ int Main(int argc, char** argv)
     rect.setFillColor(sf::Color::White);
     sf::RenderWindow window(sf::VideoMode(2560, 1440), "Fenster");
     if (!ImGui::SFML::Init(window)) return -1;
-
+    int k = Game::erstelleGame()->renderMap(window);
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
@@ -168,11 +175,11 @@ int Main(int argc, char** argv)
         if(dir != glm::vec3{0,0,0}) //um undefiniertes verhalten zu verhindern und zur optimierung
         {
            
-        	/*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+        	/*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);
             dir = glm::normalize(dir);
-            /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+            /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);
             dir *= speed_scalar;
-           /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+           /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);
 
         }
 
@@ -201,9 +208,10 @@ int Main(int argc, char** argv)
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
         }
-        window.display();
-    }
-    ImGui::SFML::Shutdown();
+        */
+        //window.display();
+    //}
+   // ImGui::SFML::Shutdown();
 
     return 0;
 }
