@@ -27,5 +27,6 @@ private:
 	std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	std::vector<sf::Sprite> background_sprites;
 	std::vector<sf::Texture> background_textures;
+	std::vector<std::vector<std::array<uint8_t, 2>>> m_tiles;
 	bool m_open = true;
 };

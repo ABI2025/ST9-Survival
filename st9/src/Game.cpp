@@ -6,6 +6,30 @@
 #include "imgui-SFML.h"
 #include "Player.h"
 
+constexpr int BACKGROUND_HEIGHT = 135;
+constexpr int BACKGROUND_WIDTH = 135;
+
+constexpr int height = 10;
+constexpr int width = 20;
+
+std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
+{
+    std::vector<std::vector<std::array<uint8_t, 2>>> KARTE;
+    std::array<uint8_t, 2> single_cell = { 0,0 };
+    for (int i = 0; i < width; i++)
+    {
+        std::vector<std::array<uint8_t, 2>> inner_map;
+        for (int j = 0; j < height; j++)
+        {
+            single_cell[0] = Utils::Random::UInt(0, 3);
+            inner_map.emplace_back(single_cell);
+
+        }
+        KARTE.emplace_back(inner_map);
+    }
+    return KARTE;
+}
+
 Game::Game(sf::RenderWindow& window):m_window(window)
 {
     window.setFramerateLimit(60);
@@ -27,18 +51,23 @@ Game::Game(sf::RenderWindow& window):m_window(window)
 
 void Game::renderMap()
 {
-    m_window.draw(background_sprites[0]);
-    m_window.draw(background_sprites[1]);
-    m_window.draw(background_sprites[2]);
-    m_window.draw(background_sprites[3]);
+    for (int i = 0; i < width; i++)
+    {
+        for (int j = 0; j < height; j++)
+        {
+            background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
+            m_window.draw(background_sprites[m_tiles[i][j][0]]);
+        }
+    }
+
+
 }
 
-constexpr int height = 10;
-constexpr int width = 10;
 
 void Game::runGame(int)
 {
     Player p;
+    m_tiles = erstelleMap();
     while (m_window.isOpen() && m_open)
     {
         sf::Event event{};
@@ -58,6 +87,7 @@ void Game::runGame(int)
         p.update();
 
         m_window.clear();
+        renderMap();
         m_window.draw(p);
         m_window.display();
     }

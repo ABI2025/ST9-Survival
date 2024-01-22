@@ -8,32 +8,25 @@ void Menu::show_menu()
 {
 	Game::erstelleGame(m_window);
     //kommt noch
-    //while (m_window.isOpen())
-    //{
-    //    sf::Event event{};
-    //    while (m_window.pollEvent(event))
-    //    {
-    //        switch (event.type)
-    //        {
-    //        case sf::Event::KeyPressed:
-    //            if (event.key.code == sf::Keyboard::Key::Escape)
-    //            {
-    //                m_window.close();
-    //            }
-    //        	break;
-    //            //fallthrough
-    //        case sf::Event::Closed:
-    //            m_window.close();
-    //            break;
-    //        }
-    //    }
-    //    m_window.clear();
-    //    m_window.display();
-    //}
-
-
-    Game::get_game()->runGame(0);
-
+    while (m_window.isOpen())
+    {
+	    switch (0)
+	    {
+	    case 0: //start knopf
+			Game::get_game()->runGame(0);
+			break;
+		case 1: //optionen oder so 
+			LOG_ERROR("irgendwas ist schrecklich");
+			break;
+		case 2: //schlieﬂen
+			LOG_ERROR("das darfst du nicht");
+			m_window.close();
+			break;
+	    default:
+			LOG_ERROR("bro how dafuq");
+			break;
+	    }
+    }
 }
 
 void Menu::button_events()
