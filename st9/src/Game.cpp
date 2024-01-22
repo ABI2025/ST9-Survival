@@ -9,10 +9,10 @@
 Game::Game()
 {
     background_textures.resize(4);
-    if (!background_textures[0].loadFromFile("Resources/Background1.jpg"))throw std::exception("Du hurensohn");
-    if (!background_textures[1].loadFromFile("Resources/Background2.jpg"))throw std::exception("Du hurensohn");
-    if (!background_textures[2].loadFromFile("Resources/Background3.jpg"))throw std::exception("Du hurensohn");
-    if (!background_textures[3].loadFromFile("Resources/Background4.jpg"))throw std::exception("Du hurensohn");
+    if (!background_textures[0].loadFromFile("Resources/Background1.jpg"))throw std::exception("Fehler");
+    if (!background_textures[1].loadFromFile("Resources/Background2.jpg"))throw std::exception("Fehler");
+    if (!background_textures[2].loadFromFile("Resources/Background3.jpg"))throw std::exception("Fehler");
+    if (!background_textures[3].loadFromFile("Resources/Background4.jpg"))throw std::exception("Fehler");
     background_sprites.resize(4);
     background_sprites[0].setTexture(background_textures[0]);
     background_sprites[1].setTexture(background_textures[1]);
