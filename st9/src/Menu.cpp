@@ -12,6 +12,7 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
 }
 
 void Menu::show_menu() {
+    Game::erstelleGame(m_window);
     while (m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event)) {
