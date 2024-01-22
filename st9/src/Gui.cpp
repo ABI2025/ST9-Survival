@@ -7,7 +7,7 @@
 bool init_sfml_imgui(sf::RenderWindow& window)
 {
 	
-    (!ImGui::SFML::Init(window)) return false;
+    if (!ImGui::SFML::Init(window)) return false;
 
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
