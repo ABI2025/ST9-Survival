@@ -144,6 +144,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Gui.h" />
+    <ClInclude Include="src\GameWindow.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Game.h" />
@@ -157,6 +159,8 @@
     <ClInclude Include="src\camera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Gui.cpp" />
+    <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
