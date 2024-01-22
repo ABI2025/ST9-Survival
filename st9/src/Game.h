@@ -4,12 +4,12 @@
 #include "Utils/Utils.h"
 #include <SFML/Graphics.hpp>
 
-std::vector<std::vector<uint8_t[2]>> erstelleMap();
+std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap();
 
 class Game
 {
 public:
-	int renderMap(sf::RenderWindow&);
+	void renderMap(sf::RenderWindow&);
 	static Game* erstelleGame();
 	void setMap(Utils::Cell& , int , int , int ); // Cell x,y,z
 	std::vector<std::vector<std::vector<Utils::Cell>>>& get_map();
