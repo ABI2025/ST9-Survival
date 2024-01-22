@@ -67,6 +67,7 @@ void Game::renderMap()
 void Game::runGame(int)
 {
     Player p;
+    Camera c(&m_window,&p);
     m_tiles = erstelleMap();
     while (m_window.isOpen() && m_open)
     {
@@ -76,7 +77,8 @@ void Game::runGame(int)
             switch (event.type)
             {
             case sf::Event::KeyPressed:
-
+                if (event.key.code == sf::Keyboard::Key::Escape)
+                    return;
             	break;
                 
             case sf::Event::Closed:
@@ -85,7 +87,7 @@ void Game::runGame(int)
             }
         }
         p.update();
-
+        c.move_cam_to_player();
         m_window.clear();
         renderMap();
         m_window.draw(p);

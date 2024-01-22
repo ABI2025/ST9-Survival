@@ -7,56 +7,62 @@ Player::Player()
 
 {
 	m_pos = {720, 720, 0};
-    textures.resize(4);
+    textures.resize(2);
     for(auto& t: textures)
     {
         t.resize(3);
+			for(auto& tt :t)
+			{
+                tt.resize(3);
+			}
     }
 
-    textures[0][0].loadFromFile("Resources/charakter_L.png");
-    textures[0][1].loadFromFile("Resources/charakter_L1.png");
-    textures[0][2].loadFromFile("Resources/charakter_L2.png");
+    textures[0][0][0].loadFromFile("Resources/charakter_L.png");
+    textures[0][0][1].loadFromFile("Resources/charakter_L1.png");
+    textures[0][0][2].loadFromFile("Resources/charakter_L2.png");
                                             
-    textures[1][0].loadFromFile("Resources/charakter_R.png");
-    textures[1][1].loadFromFile("Resources/charakter_R1.png");
-    textures[1][2].loadFromFile("Resources/charakter_R2.png");
+    textures[0][1][0].loadFromFile("Resources/charakter_R.png");
+    textures[0][1][1].loadFromFile("Resources/charakter_R1.png");
+    textures[0][1][2].loadFromFile("Resources/charakter_R2.png");
                                             
-    textures[2][0].loadFromFile("Resources/charakter_HL.png");
-    textures[2][1].loadFromFile("Resources/charakter_HL1.png");
-    textures[2][2].loadFromFile("Resources/charakter_HL2.png");
+    textures[1][0][0].loadFromFile("Resources/charakter_HL.png");
+    textures[1][0][1].loadFromFile("Resources/charakter_HL1.png");
+    textures[1][0][2].loadFromFile("Resources/charakter_HL2.png");
 
-	textures[3][0].loadFromFile("Resources/charakter_HR.png");
-    textures[3][1].loadFromFile("Resources/charakter_HR1.png");
-    textures[3][2].loadFromFile("Resources/charakter_HR2.png");
-    m_sprite.setTexture(textures[0][0]);
+	textures[1][1][0].loadFromFile("Resources/charakter_HR.png");
+    textures[1][1][1].loadFromFile("Resources/charakter_HR1.png");
+    textures[1][1][2].loadFromFile("Resources/charakter_HR2.png");
+    m_sprite.setTexture(textures[0][0][0]);
 	
 }
 static int i = 0;
-static int previndex = 0;
+static int prevleft_right = 0;
+static int prevfront_back = 0;
 void Player::update()
 {
-    int index = -1;
-    glm::vec3 dir(0);
+    int left_right = -1;
+    int front_back = -1;
+	glm::vec3 dir(0);
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        dir += glm::vec3(0, -1, 0);
+        front_back = 1;
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         dir += glm::vec3(0, 1, 0);
-        index = previndex < 2 ? previndex : 0;
+        front_back = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         dir += glm::vec3(-1, 0, 0);
-        index = 0;
+        left_right = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         dir += glm::vec3(1, 0, 0);
-        index = 1;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-    {
-        dir += glm::vec3(0, -1, 0);
-        index = 2;
+        left_right = 1;
     }
     if (dir != glm::vec3{ 0,0,0 }) //um undefiniertes verhalten zu verhindern und zur optimierung
     {
@@ -70,19 +76,23 @@ void Player::update()
         i++;
         if (i == 1000)
             i = 0;
+        if(front_back != -1)
+			prevfront_back = front_back;
+        if (left_right != -1)
+            prevleft_right = left_right;
+        
         if(i % 20 < 10)
         {
-            m_sprite.setTexture(textures[index][1]);
+            m_sprite.setTexture(textures[prevfront_back][prevleft_right][1]);
         }
         else
         {
-            m_sprite.setTexture(textures[index][2]);
+            m_sprite.setTexture(textures[prevfront_back][prevleft_right][2]);
         }
-		previndex = index;
     }
     else
     {
-        m_sprite.setTexture(textures[previndex][0]);
+        m_sprite.setTexture(textures[prevfront_back][prevleft_right][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
 }

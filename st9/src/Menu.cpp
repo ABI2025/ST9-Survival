@@ -19,7 +19,10 @@ void Menu::show_menu() {
     while (m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+
+            if (event.key.code == sf::Keyboard::Key::Escape)
+                m_window.close();
+        	if (event.type == sf::Event::Closed)
                 m_window.close();
         }
 
@@ -37,7 +40,7 @@ void Menu::show_menu() {
             switch (buttonIndex) {
             case 0: // Start-Button
                 Game::get_game()->runGame(0);
-                break;
+            	break;
             case 1: // Optionen
                 LOG_ERROR("irgendwas ist schrecklich");
                 break;
