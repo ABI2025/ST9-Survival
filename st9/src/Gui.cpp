@@ -30,6 +30,7 @@ bool init_sfml_imgui(sf::RenderWindow& window)
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
+    return true;
 }
 
 Gui::Gui(std::initializer_list<GuiElement> gui_elements) : m_elements(gui_elements)

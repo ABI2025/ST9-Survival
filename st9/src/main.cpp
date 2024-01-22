@@ -1,14 +1,3 @@
-#include <chrono>
-#include <execution>
-#include <SFML/Graphics.hpp>
-#include "Utils/Utils.h"
-#include <imgui.h>
-
-#include "Camera.h"
-#include "Game.h"
-#include "imgui-SFML.h"
-#include "Player.h"
-#include "Game.h"
 #include "Menu.h"
 
 int Main(int argc, char** argv);
@@ -35,28 +24,23 @@ int Main(int argc, char** argv)
 {
     Utils::Init();
     Menu::get()->show_menu();
-
-
-
-  //  Utils::Init();
-  //  Utils::ScopedTimer scoped_timer("scoped");
-  //std::vector<uint32_t> arr;
-  //arr.reserve(10);
-  //for (int i = 0; i < 100; i++)
-  //      arr.push_back(Utils::Random::UInt());
-  //for (int i = 0; i < 100; i++)
-  //      LOG_INFO("arr[{}]: {}", i, arr[i]);
-  //uint32_t max = 0;
-  //for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i]) ? arr[i] : max;
-  //LOG_ERROR("max: {}", max);
-  //int8_t s = 65;
-  //LOG_INFO("{0} {0} {0} {0} {0}", s);
-  //std::for_each(std::execution::par, arr.begin(), arr.end(), [](uint32_t z)
-  //{
-  //    LOG_INFO("{}", z);
-  //});
-
-   /* sf::Event event{};
+	/*  Utils::Init();
+    Utils::ScopedTimer scoped_timer("scoped");
+  std::vector<uint32_t> arr;
+  arr.reserve(10);
+  for (int i = 0; i < 100; i++)
+        arr.push_back(Utils::Random::UInt());
+  for (int i = 0; i < 100; i++)
+        LOG_INFO("arr[{}]: {}", i, arr[i]);
+  uint32_t max = 0;
+  for (uint32_t i = 0; i < arr.size(); i++) max = (i > arr[i]) ? arr[i] : max;
+  LOG_ERROR("max: {}", max);
+  int8_t s = 65;
+  LOG_INFO("{0} {0} {0} {0} {0}", s);
+  std::for_each(std::execution::par, arr.begin(), arr.end(), [](uint32_t z)
+  {
+      LOG_INFO("{}", z);
+  });sf::Event event{};
     std::string vertexShader =
         "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
@@ -208,10 +192,10 @@ int Main(int argc, char** argv)
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
         }
-        */
+        
         //window.display();
     //}
    // ImGui::SFML::Shutdown();
-
+   */
     return 0;
 }

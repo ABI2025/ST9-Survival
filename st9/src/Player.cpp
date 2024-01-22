@@ -7,7 +7,7 @@ Player::Player()
 
 {
 	m_pos = {720, 720, 0};
-    textures.resize(3);
+    textures.resize(4);
     for(auto& t: textures)
     {
         t.resize(3);
@@ -21,9 +21,13 @@ Player::Player()
     textures[1][1].loadFromFile("Resources/charakter_R1.png");
     textures[1][2].loadFromFile("Resources/charakter_R2.png");
                                             
-    textures[2][0].loadFromFile("Resources/charakter_H.png");
-    textures[2][1].loadFromFile("Resources/charakter_H1.png");
-    textures[2][2].loadFromFile("Resources/charakter_H2.png");
+    textures[2][0].loadFromFile("Resources/charakter_HL.png");
+    textures[2][1].loadFromFile("Resources/charakter_HL1.png");
+    textures[2][2].loadFromFile("Resources/charakter_HL2.png");
+
+	textures[3][0].loadFromFile("Resources/charakter_HR.png");
+    textures[3][1].loadFromFile("Resources/charakter_HR1.png");
+    textures[3][2].loadFromFile("Resources/charakter_HR2.png");
     m_sprite.setTexture(textures[0][0]);
 	
 }
@@ -34,6 +38,11 @@ void Player::update()
     int index = -1;
     glm::vec3 dir(0);
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        dir += glm::vec3(0, 1, 0);
+        index = previndex < 2 ? previndex : 0;
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         dir += glm::vec3(-1, 0, 0);
@@ -48,11 +57,6 @@ void Player::update()
     {
         dir += glm::vec3(0, -1, 0);
         index = 2;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-    {
-        dir += glm::vec3(0, 1, 0);
-        index = previndex < 2 ? previndex : 0;
     }
     if (dir != glm::vec3{ 0,0,0 }) //um undefiniertes verhalten zu verhindern und zur optimierung
     {
