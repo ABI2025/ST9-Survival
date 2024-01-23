@@ -9,6 +9,8 @@
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\GameWindow.h" />
+    <ClInclude Include="src\Gui.h" />
     <ClInclude Include="src\Menu.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Utils\Log.h">
@@ -27,13 +29,13 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\camera.h" />
-    <ClInclude Include="src\Gui.h" />
-    <ClInclude Include="src\GameWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameWindow.cpp" />
+    <ClCompile Include="src\Gui.cpp" />
     <ClCompile Include="src\Menu.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Utils\Log.cpp">
@@ -47,9 +49,5 @@
     </ClCompile>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Gui.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\GameWindow.cpp" />
   </ItemGroup>
 </Project>

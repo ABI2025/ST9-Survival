@@ -78,7 +78,7 @@ void Game::runGame(int)
             {
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Key::Escape)
-                    return;
+                    m_open = false;
             	break;
                 
             case sf::Event::Closed:
@@ -88,10 +88,13 @@ void Game::runGame(int)
         }
         p.update();
         c.move_cam_to_player();
-        m_window.clear();
-        renderMap();
+
+    	m_window.clear();
+
+    	renderMap();
         m_window.draw(p);
-        m_window.display();
+
+    	m_window.display();
     }
 }
 

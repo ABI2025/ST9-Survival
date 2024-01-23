@@ -21,6 +21,7 @@ project "st9"
 	{
       "imgui",
 		"opengl32",
+        "openal32",
 		"freetype",
 		"winmm",
 		"gdi32",

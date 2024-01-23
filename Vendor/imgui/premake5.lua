@@ -30,15 +30,18 @@ project "ImGui"
 
 	 links
 	 {
-		 "opengl32",
-		 "winmm",
-		 "gdi32",
-		 "flac",
-		 "vorbisenc",
-		 "vorbisfile",
-		 "vorbis",
-		 "ogg",
-		 "ws2_32"
+	    "opengl32",
+            "openal32",
+		    "freetype",
+		    "winmm",
+		"gdi32",
+		"flac",
+		"vorbisenc",
+		"vorbisfile",
+		"vorbis",
+		"ogg",
+		"ws2_32",
+         "legacy_stdio_definitions"
 	 }
 	includedirs
 	{
@@ -53,7 +56,7 @@ project "ImGui"
 	filter "system:linux"
 		pic "On"
 		systemversion "latest"
-		cppdialect "C++20"
+		cppdialect "C++17"
 
 	filter "configurations:Debug"
 		runtime "Debug"
@@ -63,7 +66,7 @@ project "ImGui"
 			"sfml-graphics-s-d",
 			"sfml-window-s-d",
 			"sfml-system-s-d",
-			"sfml-audio-s-d",
+            "sfml-audio-s-d",
 			"sfml-network-s-d"
 		}
 
@@ -88,6 +91,6 @@ project "ImGui"
 			"sfml-graphics-s",
 			"sfml-window-s",
 			"sfml-system-s",
-			"sfml-audio-s",
+            "sfml-audio-s",
 			"sfml-network-s"
 		}
