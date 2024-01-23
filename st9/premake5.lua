@@ -19,18 +19,19 @@ project "st9"
    libdirs { "../vendor/SFML/SFML-2.6.0/lib" }
 	links
 	{
-      "imgui",
+        "imgui",
 		"opengl32",
         "openal32",
 		"freetype",
 		"winmm",
 		"gdi32",
-		"flac",
+        "flac",
 		"vorbisenc",
 		"vorbisfile",
 		"vorbis",
 		"ogg",
-		"ws2_32"
+		"ws2_32",
+        --"legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
     }
 
    targetdir ("../bin/" .. outputdir .. "/%{prj.name}")

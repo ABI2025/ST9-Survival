@@ -30,18 +30,18 @@ project "ImGui"
 
 	 links
 	 {
-	    "opengl32",
-            "openal32",
-		    "freetype",
-		    "winmm",
+		"opengl32",
+        "openal32",
+		"freetype",
+		"winmm",
 		"gdi32",
-		"flac",
+        "flac",
 		"vorbisenc",
 		"vorbisfile",
 		"vorbis",
 		"ogg",
 		"ws2_32",
-         "legacy_stdio_definitions"
+        --"legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
 	 }
 	includedirs
 	{

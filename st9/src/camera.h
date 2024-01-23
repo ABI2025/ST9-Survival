@@ -18,7 +18,7 @@ public:
 	Player* get_player();
 	void move_cam_to_player();
 
-
+	void move_to_default();
 	void set_window_size(int x, int y);
 	void move_to_pos(int x, int y);
 	void move_to_pos(sf::Vector2f vec);
