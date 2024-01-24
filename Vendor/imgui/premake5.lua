@@ -35,13 +35,13 @@ project "ImGui"
 		"freetype",
 		"winmm",
 		"gdi32",
-        "flac",
+        --"flac",
 		"vorbisenc",
 		"vorbisfile",
 		"vorbis",
 		"ogg",
 		"ws2_32",
-        --"legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
+        "legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
 	 }
 	includedirs
 	{

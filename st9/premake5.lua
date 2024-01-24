@@ -31,7 +31,7 @@ project "st9"
 		"vorbis",
 		"ogg",
 		"ws2_32",
-        --"legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
+        "legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
     }
 
    targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
