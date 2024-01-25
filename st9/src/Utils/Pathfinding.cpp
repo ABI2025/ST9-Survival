@@ -6,9 +6,15 @@ namespace Utils {
 	Pathfinding* Pathfinding::s_instance = nullptr;
 
 
-	void Pathfinding::Init(Player* i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
+	void Pathfinding::Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
 	{
 		s_instance = new Pathfinding(i_player,i_map);
+	}
+
+	void Pathfinding::Delete()
+	{
+		delete s_instance;
+		s_instance = nullptr;
 	}
 
 
@@ -39,15 +45,15 @@ namespace Utils {
 		return { -1,-1,-1 };
 	}
 
-	void Pathfinding::find_path(const glm::vec3& dest, const glm::vec3& start)
+	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& dest, const glm::vec3& start)
 	{
-		dijkstra(dest, start);
+		return dijkstra(dest, start);
 	}
 
 
-	Pathfinding::Pathfinding(Player* i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map ): m_player(i_player), m_map(i_map)
+	Pathfinding::Pathfinding(const std::shared_ptr<Player>& i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map ): m_player(i_player), m_map(i_map)
 	{
-		for (int i = 0; i < m_map.size(); i++)
+		/*for (int i = 0; i < m_map.size(); i++)
 		{
 			std::vector<std::vector<cell>> t_vec_vec_c;
 
@@ -61,13 +67,18 @@ namespace Utils {
 				t_vec_vec_c.push_back(t_vec_c);
 			}
 			m_cellmap.push_back(t_vec_vec_c);
-		}
+		}*/
 	}
 
 	Pathfinding::~Pathfinding() = default;
 
-	void Pathfinding::dijkstra(const glm::vec3& dest, const glm::vec3& start)
+	std::vector<glm::vec3> Pathfinding::dijkstra(const glm::vec3& dest, const glm::vec3& start)
 	{
+		std::vector<std::vector<std::vector<cell>>> m_cellmap =
+			std::vector(m_map.size(),std::vector(m_map[0].size(),
+				std::vector(m_map[0][0].size(),
+				cell{{0,0,0},DBL_MAX,nullptr})));
+
 		std::vector<cell*> q_vector;
 		for(int i = 0; i < m_map.size();i++)
 		{
@@ -76,8 +87,7 @@ namespace Utils {
 				for(int k = 0; k < m_map[i][j].size(); k++)
 				{
 
-					m_cellmap[i][j][k].dist = DBL_MAX;
-					m_cellmap[i][j][k].parent = nullptr;
+					m_cellmap[i][j][k].pos = {i,j,k};
 					q_vector.push_back(&m_cellmap[i][j][k]);
 						
 				}
@@ -86,15 +96,16 @@ namespace Utils {
 		m_cellmap[start.z][start.y][start.x].dist = 0;
 		auto comp = [](const cell* c1,const cell* c2)->bool
 		{
-			return c1 > c2;
+			return c1->dist > c2->dist;
 		};
+		int i = 5;
 		while (!q_vector.empty())
 		{
 			std::sort(q_vector.begin(), q_vector.end(), comp);
 			cell* u = q_vector.back();
 			q_vector.pop_back();
-			for(cell* v : get_neighbours(u,q_vector))
-			{
+			for(cell* v : get_neighbours(u,q_vector, m_cellmap))
+			{	
 				const double dist = u->dist + get_dist(u,v);
 				if (dist < m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist)
 				{
@@ -102,8 +113,24 @@ namespace Utils {
 					m_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];
 				}
 			}
+			if(m_cellmap[dest.z][dest.y][dest.x].dist != DBL_MAX && m_cellmap[dest.z][dest.y][dest.x].parent != nullptr)
+			{
+				i--;
+
+			}
+			if (i == 0)
+				break;
 		}
 
+		std::vector<glm::vec3> bewegungsablauf;
+		cell* u = &m_cellmap[dest.z][dest.y][dest.x];
+		while(u->parent != nullptr)
+		{
+			bewegungsablauf.push_back(u->pos);
+			u = u->parent;
+		}
+		//std::ranges::reverse(bewegungsablauf);
+		return bewegungsablauf;
 	}
 
 
@@ -123,7 +150,7 @@ namespace Utils {
 	
 	static std::vector<glm::vec3> dirs({ {0,0,-1},{0,0,1},{0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
 
-	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, const std::vector<cell*>& q_vector)
+	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, const std::vector<cell*>& q_vector, std::vector<std::vector<std::vector<cell>>> m_cellmap)
 	{
 		std::vector<cell*> neighbours;
 		for(auto dir : dirs)

@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "imgui-SFML.h"
 #include "Player.h"
+#include "Enemymanager.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
@@ -46,7 +47,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	background_sprites[1].setTexture(background_textures[1]);
 	background_sprites[2].setTexture(background_textures[2]);
 	background_sprites[3].setTexture(background_textures[3]);
-
+	m_map = std::vector(1, std::vector(height * BACKGROUND_HEIGHT, std::vector(width * BACKGROUND_WIDTH, Utils::Cell::NOTHING)));
 }
 
 void Game::renderMap()
@@ -66,11 +67,17 @@ void Game::renderMap()
 
 void Game::runGame(int)
 {
-	Player p;
-	Camera c(&m_window, &p);
+	std::shared_ptr<Player> p = std::make_shared<Player>();
+	Camera c(&m_window, p.get());
 	sf::Clock deltaClock;
-
+	Utils::Pathfinding::Init(p, m_map);
+	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
+	Enemymanager ma;
 	m_tiles = erstelleMap();
+	m_window.clear();
+	renderMap();
+	m_window.display();
+	bool epilepsy = false;
 	while (m_window.isOpen() && m_open)
 	{
 		sf::Event event{};
@@ -92,13 +99,15 @@ void Game::runGame(int)
 			}
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		p.update();
+		p->update();
 		c.move_cam_to_player();
-
-		m_window.clear();
+		ma.update();
+		
+		m_window.clear(sf::Color(50,241,241));
 
 		renderMap();
-		m_window.draw(p);
+		ma.draw(m_window);
+		m_window.draw(*p);
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
 
 		m_window.display();
@@ -106,6 +115,8 @@ void Game::runGame(int)
 	m_tiles.clear();
 	m_open = true;
 	c.move_to_default();
+	pa = nullptr;
+	Utils::Pathfinding::Delete();
 
 }
 
