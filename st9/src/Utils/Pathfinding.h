@@ -34,6 +34,7 @@ namespace Utils
 		{
 			glm::vec3 pos;
 			double dist;
+			double h_dist;
 			cell* parent;
 		};
 
@@ -58,7 +59,7 @@ namespace Utils
 	private:
 		std::vector<glm::vec3> dijkstra(const glm::vec3& dest, const glm::vec3& start);
 		bool is_valid(glm::vec3) const;
-		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>> m_cellmap);
+		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap);
 		double get_dist(cell *, const cell *);
 
 	};

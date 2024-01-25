@@ -75,38 +75,54 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::dijkstra(const glm::vec3& dest, const glm::vec3& start)
 	{
+
+
+
+
 		std::vector<std::vector<std::vector<cell>>> m_cellmap =
 			std::vector(m_map.size(),std::vector(m_map[0].size(),
 				std::vector(m_map[0][0].size(),
-				cell{{0,0,0},DBL_MAX,nullptr})));
+				cell{{0,0,0},DBL_MAX,DBL_MAX,nullptr})));
 
 		std::vector<cell*> q_vector;
+
 		for(int i = 0; i < m_map.size();i++)
 		{
 			for(int j = 0; j < m_map[i].size();j++)
 			{
 				for(int k = 0; k < m_map[i][j].size(); k++)
 				{
-
-					m_cellmap[i][j][k].pos = {i,j,k};
+					m_cellmap[i][j][k].pos = { k, j, i };
+					const glm::vec3 temp = dest - glm::vec3(k, j, i);
+					m_cellmap[i][j][k].h_dist = temp.x+temp.y;
 					q_vector.push_back(&m_cellmap[i][j][k]);
 						
 				}
 			}
 		}
 		m_cellmap[start.z][start.y][start.x].dist = 0;
+
+
+
+
+
 		auto comp = [](const cell* c1,const cell* c2)->bool
 		{
-			return c1->dist > c2->dist;
+			return (c1->dist+c1->h_dist) > (c2->dist+c2->h_dist);
 		};
 		int i = 5;
 		while (!q_vector.empty())
 		{
 			std::sort(q_vector.begin(), q_vector.end(), comp);
 			cell* u = q_vector.back();
+			//LOG_DEBUG("u: addrese:  ; dist: {} ; h_dist: {} ; pos: x:{} y:{} z:{}", u->dist,u->h_dist,u->pos.x,u->pos.y, u->pos.z);
 			q_vector.pop_back();
 			for(cell* v : get_neighbours(u,q_vector, m_cellmap))
-			{	
+			{
+				//if (v->pos.z != 0)
+				//	LOG_CRITICAL("somethings fishy");
+				//LOG_DEBUG("v: addrese:  ; dist: {} ; h_dist: {} ; pos: x:{} y:{} z:{}", v->dist, v->h_dist, v->pos.x, v->pos.y, v->pos.z);
+
 				const double dist = u->dist + get_dist(u,v);
 				if (dist < m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist)
 				{
@@ -139,24 +155,26 @@ namespace Utils {
 
 	bool Pathfinding::is_valid(glm::vec3 pos) const
 	{
-		if (
-			pos.z < m_map.size() && pos.z >= 0 &&
-			pos.y < m_map[pos.z].size() && pos.y >= 0 &&
-			pos.x < m_map[pos.z][pos.y].size() && pos.x >= 0
-			)
-			return true;
-		return false;
+		if (!(pos.z < m_map.size() && pos.z >= 0 ))
+			return false;
+		if (!(pos.y < m_map[pos.z].size() && pos.y >= 0))
+			return false;
+		if (!(pos.x < m_map[pos.z][pos.y].size() && pos.x >= 0))
+			return false;
+		return true;
 		
 	}
 	
-	static std::vector<glm::vec3> dirs({ {0,0,-1},{0,0,1},{0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
-
-	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, const std::vector<cell*>& q_vector, std::vector<std::vector<std::vector<cell>>> m_cellmap)
+	static std::vector<glm::vec3> dirs({ {0,0,-1},{0,0,1}, {0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
+	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, const std::vector<cell*>& q_vector, std::vector<std::vector<std::vector<cell>>>& m_cellmap)
 	{
 		std::vector<cell*> neighbours;
+		//LOG_DEBUG("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
 		for(auto dir : dirs)
 		{
 			glm::vec3 pos = current->pos + dir;
+			//LOG_DEBUG("pos: x: {} y: {} z:{}",pos.x, pos.y, pos.z);
+			//LOG_DEBUG("is_valid pos {}", is_valid(pos));
 			if (is_valid(pos))
 				neighbours.push_back(&m_cellmap[pos.z][pos.y][pos.x]);
 
@@ -169,16 +187,20 @@ namespace Utils {
 		switch (m_map[dest->pos.z][dest->pos.y][dest->pos.x])
 		{
 		case Cell::NOTHING:
+			return 1;
 			break;
-		case Cell::WALL: 
+		case Cell::WALL:
+			return 50;
 			break;
-		case Cell::DEFENSE: 
+		case Cell::DEFENSE:
+			return 25;
 			break;
-		case Cell::STAIR: 
+		case Cell::STAIR:
+			return 1;
 			break;
 		default:
 				return 1;
 		}
-		return 0;
+		return 1;
 	}
 }

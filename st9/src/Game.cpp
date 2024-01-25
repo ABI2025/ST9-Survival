@@ -35,7 +35,7 @@ std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 
 Game::Game(sf::RenderWindow& window) :m_window(window)
 {
-	window.setFramerateLimit(60);
+	//window.setFramerateLimit(2);
 	background_textures.resize(4);
 
 	if (!background_textures[0].loadFromFile("Resources/Background1.jpg"))throw std::exception("Fehler");
@@ -49,7 +49,8 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	background_sprites[1].setTexture(background_textures[1]);
 	background_sprites[2].setTexture(background_textures[2]);
 	background_sprites[3].setTexture(background_textures[3]);
-	m_map = std::vector(1, std::vector(height * BACKGROUND_HEIGHT, std::vector(width * BACKGROUND_WIDTH, Utils::Cell::NOTHING)));
+	m_map = std::vector(1, std::vector(height *5, std::vector(width *5, Utils::Cell::NOTHING)));
+	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
 void Game::renderMap()
@@ -102,10 +103,10 @@ void Game::runGame(int)
 			}
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		p->update(t.Ellapsed());
+		p->update(t.Elapsed());
 		t.Reset();
 		c.move_cam_to_player();
-		ma.update()
+		ma.update();
 		m_window.clear();
 
 		renderMap();
