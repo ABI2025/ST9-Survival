@@ -28,10 +28,13 @@ void Menu::show_menu() {
 	if (!buffer.loadFromFile("Resources/Hitmarker.wav")) LOG_ERROR("fuck");
 	sf::Sound sound;
 	sound.setBuffer(buffer);
-	while (m_window.isOpen()) {
+	sound.setVolume(50.0f);
+	while (m_window.isOpen())
+	{
 
 		sf::Event event;
-		while (m_window.pollEvent(event)) {
+		while (m_window.pollEvent(event)) 
+		{
 			switch (event.type)
 			{
 			case sf::Event::KeyPressed:
@@ -49,34 +52,38 @@ void Menu::show_menu() {
 		sf::FloatRect mouse = { sf::Vector2f(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))), {1, 1} };
 
 		int buttonIndex = -1;
-		for (int i = 0; i < NUM_BUTTONS; ++i) {
-			if (buttons[i].first.contains(mouse.left, mouse.top)) {
+		for (int i = 0; i < NUM_BUTTONS; ++i) 
+		{
+			if (buttons[i].first.contains(mouse.left, mouse.top)) 
+			{
 				buttonIndex = i;
 				if (!buttons[i].second)
 				{
 					sound.play();
 				}
 				buttons[i].second = true;
-				break;
+				//break; //entfernt weil es theoretisch mˆglich ist, dass jemand von einem zum anderen frame von einem knopf zum andern geht.
 			}
 			else
 				buttons[i].second = false;
 		}
 
-		if (buttonIndex != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			switch (buttonIndex) {
+		if (buttonIndex != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+		{
+			switch (buttonIndex)
+			{
 			case 0: // Start-Button
 				Game::get_game()->runGame(0);
 				break;
 			case 1: // Optionen
-				LOG_ERROR("irgendwas ist schrecklich");
+				//LOG_ERROR("irgendwas ist schrecklich");
 				break;
 			case 2: // Schlieﬂen
-				LOG_DEBUG("das darfst du nicht");
+				//LOG_DEBUG("das darfst du nicht");
 				m_window.close();
 				break;
 			default:
-				LOG_DEBUG("das darf nicht sein");
+				LOG_WARN("how the ...");
 				break;
 			}
 		}
@@ -84,10 +91,11 @@ void Menu::show_menu() {
 		m_window.clear();
 
 		// Zeichne sichtbare Buttons und Labels
-		for (const auto& button : buttons) {
+		for (const auto& button : buttons) 
+		{
 			sf::RectangleShape buttonShape(sf::Vector2f(button.first.width, button.first.height));
 			buttonShape.setPosition(button.first.left, button.first.top);
-			buttonShape.setFillColor(button.second ? sf::Color::Green : sf::Color::Red); // Farbe der Buttons
+			buttonShape.setFillColor(button.second ? sf::Color(183, 65, 14) : sf::Color::Red); // Farbe der Buttons
 			m_window.draw(buttonShape);
 		}
 		drawButtonLabels(NUM_BUTTONS);
@@ -96,8 +104,10 @@ void Menu::show_menu() {
 	}
 }
 
-void Menu::drawButtonLabels(int numButtons) {
-	for (int i = 0; i < numButtons; i++) {
+void Menu::drawButtonLabels(int numButtons)
+{
+	for (int i = 0; i < numButtons; i++) 
+	{
 		sf::Text buttonText;
 		buttonText.setFont(font); // Stelle sicher, dass die Schriftart geladen ist
 		buttonText.setString(nameButton[i]); // Setze den Button-Text

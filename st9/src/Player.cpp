@@ -35,31 +35,32 @@ Player::Player()
     m_sprite.setTexture(textures[0][0][0]);
 	
 }
+
 static int i = 0;
 static int prevleft_right = 0;
 static int prevfront_back = 0;
-void Player::update()
+void Player::update(float deltatime)
 {
     int left_right = -1;
     int front_back = -1;
-	glm::vec3 dir(0);
+    glm::vec3 dir(0);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         dir += glm::vec3(0, -1, 0);
         front_back = 1;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         dir += glm::vec3(0, 1, 0);
         front_back = 0;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         dir += glm::vec3(-1, 0, 0);
         left_right = 0;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         dir += glm::vec3(1, 0, 0);
         left_right = 1;
@@ -70,18 +71,18 @@ void Player::update()
         /*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
         dir = glm::normalize(dir);
         /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
-        dir *= 5;
+        dir *= 300 * deltatime;
         m_pos += dir;
         /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
         i++;
         if (i == 1000)
             i = 0;
-        if(front_back != -1)
-			prevfront_back = front_back;
+        if (front_back != -1)
+            prevfront_back = front_back;
         if (left_right != -1)
             prevleft_right = left_right;
-        
-        if(i % 20 < 10)
+
+        if (i % 20 < 10)
         {
             m_sprite.setTexture(textures[prevfront_back][prevleft_right][1]);
         }
@@ -99,5 +100,6 @@ void Player::update()
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(m_sprite,states);
+    target.draw(m_sprite, states);
 }
+

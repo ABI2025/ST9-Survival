@@ -12,15 +12,24 @@ private:
 	sf::View m_view;
 public:
 	Camera(sf::RenderWindow* window);
+
 	Camera(sf::RenderWindow* window, Player* player);
+
 	~Camera();
+
 	void set_player(Player* player);
+
 	Player* get_player();
+
 	void move_cam_to_player();
 
 	void move_to_default();
+
 	void set_window_size(int x, int y);
+
 	void move_to_pos(int x, int y);
+
 	void move_to_pos(sf::Vector2f vec);
+
 	void move_to_pos(sf::View view);
 };

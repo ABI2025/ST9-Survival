@@ -1,4 +1,6 @@
 #include "Game.h"
+
+#include <complex>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
 #include <imgui.h>
@@ -70,6 +72,7 @@ void Game::runGame(int)
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Camera c(&m_window, p.get());
 	sf::Clock deltaClock;
+	Utils::Timer t;
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
 	Enemymanager ma;
@@ -99,11 +102,11 @@ void Game::runGame(int)
 			}
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		p->update();
+		p->update(t.Ellapsed());
+		t.Reset();
 		c.move_cam_to_player();
-		ma.update();
-		
-		m_window.clear(sf::Color(50,241,241));
+		ma.update()
+		m_window.clear();
 
 		renderMap();
 		ma.draw(m_window);
@@ -115,8 +118,8 @@ void Game::runGame(int)
 	m_tiles.clear();
 	m_open = true;
 	c.move_to_default();
-	pa = nullptr;
 	Utils::Pathfinding::Delete();
+	pa = nullptr;
 
 }
 

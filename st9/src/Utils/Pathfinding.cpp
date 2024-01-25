@@ -8,7 +8,8 @@ namespace Utils {
 
 	void Pathfinding::Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
 	{
-		s_instance = new Pathfinding(i_player,i_map);
+		if(!s_instance)
+			s_instance = new Pathfinding(i_player,i_map);
 	}
 
 	void Pathfinding::Delete()
