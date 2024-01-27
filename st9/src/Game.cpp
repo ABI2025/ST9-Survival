@@ -12,8 +12,8 @@
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 10;
-constexpr int width = 20;
+constexpr int height = 20;
+constexpr int width = 40;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 {
@@ -49,7 +49,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	background_sprites[1].setTexture(background_textures[1]);
 	background_sprites[2].setTexture(background_textures[2]);
 	background_sprites[3].setTexture(background_textures[3]);
-	m_map = std::vector(1, std::vector(height *5, std::vector(width *5, Utils::Cell::NOTHING)));
+	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
@@ -73,7 +73,8 @@ void Game::runGame(int)
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Camera c(&m_window, p.get());
 	sf::Clock deltaClock;
-	Utils::Timer t;
+	Utils::Timer player_timer;
+	Utils::Timer enemymanager_timer;
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
 	Enemymanager ma;
@@ -93,6 +94,8 @@ void Game::runGame(int)
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::Key::Escape)
 					m_open = false;
+				else if (event.key.code == sf::Keyboard::E)
+					ma.add_enemy();
 				break;
 
 			case sf::Event::Closed:
@@ -102,11 +105,13 @@ void Game::runGame(int)
 				break;
 			}
 		}
+		LOG_DEBUG("amount of enemies: {}",ma.get_enemies().size());
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		p->update(t.Elapsed());
-		t.Reset();
+		p->update(player_timer.Elapsed());
+		player_timer.Reset();
 		c.move_cam_to_player();
-		ma.update();
+		ma.update(enemymanager_timer.Elapsed());
+		enemymanager_timer.Reset();
 		m_window.clear();
 
 		renderMap();

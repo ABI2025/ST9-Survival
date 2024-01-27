@@ -8,7 +8,10 @@ class Enemymanager
 
 public:
 	Enemymanager();
-	void update();
+	void update(float deltatime);
+
+	void add_enemy();
+	std::vector<std::shared_ptr<Enemy>>& get_enemies() { return m_enemys; }
 
 	void draw(sf::RenderWindow& i_window)
 	{

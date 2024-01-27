@@ -48,7 +48,12 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& dest, const glm::vec3& start)
 	{
-		return dijkstra(dest, start);
+		if (vec3_almost_equal(round(dest),round(start)))
+		{
+			return bresenham(dest, start);
+		}
+
+		return a_star(round(dest), round(start));
 	}
 
 
@@ -73,10 +78,14 @@ namespace Utils {
 
 	Pathfinding::~Pathfinding() = default;
 
-	std::vector<glm::vec3> Pathfinding::dijkstra(const glm::vec3& dest, const glm::vec3& start)
+	std::vector<glm::vec3> Pathfinding::a_star(const glm::vec3& dest, const glm::vec3& start)
 	{
-
-
+		const glm::vec3 rounded_dest = round(dest);
+		const glm::vec3 rounded_start= round(start);
+		if(!is_valid(rounded_dest) || !is_valid(rounded_start))
+		{
+			return bresenham(dest, start);
+		}
 
 
 		std::vector<std::vector<std::vector<cell>>> m_cellmap =
@@ -93,14 +102,14 @@ namespace Utils {
 				for(int k = 0; k < m_map[i][j].size(); k++)
 				{
 					m_cellmap[i][j][k].pos = { k, j, i };
-					const glm::vec3 temp = dest - glm::vec3(k, j, i);
+					const glm::vec3 temp = rounded_dest - glm::vec3(k, j, i);
 					m_cellmap[i][j][k].h_dist = temp.x+temp.y;
 					q_vector.push_back(&m_cellmap[i][j][k]);
 						
 				}
 			}
 		}
-		m_cellmap[start.z][start.y][start.x].dist = 0;
+		m_cellmap[rounded_start.z][rounded_start.y][rounded_start.x].dist = 0;
 
 
 
@@ -130,7 +139,7 @@ namespace Utils {
 					m_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];
 				}
 			}
-			if(m_cellmap[dest.z][dest.y][dest.x].dist != DBL_MAX && m_cellmap[dest.z][dest.y][dest.x].parent != nullptr)
+			if(m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x].dist != DBL_MAX && m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x].parent != nullptr)
 			{
 				i--;
 
@@ -140,17 +149,91 @@ namespace Utils {
 		}
 
 		std::vector<glm::vec3> bewegungsablauf;
-		cell* u = &m_cellmap[dest.z][dest.y][dest.x];
-		while(u->parent != nullptr)
+		cell* u = &m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x];
+		constexpr double epsilon = 1e-6;
+
+		//for (int i = 0; i < (std::abs(rounded_start.y - u->pos.y) < epsilon ? 1 : 135); i++)
+		//{
+
+		//	for (int j = 0; j < (std::abs(rounded_start.x - u->pos.x) < epsilon ? 1 : 135); j++)
+		//	{
+
+		//		bewegungsablauf.push_back((start * 135.0f) - glm::vec3{ rounded_start.x > u->pos.x ? j : -j, rounded_start.y > u->pos.y ? i : -i,0 });
+		//	}
+
+		//}
+		while (u->parent != nullptr)
 		{
-			bewegungsablauf.push_back(u->pos);
+			for (int i = 0; i < (std::abs(u->parent->pos.y - u->pos.y) < epsilon ? 1 : 135); i++)
+			{
+					
+				for (int j = 0; j < (std::abs(u->parent->pos.x - u->pos.x) < epsilon ? 1 : 135); j++)
+				{
+					
+					bewegungsablauf.push_back((u->pos * 135.0f) - glm::vec3{ u->pos.x > u->parent->pos.x ? j : -j, u->pos.y > u->parent->pos.y ? i : -i,0 });
+				}
+				
+			}
 			u = u->parent;
 		}
 		//std::ranges::reverse(bewegungsablauf);
 		return bewegungsablauf;
 	}
 
+	std::vector<glm::vec3> Pathfinding::bresenham(const glm::vec3& dest, const glm::vec3& start)
+	{
+		glm::vec3 temp_dest = round(dest * (135.0f));
+		glm::vec3 temp_start = round(start * (135.0f));
+		
+		bool swapped = false;
+		std::vector<glm::vec3> route;
+		{
+			int x1 = static_cast<int>(temp_start.x);
+			int y1 = static_cast<int>(temp_start.y);
+			int x2 = static_cast<int>(temp_dest.x);
+			int y2 = static_cast<int>(temp_dest.y);
 
+			// Ensure (x1, y1) is the point with the smaller x-coordinate
+			if (x1 > x2) {
+				swapped = true;
+				std::swap(x1, x2);
+				std::swap(y1, y2);
+			}
+
+			int dx = abs(x2 - x1);
+			int dy = abs(y2 - y1);
+			int sx = (x1 < x2) ? 1 : -1;
+			int sy = (y1 < y2) ? 1 : -1;
+
+			int err = dx - dy;
+
+			while (true) {
+				// Save the current point (x1, y1) to the vector
+				route.push_back(glm::vec3(x1, y1, 0.0f));
+
+				if (x1 == x2 && y1 == y2) {
+					break;
+				}
+
+				int err2 = 2 * err;
+
+				if (err2 > -dy) {
+					err -= dy;
+					x1 += sx;
+				}
+
+				if (err2 < dx) {
+					err += dx;
+					y1 += sy;
+				}
+			}
+		}
+		if (!swapped)
+		{
+			std::reverse(route.begin(), route.end());
+		}
+		return route;
+	}
 
 
 	bool Pathfinding::is_valid(glm::vec3 pos) const
