@@ -10,6 +10,7 @@ class Game
 {
 public:
 	void renderMap();
+	void render_Tower();
 	static void erstelleGame(sf::RenderWindow&);
 	static Game* get_game();
 

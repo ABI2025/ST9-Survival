@@ -48,7 +48,7 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& dest, const glm::vec3& start)
 	{
-		if (vec3_almost_equal(round(dest),round(start)))
+		if (vec3_almost_equal(round(dest / 135.0f),round(start / 135.0f)))
 		{
 			return bresenham(dest, start);
 		}
@@ -80,8 +80,8 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::a_star(const glm::vec3& dest, const glm::vec3& start)
 	{
-		const glm::vec3 rounded_dest = round(dest);
-		const glm::vec3 rounded_start= round(start);
+		const glm::vec3 rounded_dest = round(dest /135.0f);
+		const glm::vec3 rounded_start= round(start /135.0f);
 		if(!is_valid(rounded_dest) || !is_valid(rounded_start))
 		{
 			return bresenham(dest, start);
@@ -152,29 +152,27 @@ namespace Utils {
 		cell* u = &m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x];
 		constexpr double epsilon = 1e-6;
 
-		//for (int i = 0; i < (std::abs(rounded_start.y - u->pos.y) < epsilon ? 1 : 135); i++)
-		//{
-
-		//	for (int j = 0; j < (std::abs(rounded_start.x - u->pos.x) < epsilon ? 1 : 135); j++)
-		//	{
-
-		//		bewegungsablauf.push_back((start * 135.0f) - glm::vec3{ rounded_start.x > u->pos.x ? j : -j, rounded_start.y > u->pos.y ? i : -i,0 });
-		//	}
-
-		//}
-		while (u->parent != nullptr)
+		while (u->parent->parent != nullptr)
 		{
-			for (int i = 0; i < (std::abs(u->parent->pos.y - u->pos.y) < epsilon ? 1 : 135); i++)
+			for (auto pos : bresenham(u->pos * 135.0f, u->parent->pos * 135.0f))
 			{
-					
-				for (int j = 0; j < (std::abs(u->parent->pos.x - u->pos.x) < epsilon ? 1 : 135); j++)
-				{
-					
-					bewegungsablauf.push_back((u->pos * 135.0f) - glm::vec3{ u->pos.x > u->parent->pos.x ? j : -j, u->pos.y > u->parent->pos.y ? i : -i,0 });
-				}
-				
+				bewegungsablauf.push_back(pos);
 			}
+			//for (int i = 0; i < (std::abs(u->parent->pos.y - u->pos.y) < epsilon ? 1 : 135); i++)
+			//{
+			//		
+			//	for (int j = 0; j < (std::abs(u->parent->pos.x - u->pos.x) < epsilon ? 1 : 135); j++)
+			//	{
+			//		
+			//		bewegungsablauf.push_back((u->pos * 135.0f) - glm::vec3{ u->pos.x > u->parent->pos.x ? j : -j, u->pos.y > u->parent->pos.y ? i : -i,0 });
+			//	}
+			//	
+			//}
 			u = u->parent;
+		}
+		for(auto pos : bresenham(u->pos * 135.0f,start))
+		{
+			bewegungsablauf.push_back(pos);
 		}
 		//std::ranges::reverse(bewegungsablauf);
 		return bewegungsablauf;
@@ -182,8 +180,8 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::bresenham(const glm::vec3& dest, const glm::vec3& start)
 	{
-		glm::vec3 temp_dest = round(dest * (135.0f));
-		glm::vec3 temp_start = round(start * (135.0f));
+		glm::vec3 temp_dest = round(dest);
+		glm::vec3 temp_start = round(start);
 		
 		bool swapped = false;
 		std::vector<glm::vec3> route;
@@ -209,7 +207,7 @@ namespace Utils {
 
 			while (true) {
 				// Save the current point (x1, y1) to the vector
-				route.push_back(glm::vec3(x1, y1, 0.0f));
+				route.emplace_back(x1, y1, 0.0f);
 
 				if (x1 == x2 && y1 == y2) {
 					break;
@@ -250,7 +248,7 @@ namespace Utils {
 	
 	static std::vector<glm::vec3> dirs({ {0,0,-1},{0,0,1}, {0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
 	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, const std::vector<cell*>& q_vector, std::vector<std::vector<std::vector<cell>>>& m_cellmap)
-	{
+	{ 
 		std::vector<cell*> neighbours;
 		//LOG_DEBUG("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
 		for(auto dir : dirs)

@@ -56,10 +56,10 @@ namespace Utils
 			std::vector<glm::vec3> find_path(const glm::vec3& dest, const glm::vec3& start);
 			//private methods
 					
+			bool is_valid(glm::vec3) const;
 	private:
 		std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start);
 		std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start);
-		bool is_valid(glm::vec3) const;
 		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap);
 		double get_dist(cell *, const cell *);
 

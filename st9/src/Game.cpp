@@ -50,6 +50,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	background_sprites[2].setTexture(background_textures[2]);
 	background_sprites[3].setTexture(background_textures[3]);
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
+
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
@@ -67,7 +68,23 @@ void Game::renderMap()
 
 }
 
+void Game::render_Tower()
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			
+			if (m_map[0][j][i] != Utils::Cell::NOTHING) {
+				sf::RectangleShape rect (sf::Vector2<float>{120,120});
+				rect.setPosition(i * 135, j * 135);
+				
+				m_window.draw(rect);
+			}
+		}
+	}
 
+}
 void Game::runGame(int)
 {
 	std::shared_ptr<Player> p = std::make_shared<Player>();
@@ -83,6 +100,7 @@ void Game::runGame(int)
 	renderMap();
 	m_window.display();
 	bool epilepsy = false;
+
 	while (m_window.isOpen() && m_open)
 	{
 		sf::Event event{};
@@ -94,7 +112,7 @@ void Game::runGame(int)
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::Key::Escape)
 					m_open = false;
-				else if (event.key.code == sf::Keyboard::E)
+				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
 				break;
 
@@ -107,6 +125,26 @@ void Game::runGame(int)
 		}
 		LOG_DEBUG("amount of enemies: {}",ma.get_enemies().size());
 		ImGui::SFML::Update(m_window, deltaClock.restart());
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left) )
+		{
+			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
+			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
+			{
+				m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::WALL;
+
+			}
+		}
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Right) )
+		{
+			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
+			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
+			{
+				m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::NOTHING;
+
+			}
+		}
 		p->update(player_timer.Elapsed());
 		player_timer.Reset();
 		c.move_cam_to_player();
@@ -115,8 +153,11 @@ void Game::runGame(int)
 		m_window.clear();
 
 		renderMap();
+		render_Tower();
 		ma.draw(m_window);
 		m_window.draw(*p);
+		
+
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
 
 		m_window.display();

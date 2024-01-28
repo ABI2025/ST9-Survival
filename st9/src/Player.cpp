@@ -2,11 +2,15 @@
 
 #include <iostream>
 
+#include "Enemymanager.h"
+
 Player::Player()
 	: Entity()
 
 {
 	m_pos = {720, 720, 0};
+    cell_pos = m_pos / 135.0f;
+    prev_cell_pos = m_pos / 135.0f;
     textures.resize(2);
     for(auto& t: textures)
     {
@@ -41,10 +45,14 @@ static int prevleft_right = 0;
 static int prevfront_back = 0;
 void Player::update(float deltatime)
 {
+    double speed_scalar = 1.0f;
     int left_right = -1;
     int front_back = -1;
     glm::vec3 dir(0);
-
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+    {
+        speed_scalar = 1.5f;
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         dir += glm::vec3(0, -1, 0);
@@ -67,14 +75,27 @@ void Player::update(float deltatime)
     }
     if (dir != glm::vec3{ 0,0,0 }) //um undefiniertes verhalten zu verhindern und zur optimierung
     {
-
-        /*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
         dir = glm::normalize(dir);
         /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
-        dir *= 300 * deltatime;
+        dir *= 300 * speed_scalar * deltatime;
         m_pos += dir;
         /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
-        i++;
+
+        //cell_pos = m_pos;
+        if (prev_pos != m_pos)
+        {
+            prev_pos = m_pos;
+            Enemymanager::set_player_moving(true);
+        }
+        else
+            Enemymanager::set_player_moving(false);
+
+
+
+        /*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
+
+
+    	i++;
         if (i == 1000)
             i = 0;
         if (front_back != -1)
@@ -93,6 +114,7 @@ void Player::update(float deltatime)
     }
     else
     {
+        Enemymanager::set_player_moving(false);
         m_sprite.setTexture(textures[prevfront_back][prevleft_right][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
