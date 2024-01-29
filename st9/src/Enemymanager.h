@@ -14,12 +14,6 @@ public:
 	void add_enemy();
 	std::vector<std::shared_ptr<Enemy>>& get_enemies() { return m_enemys; }
 
-	void draw(sf::RenderWindow& i_window)
-	{
-		for (auto m : m_enemys)
-		{
-			i_window.draw(*m);
-		}
-	}
+	void draw(sf::RenderWindow& i_window) const;
 };
 

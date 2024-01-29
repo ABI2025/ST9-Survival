@@ -45,7 +45,7 @@ static int prevleft_right = 0;
 static int prevfront_back = 0;
 void Player::update(float deltatime)
 {
-    double speed_scalar = 1.0f;
+    float speed_scalar = 1.0f;
     int left_right = -1;
     int front_back = -1;
     glm::vec3 dir(0);
@@ -55,30 +55,81 @@ void Player::update(float deltatime)
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        dir += glm::vec3(0, -1, 0);
+        //if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ 0.0f,-1.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
+        //{
+            //if (Utils::Pathfinding::get_instance()->get_map()[0][(m_pos.y - 1 * 300.0f * deltatime * speed_scalar) / 135][m_pos.x / 135] != Utils::Cell::WALL)
+            //{
+                //dir += glm::vec3(0, -1, 0);
+            //}
+        //}
+       //else
+        //{
+            dir += glm::vec3(0, -1, 0);
+        //}
+
         front_back = 1;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        dir += glm::vec3(0, 1, 0);
+
+        //if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ 0.0f,1.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
+        //{
+         //   if (Utils::Pathfinding::get_instance()->get_map()[0][(m_pos.y + 1 * 300.0f * deltatime * speed_scalar) / 135][m_pos.x / 135] != Utils::Cell::WALL)
+          //  {
+           //     dir += glm::vec3(0, 1, 0);
+                // }
+        //}
+        //else
+        //{
+            dir += glm::vec3(0, 1, 0);
+            // }
+
         front_back = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        dir += glm::vec3(-1, 0, 0);
+
+       // if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ -1.0f,0.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
+       // {
+       //     if (Utils::Pathfinding::get_instance()->get_map()[0][m_pos.y / 135][(m_pos.x - 1 * 300.0f * deltatime * speed_scalar) / 135] != Utils::Cell::WALL)
+       //     {
+        //    	dir += glm::vec3(-1, 0, 0);
+      //      }
+      //          
+      //  }
+      //  else
+      //  {
+            dir += glm::vec3(-1, 0, 0);
+            //  }
+
         left_right = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        dir += glm::vec3(1, 0, 0);
+       //if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ 1.0f,0.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
+       //{
+       //    if (Utils::Pathfinding::get_instance()->get_map()[0][m_pos.y / 135][(m_pos.x + 1 * 300.0f * deltatime * speed_scalar) / 135] != Utils::Cell::WALL)
+       //    {
+       //        dir += glm::vec3(1, 0, 0);
+       //    }
+       //
+       //}
+       //else
+       //{
+          dir += glm::vec3(1, 0, 0);
+       //}
+
         left_right = 1;
     }
+
+
     if (dir != glm::vec3{ 0,0,0 }) //um undefiniertes verhalten zu verhindern und zur optimierung
     {
         dir = glm::normalize(dir);
         /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
         dir *= 300 * speed_scalar * deltatime;
         m_pos += dir;
+
         /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
 
         //cell_pos = m_pos;

@@ -29,7 +29,7 @@ void Menu::show_menu() {
 	sf::Sound sound;
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);
-	m_window.setFramerateLimit(30);
+	m_window.setFramerateLimit(60);
 	while (m_window.isOpen())
 	{
 

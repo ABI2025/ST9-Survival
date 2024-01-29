@@ -92,8 +92,11 @@ void Game::runGame(int)
 	sf::Clock deltaClock;
 	Utils::Timer player_timer;
 	Utils::Timer enemymanager_timer;
+	Utils::Timer frame_timer;
+
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
+
 	Enemymanager ma;
 	m_tiles = erstelleMap();
 	m_window.clear();
@@ -145,11 +148,25 @@ void Game::runGame(int)
 
 			}
 		}
+
 		p->update(player_timer.Elapsed());
+
 		player_timer.Reset();
-		c.move_cam_to_player();
+
 		ma.update(enemymanager_timer.Elapsed());
 		enemymanager_timer.Reset();
+
+		{
+			ImGui::Begin("DEBUG WINDOW");
+
+			ImGui::TextWrapped("MS: %f FPS: %f", frame_timer.ElapsedMillis(), 1/frame_timer.Elapsed());
+			frame_timer.Reset();
+
+			ImGui::End();
+		}
+
+
+		c.move_cam_to_player();
 		m_window.clear();
 
 		renderMap();

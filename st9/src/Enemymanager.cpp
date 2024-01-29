@@ -98,6 +98,14 @@ void Enemymanager::update(float deltatime)
 			++it;
 		}
 	}
+	constexpr float epsilon = 1e-6;
+
+	auto comp = [](std::shared_ptr<Enemy>& e1, std::shared_ptr<Enemy>& e2)
+		{
+			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos,epsilon);
+		};
+
+	std::ranges::sort(m_enemys, comp);
 	if (con_dt > 1)
 		con_dt = 0;
 	if (curr_frame == 1200)
@@ -110,4 +118,25 @@ void Enemymanager::add_enemy()
 {
 	m_enemys.push_back(std::make_shared<Enemy>());
 	m_enemys.back()->id = 0;
+}
+void Enemymanager::draw(sf::RenderWindow& i_window) const
+{
+#ifndef DIST
+	int counter = 0;
+#endif
+	glm::vec3 prev_pos (-1);
+	for (const auto& m : m_enemys)
+	{
+		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6))
+		{
+#ifndef DIST
+			counter++;
+#endif
+			i_window.draw(*m);
+		}
+		prev_pos = m->m_pos;
+	}
+#ifndef DIST
+	LOG_INFO("{} enemies drawn", counter);
+#endif
 }
