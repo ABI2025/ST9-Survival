@@ -7,7 +7,7 @@
 constexpr int NUM_BUTTONS = 3;
 
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
-	nameButton = { "Start","Options","Exit" };
+	m_name_button = { "Start","Options","Exit" };
 	init_sfml_imgui(m_window);
 	font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
 	// Initialisiere Buttons direkt im Konstruktor
@@ -23,7 +23,7 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
 }
 
 void Menu::show_menu() {
-	Game::erstelleGame(m_window);
+	Game::erstelle_game(m_window);
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("Resources/Hitmarker.wav")) LOG_ERROR("fuck");
 	sf::Sound sound;
@@ -74,7 +74,7 @@ void Menu::show_menu() {
 			switch (buttonIndex)
 			{
 			case 0: // Start-Button
-				Game::get_game()->runGame(0);
+				Game::get_game()->run_game(0);
 				break;
 			case 1: // Optionen
 				//LOG_ERROR("irgendwas ist schrecklich");
@@ -99,19 +99,19 @@ void Menu::show_menu() {
 			buttonShape.setFillColor(button.second ? sf::Color(183, 65, 14) : sf::Color::Red); // Farbe der Buttons
 			m_window.draw(buttonShape);
 		}
-		drawButtonLabels(NUM_BUTTONS);
+		draw_button_labels(NUM_BUTTONS);
 
 		m_window.display();
 	}
 }
 
-void Menu::drawButtonLabels(int numButtons)
+void Menu::draw_button_labels(int numButtons)
 {
 	for (int i = 0; i < numButtons; i++) 
 	{
 		sf::Text buttonText;
 		buttonText.setFont(font); // Stelle sicher, dass die Schriftart geladen ist
-		buttonText.setString(nameButton[i]); // Setze den Button-Text
+		buttonText.setString(m_name_button[i]); // Setze den Button-Text
 		buttonText.setCharacterSize(24); // Wähle eine Textgröße
 		buttonText.setPosition(buttons[i].first.left + 20, buttons[i].first.top + 10); // Positioniere den Text innerhalb des Buttons
 		buttonText.setFillColor(sf::Color::White); // Textfarbe

@@ -36,39 +36,39 @@ std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 Game::Game(sf::RenderWindow& window) :m_window(window)
 {
 	//window.setFramerateLimit(2);
-	background_textures.resize(4);
+	m_background_textures.resize(4);
 
-	if (!background_textures[0].loadFromFile("Resources/Background1.jpg"))throw std::exception("Fehler");
-	if (!background_textures[1].loadFromFile("Resources/Background2.jpg"))throw std::exception("Fehler");
-	if (!background_textures[2].loadFromFile("Resources/Background3.jpg"))throw std::exception("Fehler");
-	if (!background_textures[3].loadFromFile("Resources/Background4.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[0].loadFromFile("Resources/Background1.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[1].loadFromFile("Resources/Background2.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[2].loadFromFile("Resources/Background3.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[3].loadFromFile("Resources/Background4.jpg"))throw std::exception("Fehler");
 
-	background_sprites.resize(4);
+	m_background_sprites.resize(4);
 
-	background_sprites[0].setTexture(background_textures[0]);
-	background_sprites[1].setTexture(background_textures[1]);
-	background_sprites[2].setTexture(background_textures[2]);
-	background_sprites[3].setTexture(background_textures[3]);
+	m_background_sprites[0].setTexture(m_background_textures[0]);
+	m_background_sprites[1].setTexture(m_background_textures[1]);
+	m_background_sprites[2].setTexture(m_background_textures[2]);
+	m_background_sprites[3].setTexture(m_background_textures[3]);
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
-void Game::renderMap()
+void Game::render_map()
 {
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
 		{
-			background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
-			m_window.draw(background_sprites[m_tiles[i][j][0]]);
+			m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
+			m_window.draw(m_background_sprites[m_tiles[i][j][0]]);
 		}
 	}
 
 
 }
 
-void Game::render_Tower()
+void Game::render_tower()
 {
 	for (int i = 0; i < width; i++)
 	{
@@ -85,7 +85,7 @@ void Game::render_Tower()
 	}
 
 }
-void Game::runGame(int)
+void Game::run_game(int)
 {
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Camera c(&m_window, p.get());
@@ -100,7 +100,7 @@ void Game::runGame(int)
 	Enemymanager ma;
 	m_tiles = erstelleMap();
 	m_window.clear();
-	renderMap();
+	render_map();
 	m_window.display();
 	bool epilepsy = false;
 
@@ -169,8 +169,8 @@ void Game::runGame(int)
 		c.move_cam_to_player();
 		m_window.clear();
 
-		renderMap();
-		render_Tower();
+		render_map();
+		render_tower();
 		ma.draw(m_window);
 		m_window.draw(*p);
 		
@@ -187,7 +187,7 @@ void Game::runGame(int)
 
 }
 
-void Game::erstelleGame(sf::RenderWindow& i_window)
+void Game::erstelle_game(sf::RenderWindow& i_window)
 {
 	if (!s_game)
 		s_game = new Game(i_window);
@@ -198,7 +198,7 @@ Game* Game::get_game()
 	return s_game;
 }
 
-void Game::setMap(Utils::Cell& cell, int x, int y, int z) {
+void Game::set_map(Utils::Cell& cell, int x, int y, int z) {
 	if (
 		z < m_map.size() && z >= 0 &&
 		y < m_map[z].size() && y >= 0 &&

@@ -4,27 +4,27 @@
 Enemymanager::Enemymanager()
 {
 	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[0]->id = 0;
+	//m_enemys[0]->m_id = 0;
 
 	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[1]->id = 0;
+	//m_enemys[1]->m_id = 0;
 	//m_enemys[1]->m_pos = {135,135,0};
 
 
 	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[2]->id = 0;
+	//m_enemys[2]->m_id = 0;
 	//m_enemys[2]->m_pos = { 135*3,135*3,0 };
 
 	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[3]->id = 0;
+	//m_enemys[3]->m_id = 0;
 
 	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[4]->id = 0;
+	//m_enemys[4]->m_id = 0;
 	//m_enemys[4]->m_pos = {135,135,0};
 
 
 	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[5]->id = 0;
+	//m_enemys[5]->m_id = 0;
 	//m_enemys[5]->m_pos = { 135*3,135*3,0 };
 
 	textures.resize(1);
@@ -44,7 +44,7 @@ void Enemymanager::update(float deltatime)
 			{
 				if (e == nullptr)
 					return;
-				if (e->hp <= 0)
+				if (e->m_hp <= 0)
 				{
 					e->die();
 					e.reset();
@@ -52,9 +52,9 @@ void Enemymanager::update(float deltatime)
 				}
 
 			}
-			if (e->m_movements.empty() == true || (player_moving))
+			if (e->m_movements.empty() == true || (s_player_moving))
 			{
-				//e->hp--;
+				//e->m_hp--;
 				glm::vec3 player = Utils::Pathfinding::get_instance()->find_nearest(e->m_pos, Utils::Priority::player);
 				/*player.x /= 135;
 				player.y /= 135;*/
@@ -117,7 +117,7 @@ void Enemymanager::update(float deltatime)
 void Enemymanager::add_enemy()
 {
 	m_enemys.push_back(std::make_shared<Enemy>());
-	m_enemys.back()->id = 0;
+	m_enemys.back()->m_id = 0;
 }
 void Enemymanager::draw(sf::RenderWindow& i_window) const
 {

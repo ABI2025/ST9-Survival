@@ -11,8 +11,8 @@ Player::Player()
 	m_pos = {720, 720, 0};
     cell_pos = m_pos / 135.0f;
     prev_cell_pos = m_pos / 135.0f;
-    textures.resize(2);
-    for(auto& t: textures)
+    m_textures.resize(2);
+    for(auto& t: m_textures)
     {
         t.resize(3);
 			for(auto& tt :t)
@@ -21,22 +21,22 @@ Player::Player()
 			}
     }
 
-    textures[0][0][0].loadFromFile("Resources/charakter_L.png");
-    textures[0][0][1].loadFromFile("Resources/charakter_L1.png");
-    textures[0][0][2].loadFromFile("Resources/charakter_L2.png");
+    m_textures[0][0][0].loadFromFile("Resources/charakter_L.png");
+    m_textures[0][0][1].loadFromFile("Resources/charakter_L1.png");
+    m_textures[0][0][2].loadFromFile("Resources/charakter_L2.png");
                                             
-    textures[0][1][0].loadFromFile("Resources/charakter_R.png");
-    textures[0][1][1].loadFromFile("Resources/charakter_R1.png");
-    textures[0][1][2].loadFromFile("Resources/charakter_R2.png");
+    m_textures[0][1][0].loadFromFile("Resources/charakter_R.png");
+    m_textures[0][1][1].loadFromFile("Resources/charakter_R1.png");
+    m_textures[0][1][2].loadFromFile("Resources/charakter_R2.png");
                                             
-    textures[1][0][0].loadFromFile("Resources/charakter_HL.png");
-    textures[1][0][1].loadFromFile("Resources/charakter_HL1.png");
-    textures[1][0][2].loadFromFile("Resources/charakter_HL2.png");
+    m_textures[1][0][0].loadFromFile("Resources/charakter_HL.png");
+    m_textures[1][0][1].loadFromFile("Resources/charakter_HL1.png");
+    m_textures[1][0][2].loadFromFile("Resources/charakter_HL2.png");
 
-	textures[1][1][0].loadFromFile("Resources/charakter_HR.png");
-    textures[1][1][1].loadFromFile("Resources/charakter_HR1.png");
-    textures[1][1][2].loadFromFile("Resources/charakter_HR2.png");
-    m_sprite.setTexture(textures[0][0][0]);
+	m_textures[1][1][0].loadFromFile("Resources/charakter_HR.png");
+    m_textures[1][1][1].loadFromFile("Resources/charakter_HR1.png");
+    m_textures[1][1][2].loadFromFile("Resources/charakter_HR2.png");
+    m_sprite.setTexture(m_textures[0][0][0]);
 	
 }
 
@@ -156,17 +156,17 @@ void Player::update(float deltatime)
 
         if (i % 20 < 10)
         {
-            m_sprite.setTexture(textures[prevfront_back][prevleft_right][1]);
+            m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][1]);
         }
         else
         {
-            m_sprite.setTexture(textures[prevfront_back][prevleft_right][2]);
+            m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][2]);
         }
     }
     else
     {
         Enemymanager::set_player_moving(false);
-        m_sprite.setTexture(textures[prevfront_back][prevleft_right][0]);
+        m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
 }

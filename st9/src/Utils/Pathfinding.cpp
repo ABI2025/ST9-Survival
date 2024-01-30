@@ -207,6 +207,7 @@ namespace Utils {
 
 			while (true) {
 				// Save the current point (x1, y1) to the vector
+
 				route.emplace_back(x1, y1, 0.0f);
 
 				if (x1 == x2 && y1 == y2) {
@@ -257,7 +258,7 @@ namespace Utils {
 			//LOG_DEBUG("pos: x: {} y: {} z:{}",pos.x, pos.y, pos.z);
 			//LOG_DEBUG("is_valid pos {}", is_valid(pos));
 			if (is_valid(pos))
-				neighbours.push_back(&m_cellmap[pos.z][pos.y][pos.x]);
+				neighbours.push_back(&m_cellmap[(pos.z)][pos.y][pos.x]);
 
 		}
 		return neighbours;
@@ -267,20 +268,16 @@ namespace Utils {
 	{
 		switch (m_map[dest->pos.z][dest->pos.y][dest->pos.x])
 		{
-		case Cell::NOTHING:
-			return 1;
-			break;
-		case Cell::WALL:
-			return 50;
-			break;
-		case Cell::DEFENSE:
-			return 25;
-			break;
+		case Cell::NOTHING: // fallthrough
 		case Cell::STAIR:
 			return 1;
-			break;
-		default:
-				return 1;
+
+		case Cell::DEFENSE:
+			return 2;
+
+		case Cell::WALL:
+			return 5;
+
 		}
 		return 1;
 	}
