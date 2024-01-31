@@ -29,6 +29,7 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\Tower.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
@@ -49,5 +50,6 @@
     </ClCompile>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Tower.cpp" />
   </ItemGroup>
 </Project>
