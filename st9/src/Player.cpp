@@ -44,22 +44,22 @@ void Player::update()
     int front_back = -1;
 	glm::vec3 dir(0);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         dir += glm::vec3(0, -1, 0);
         front_back = 1;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         dir += glm::vec3(0, 1, 0);
         front_back = 0;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         dir += glm::vec3(-1, 0, 0);
         left_right = 0;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         dir += glm::vec3(1, 0, 0);
         left_right = 1;
