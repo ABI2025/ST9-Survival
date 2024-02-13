@@ -30,6 +30,7 @@
     </ClInclude>
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\Tower.h" />
+    <ClInclude Include="MainBuilding.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
@@ -51,5 +52,6 @@
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tower.cpp" />
+    <ClCompile Include="MainBuilding.cpp" />
   </ItemGroup>
 </Project>
