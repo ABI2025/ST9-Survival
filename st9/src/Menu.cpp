@@ -4,8 +4,8 @@
 #include "Gui.h"
 #include "../Resources/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
-constexpr int NUM_BUTTONS = 3;
 
+constexpr int NUM_BUTTONS = 3;
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
 	m_name_button = { "Start","Options","Exit" };
 	init_sfml_imgui(m_window);

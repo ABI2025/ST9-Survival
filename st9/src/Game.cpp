@@ -159,7 +159,7 @@ void Game::run_game(int)
 		{
 			ImGui::Begin("DEBUG WINDOW");
 
-			ImGui::TextWrapped("MS: %f FPS: %f", frame_timer.ElapsedMillis(), 1/frame_timer.Elapsed());
+			ImGui::TextWrapped("MS: %f FPS: %2.2f", frame_timer.ElapsedMillis(), 1/frame_timer.Elapsed());
 			frame_timer.Reset();
 
 			ImGui::End();

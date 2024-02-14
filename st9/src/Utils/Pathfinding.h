@@ -46,14 +46,32 @@ namespace Utils
 
 		//public methods
 	public:
-			//Init nimmt die Karte und den Player an und speichert sie als referenzen
+			/*
+			* Init nimmt die Karte und den Player an und speichert sie als referenzen
+			* 
+			*
+			*
+			 */
 			static void Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Cell>>>& i_map);
+
+			//die klasse löschen, damit keine artifakte und sonstiges dableiben
 			static void Delete();
-			static void Init(Player* i_player, std::vector<std::vector<std::vector<Cell>>>& i_map);
+
 			//Bevor get_instance gerufen wird, erstmal Init Rufen
 			static Pathfinding* get_instance();
+
+			
 			std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
+
 			glm::vec3 find_nearest(const glm::vec3& start, Priority priority);
+
+			/*
+			* dest ist das Ziel 
+			*
+			*
+			* start ist der anfang (position vom gegner / entity)
+			*
+			*/
 			std::vector<glm::vec3> find_path(const glm::vec3& dest, const glm::vec3& start);
 			//private methods
 					

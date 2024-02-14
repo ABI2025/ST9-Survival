@@ -82,6 +82,7 @@ namespace Utils {
 	{
 		const glm::vec3 rounded_dest = round(dest /135.0f);
 		const glm::vec3 rounded_start= round(start /135.0f);
+
 		if(!is_valid(rounded_dest) || !is_valid(rounded_start))
 		{
 			return bresenham(dest, start);
@@ -93,64 +94,58 @@ namespace Utils {
 				std::vector(m_map[0][0].size(),
 				cell{{0,0,0},DBL_MAX,DBL_MAX,nullptr})));
 
-		std::vector<cell*> q_vector;
+		std::vector<cell*> q_vector; //eigentlich sollte man eine priority
+		//queue nutzen aber es gibt damit probleme deshalb
+		//ein vector und jedes mal sortiert kommt aufs selbe hinaus wie mit ner priority queue
 
-		for(int i = 0; i < m_map.size();i++)
+		//alle positonen werden in q_vector geladen könnte noch mal optimiert werden
+		for(int i = 0; i < m_map.size();i++) // z
 		{
-			for(int j = 0; j < m_map[i].size();j++)
+			for(int j = 0; j < m_map[i].size();j++) // y
 			{
-				for(int k = 0; k < m_map[i][j].size(); k++)
+				for(int k = 0; k < m_map[i][j].size(); k++) // x
 				{
-					m_cellmap[i][j][k].pos = { k, j, i };
-					const glm::vec3 temp = rounded_dest - glm::vec3(k, j, i);
-					m_cellmap[i][j][k].h_dist = temp.x+temp.y;
-					q_vector.push_back(&m_cellmap[i][j][k]);
+					m_cellmap[i][j][k].pos = { k, j, i }; // x y z 
+					const glm::vec3 temp = rounded_dest - glm::vec3(k, j, i); 
+					m_cellmap[i][j][k].h_dist = temp.x+temp.y; // h_dist ist die manhatten distanz zwischen einem punkt und der destination
+					q_vector.push_back(&m_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
 						
 				}
 			}
 		}
-		m_cellmap[rounded_start.z][rounded_start.y][rounded_start.x].dist = 0;
 
+		m_cellmap[rounded_start.z][rounded_start.y][rounded_start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
 
-
-
-
-		auto comp = [](const cell* c1,const cell* c2)->bool
+		auto comp = [](const cell* c1,const cell* c2)->bool //eine funktion um die zellen mit einander zu vergleichen
 		{
 			return (c1->dist+c1->h_dist) > (c2->dist+c2->h_dist);
 		};
+
 		int i = 5;
 		while (!q_vector.empty())
 		{
-			std::sort(q_vector.begin(), q_vector.end(), comp);
-			cell* u = q_vector.back();
-			//LOG_DEBUG("u: addrese:  ; dist: {} ; h_dist: {} ; pos: x:{} y:{} z:{}", u->dist,u->h_dist,u->pos.x,u->pos.y, u->pos.z);
-			q_vector.pop_back();
-			for(cell* v : get_neighbours(u,q_vector, m_cellmap))
+			std::sort(q_vector.begin(), q_vector.end(), comp); // sortieren. die zelle mit der niedrigsten distanz ist ganz hinten
+			cell* u = q_vector.back(); // hinterstes element wird genommen
+			q_vector.pop_back(); // aus dem vector gelöscht
+			for(cell* v : get_neighbours(u,q_vector, m_cellmap)) // die nachbarn von u durchgehen
 			{
-				//if (v->pos.z != 0)
-				//	LOG_CRITICAL("somethings fishy");
-				//LOG_DEBUG("v: addrese:  ; dist: {} ; h_dist: {} ; pos: x:{} y:{} z:{}", v->dist, v->h_dist, v->pos.x, v->pos.y, v->pos.z);
-
-				const double dist = u->dist + get_dist(u,v);
-				if (dist < m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist)
+				const double dist = u->dist + get_dist(u,v); //distanz ausrechnen zwischen u und v 
+				if (dist < m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist) // ist diese niedriger
 				{
-					m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist = dist;
-					m_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];
+					m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist = dist; // wird die distanz von v verändert
+					m_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];// und u wird als parent von v gesetzt
 				}
 			}
-			if(m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x].dist != DBL_MAX && m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x].parent != nullptr)
-			{
-				i--;
 
-			}
-			if (i == 0)
+			if(m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x].dist != DBL_MAX && m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x].parent != nullptr)
+			{ //wenn die destination schon eine veränderte distanz hat und ein parent hat wird gestoppt
 				break;
+			}
 		}
 
-		std::vector<glm::vec3> bewegungsablauf;
+		std::vector<glm::vec3> bewegungsablauf; // hier wird der bewegungsablauf gespeichert
 		cell* u = &m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x];
-		constexpr double epsilon = 1e-6;
+		//constexpr double epsilon = 1e-6; 
 
 		while (u->parent->parent != nullptr)
 		{
