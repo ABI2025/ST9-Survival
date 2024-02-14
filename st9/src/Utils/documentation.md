@@ -1,17 +1,17 @@
 # Utils
 
--[log](#Log)
-    -[how it works](#how-it-works)
-    -[usage](#usage)
--[Random](#Random)  
-    -[how it works](#how-it-works-1)
-    -[usage](#usage-1)
--[Timer](#Timer)
-    -[how it works](#how-it-works-2)
-    -[usage](#usage-2)
--[Pathfinding](#pathfinding)
-    -[how it works](#how-it-works-3)
-    -[usage](#usage-3)
+- [log](#Log)
+    - [how it works](#how-it-works)
+    - [usage](#usage)
+- [Random](#Random)  
+    - [how it works](#how-it-works-1)
+    - [usage](#usage-1)
+- [Timer](#Timer)
+    - [how it works](#how-it-works-2)
+    - [usage](#usage-2)
+- [Pathfinding](#pathfinding)
+    - [how it works](#how-it-works-3)
+    - [usage](#usage-3)
 
 # Log
 
