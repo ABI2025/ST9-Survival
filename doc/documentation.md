@@ -1,4 +1,3 @@
-# Utils
 
 - [log](#Log)
     - [how it works](#how-it-works)
@@ -19,6 +18,8 @@
 
 
 ### usage
+![when to use which log](log.png)
+
 ```c++
 LOG_DEBUG("");
 ```
