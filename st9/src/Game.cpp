@@ -8,12 +8,13 @@
 #include "imgui-SFML.h"
 #include "Player.h"
 #include "EnemyManager.h"
+#include "MainBuilding.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 20;
-constexpr int width = 40;
+constexpr int height = 200;
+constexpr int width = 400;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 {
@@ -54,18 +55,25 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
-void Game::render_map()
+void Game::render_map(glm::vec3 player_pos)
 {
-	for (int i = 0; i < width; i++)
+	Utils::ScopedTimer ttt("render_map funktion");
+	player_pos = round(player_pos / 135.0f);
+
+	const int rendersizex = 5;
+	const int rendersizey = 3;
+
+	for (int i = player_pos.x - rendersizex; i < player_pos.x + rendersizex; i++)
 	{
-		for (int j = 0; j < height; j++)
+		for (int j = player_pos.y - rendersizey; j < player_pos.y + rendersizey; j++)
 		{
-			m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
-			m_window.draw(m_background_sprites[m_tiles[i][j][0]]);
+			if (Utils::is_valid({ i,j,0.0f }))
+			{
+				m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
+				m_window.draw(m_background_sprites[m_tiles[i][j][0]]);
+			}
 		}
 	}
-
-
 }
 
 void Game::render_tower()
@@ -94,14 +102,16 @@ void Game::run_game(int)
 
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
-	bool right_click;
-	bool left_click;
+	bool right_click = false;
+	bool left_click = false;
 	EnemyManager ma;
 	m_tiles = erstelleMap();
+	MainBuilding mb;
 	m_window.clear();
-	render_map();
+	render_map(p->get_pos());
 	m_window.display();
 	bool epilepsy = false;
+
 	while (m_window.isOpen() && m_open)
 	{
 		double deltatime = delta_timer.Elapsed();
@@ -184,7 +194,8 @@ void Game::run_game(int)
 		c.move_cam_to_player();
 		m_window.clear();
 
-		render_map();
+		render_map(p->get_pos());
+		mb.MainSprite(m_window);
 		render_tower();
 		ma.draw(m_window);
 		m_window.draw(*p);
