@@ -9,7 +9,7 @@ class Enemy :
        size_t prev_size;
        double m_hp = 2;
        double m_id = 0;
-       friend class Enemymanager;
+       friend class EnemyManager;
    public:
        void die(){}
        void update();

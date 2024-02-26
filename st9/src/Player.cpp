@@ -1,8 +1,10 @@
 #include "Player.h"
-
+#include "Utils/Log.h"
 #include <iostream>
 
-#include "Enemymanager.h"
+#include "EnemyManager.h"
+#include "imgui.h"
+#include "imgui-sfml.h"
 
 Player::Player()
 	: Entity()
@@ -132,14 +134,14 @@ void Player::update(float deltatime)
 
         /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
 
-        //cell_pos = m_pos;
-        if (prev_pos != m_pos)
+        cell_pos = round(glm::vec3{m_pos.x/135.0f,m_pos.y/135.0f,m_pos.z});
+        if (prev_pos != cell_pos)
         {
-            prev_pos = m_pos;
-            Enemymanager::set_player_moving(true);
+            prev_pos = cell_pos;
+            EnemyManager::set_player_moving(true);
         }
         else
-            Enemymanager::set_player_moving(false);
+            EnemyManager::set_player_moving(false);
 
 
 
@@ -165,7 +167,7 @@ void Player::update(float deltatime)
     }
     else
     {
-        Enemymanager::set_player_moving(false);
+        EnemyManager::set_player_moving(false);
         m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
@@ -173,6 +175,12 @@ void Player::update(float deltatime)
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+    ImGui::Begin("test",nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+    if(ImGui::ImageButton("test", m_sprite, {50.0f,135.0f}))
+    {
+        LOG_CRITICAL("button works");
+    }
+    ImGui::End();
     target.draw(m_sprite, states);
 }
 
