@@ -8,6 +8,7 @@
 #include "imgui-SFML.h"
 #include "Player.h"
 #include "EnemyManager.h"
+#include "MainBuilding.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
@@ -94,14 +95,16 @@ void Game::run_game(int)
 
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
-	bool right_click;
-	bool left_click;
+	bool right_click = false;
+	bool left_click = false;
 	EnemyManager ma;
 	m_tiles = erstelleMap();
+	MainBuilding mb;
 	m_window.clear();
 	render_map();
 	m_window.display();
 	bool epilepsy = false;
+
 	while (m_window.isOpen() && m_open)
 	{
 		double deltatime = delta_timer.Elapsed();
@@ -185,6 +188,7 @@ void Game::run_game(int)
 		m_window.clear();
 
 		render_map();
+		mb.MainSprite(m_window);
 		render_tower();
 		ma.draw(m_window);
 		m_window.draw(*p);

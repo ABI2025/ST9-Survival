@@ -158,7 +158,7 @@ void Player::update(float deltatime)
 
         if (i % 20 < 10)
         {
-            m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][1]);
+			m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][1]);
         }
         else
         {
