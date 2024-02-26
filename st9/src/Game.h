@@ -9,7 +9,7 @@ std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap();
 class Game
 {
 public:
-	void render_map();
+	void render_map(glm::vec3);
 	void render_tower();
 	static void erstelle_game(sf::RenderWindow&);
 	static Game* get_game();
