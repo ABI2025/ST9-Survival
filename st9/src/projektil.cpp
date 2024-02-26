@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <glm/glm.hpp>
 
-projectil::projectil(int speed, glm::vec3 pos) {
+projectil::projectil(int speed, sf::Vector2f pos) {
 	m_speed = speed;
 	m_pos = pos;
 }
@@ -16,12 +16,12 @@ projectil::~projectil() {
 void projectil::setSpeed(int speed) {
 	m_speed = speed;
 }
-void projectil::setVec3(glm::vec3 pos) {
+void projectil::setVec2(sf::Vector2f pos) {
 	m_pos = pos;
 }
 int projectil::getSpeed() {
 	return m_speed;
 }
-glm::vec3 projectil::getVec3() {
+sf::Vector2f projectil::getVec2() {
 	return m_pos;
 }

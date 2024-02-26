@@ -8,16 +8,16 @@ class tower;
 class projectil
 {
 private:
-	glm::vec3 m_pos;
+	sf::Vector2f m_pos{};
 	int m_speed;
 public:
-	projectil(int, glm::vec3);
+	projectil(int, sf::Vector2f);
 	~projectil();
 
 	void setSpeed(int);
-	void setVec3(glm::vec3);
+	void setVec2(sf::Vector2f);
 
 	int getSpeed();
-	glm::Vec3 getVec3();
+	sf::Vector2f getVec2();
 };
 
