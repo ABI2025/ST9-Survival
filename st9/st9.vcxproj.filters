@@ -32,6 +32,28 @@
     <ClInclude Include="src\Utils\Timer.h" />
     <ClInclude Include="src\Utils\Utils.h" />
     <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\Enemymanager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameWindow.cpp" />
+    <ClCompile Include="src\Gui.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Utils\Log.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Pathfinding.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Random.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Enemymanager.cpp" />
     <ClInclude Include="src\Tower.h" />
     <ClInclude Include="src\projektil.h" />
   </ItemGroup>
