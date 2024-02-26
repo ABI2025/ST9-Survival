@@ -25,3 +25,12 @@ int projectil::getSpeed() {
 sf::Vector2f projectil::getVec2() {
 	return m_pos;
 }
+void projectil::drawProjectil(sf::RenderTarget& window) {
+	sf::CircleShape projectile(10);
+	//sf::RectangleShape projectile(sf::Vector2f(1,2));
+	projectile.setFillColor(sf::Color::Red);
+	projectile.setPosition(m_pos);
+	//projectile.setRotation(); //Soll in Richtung Ziel zeigen
+
+	window.draw(projectile);
+}

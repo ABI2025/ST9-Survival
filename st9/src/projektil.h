@@ -19,5 +19,7 @@ public:
 
 	int getSpeed();
 	sf::Vector2f getVec2();
+
+	void drawProjectil(sf::RenderTarget&);
 };
 
