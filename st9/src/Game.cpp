@@ -56,13 +56,13 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 
 void Game::render_map(glm::vec3 playerPos)
 {
+	Utils::ScopedTimer ttt("render_map funktion");
 	constexpr int renderSizeX = 5;
 	constexpr int renderSizeY = 3;
 	for (int i = playerPos.x/ BACKGROUND_WIDTH - renderSizeX; i < playerPos.x/ BACKGROUND_WIDTH + renderSizeX; i++)
 	{
 		for (int j = playerPos.y/BACKGROUND_HEIGHT - renderSizeY; j < playerPos.y/BACKGROUND_HEIGHT + renderSizeY; j++)
 		{
-			
 			if ( j < 0 || j >= m_map[0].size() || i < 0 || i >= m_map[0][j].size())continue;
 			//if (j < 0  || i < 0 )continue;
 			m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
