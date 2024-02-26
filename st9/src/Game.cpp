@@ -8,6 +8,7 @@
 #include "imgui-SFML.h"
 #include "Player.h"
 #include "EnemyManager.h"
+#include "MainBuilding.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
@@ -57,16 +58,16 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 void Game::render_map(glm::vec3 player_pos)
 {
 	Utils::ScopedTimer ttt("render_map funktion");
-	player_pos = round(player_pos/135.0f);
-	
+	player_pos = round(player_pos / 135.0f);
+
 	const int rendersizex = 5;
 	const int rendersizey = 3;
 
-	for (int i = player_pos.x  - rendersizex; i < player_pos.x+rendersizex; i++)
+	for (int i = player_pos.x - rendersizex; i < player_pos.x + rendersizex; i++)
 	{
 		for (int j = player_pos.y - rendersizey; j < player_pos.y + rendersizey; j++)
 		{
-			if (Utils::is_valid({ i,j,0.0f })) 
+			if (Utils::is_valid({ i,j,0.0f }))
 			{
 				m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
 				m_window.draw(m_background_sprites[m_tiles[i][j][0]]);
@@ -105,10 +106,12 @@ void Game::run_game(int)
 	bool left_click = false;
 	EnemyManager ma;
 	m_tiles = erstelleMap();
+	MainBuilding mb;
 	m_window.clear();
 	render_map(p->get_pos());
 	m_window.display();
 	bool epilepsy = false;
+
 	while (m_window.isOpen() && m_open)
 	{
 		double deltatime = delta_timer.Elapsed();
@@ -192,6 +195,7 @@ void Game::run_game(int)
 		m_window.clear();
 
 		render_map(p->get_pos());
+		mb.MainSprite(m_window);
 		render_tower();
 		ma.draw(m_window);
 		m_window.draw(*p);
