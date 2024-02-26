@@ -13,8 +13,8 @@
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 20;
-constexpr int width = 40;
+constexpr int height = 200;
+constexpr int width = 400;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 {
@@ -55,12 +55,17 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
-void Game::render_map()
+void Game::render_map(glm::vec3 playerPos)
 {
-	for (int i = 0; i < width; i++)
+	Utils::ScopedTimer ttt("render_map funktion");
+	constexpr int renderSizeX = 5;
+	constexpr int renderSizeY = 3;
+	for (int i = playerPos.x/ BACKGROUND_WIDTH - renderSizeX; i < playerPos.x/ BACKGROUND_WIDTH + renderSizeX; i++)
 	{
-		for (int j = 0; j < height; j++)
+		for (int j = playerPos.y/BACKGROUND_HEIGHT - renderSizeY; j < playerPos.y/BACKGROUND_HEIGHT + renderSizeY; j++)
 		{
+			if ( j < 0 || j >= m_map[0].size() || i < 0 || i >= m_map[0][j].size())continue;
+			//if (j < 0  || i < 0 )continue;
 			m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
 			m_window.draw(m_background_sprites[m_tiles[i][j][0]]);
 		}
@@ -101,7 +106,7 @@ void Game::run_game(int)
 	m_tiles = erstelleMap();
 	MainBuilding mb;
 	m_window.clear();
-	render_map();
+	render_map(p->get_pos());
 	m_window.display();
 	bool epilepsy = false;
 
@@ -187,7 +192,7 @@ void Game::run_game(int)
 		c.move_cam_to_player();
 		m_window.clear();
 
-		render_map();
+		render_map(p->get_pos());
 		mb.MainSprite(m_window);
 		render_tower();
 		ma.draw(m_window);
