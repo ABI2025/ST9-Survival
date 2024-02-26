@@ -3,11 +3,11 @@
 #include "Log.h"
 #include "Timer.h"
 #include "Pathfinding.h"
-
 #include <SFML/Graphics.hpp>
 
 namespace Utils
 {
+
 
 	enum class Cell
 	{
@@ -26,6 +26,11 @@ namespace Utils
 		player,
 		tower
 	};
+
+	inline bool is_valid(const glm::vec3& vec)
+	{
+		return Pathfinding::get_instance()->is_valid(vec);
+	}
 
 	inline void Init()
 	{

@@ -1,9 +1,10 @@
 #pragma once
 
 
+#include <memory>
+#include <vector>
 #include <glm/glm.hpp>
 
-#include "Utils.h"
 
 class Player;
 
@@ -75,7 +76,7 @@ namespace Utils
 			std::vector<glm::vec3> find_path(const glm::vec3& dest, const glm::vec3& start);
 			//private methods
 					
-			bool is_valid(glm::vec3) const;
+			bool is_valid(const glm::vec3 &) const;
 	private:
 		std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start);
 		std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start);

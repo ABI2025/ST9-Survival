@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "imgui-SFML.h"
 #include "Player.h"
-#include "Enemymanager.h"
+#include "EnemyManager.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
@@ -90,28 +90,40 @@ void Game::run_game(int)
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Camera c(&m_window, p.get());
 	sf::Clock deltaClock;
-	Utils::Timer player_timer;
-	Utils::Timer enemymanager_timer;
-	Utils::Timer frame_timer;
+	Utils::Timer delta_timer;
 
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
-
-	Enemymanager ma;
+	bool right_click;
+	bool left_click;
+	EnemyManager ma;
 	m_tiles = erstelleMap();
 	m_window.clear();
 	render_map();
 	m_window.display();
 	bool epilepsy = false;
-
 	while (m_window.isOpen() && m_open)
 	{
+		double deltatime = delta_timer.Elapsed();
+		delta_timer.Reset();
 		sf::Event event{};
 		while (m_window.pollEvent(event))
 		{
 			ImGui::SFML::ProcessEvent(m_window, event);
 			switch (event.type)
 			{
+			case sf::Event::MouseButtonReleased:
+				if (event.mouseButton.button == sf::Mouse::Button::Left)
+					left_click = false;
+				if (event.mouseButton.button == sf::Mouse::Button::Right)
+					right_click = false;
+				break;
+			case sf::Event::MouseButtonPressed:
+				if (event.mouseButton.button == sf::Mouse::Button::Left)
+					left_click = true ;
+				if (event.mouseButton.button == sf::Mouse::Button::Right)
+					right_click = true;
+				break;
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::Key::Escape)
 					m_open = false;
@@ -128,7 +140,8 @@ void Game::run_game(int)
 		}
 		LOG_DEBUG("amount of enemies: {}",ma.get_enemies().size());
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Left) )
+		
+		if(left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 		{
 			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
@@ -138,7 +151,7 @@ void Game::run_game(int)
 
 			}
 		}
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Right) )
+		if(right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 		{
 			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
@@ -148,20 +161,22 @@ void Game::run_game(int)
 
 			}
 		}
+		if(m_window.hasFocus())
+			p->update(deltatime);
 
-		p->update(player_timer.Elapsed());
 
-		player_timer.Reset();
-
-		ma.update(enemymanager_timer.Elapsed());
-		enemymanager_timer.Reset();
+		if(m_window.hasFocus())
+			ma.update(deltatime);
 
 		{
 			ImGui::Begin("DEBUG WINDOW");
 
-			ImGui::TextWrapped("MS: %f FPS: %2.2f", frame_timer.ElapsedMillis(), 1/frame_timer.Elapsed());
-			frame_timer.Reset();
-
+			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime*1000, 1/deltatime);
+			if(ImGui::Button("fix lc/right click"))
+			{
+				left_click = false;
+				right_click = false;
+			}
 			ImGui::End();
 		}
 

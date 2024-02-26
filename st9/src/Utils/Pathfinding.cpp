@@ -1,6 +1,7 @@
 #include "Pathfinding.h"
 
 #include "../Player.h"
+#include "Utils.h"
 
 namespace Utils {
 	Pathfinding* Pathfinding::s_instance = nullptr;
@@ -80,6 +81,7 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::a_star(const glm::vec3& dest, const glm::vec3& start)
 	{
+		ScopedTimer a_star_t("A*");
 		const glm::vec3 rounded_dest = round(dest /135.0f);
 		const glm::vec3 rounded_start= round(start /135.0f);
 
@@ -142,7 +144,7 @@ namespace Utils {
 				break;
 			}
 		}
-
+		ScopedTimer t("Backtracking");
 		std::vector<glm::vec3> bewegungsablauf; // hier wird der bewegungsablauf gespeichert
 		cell* u = &m_cellmap[rounded_dest.z][rounded_dest.y][rounded_dest.x];
 		//constexpr double epsilon = 1e-6; 
@@ -153,16 +155,6 @@ namespace Utils {
 			{
 				bewegungsablauf.push_back(pos);
 			}
-			//for (int i = 0; i < (std::abs(u->parent->pos.y - u->pos.y) < epsilon ? 1 : 135); i++)
-			//{
-			//		
-			//	for (int j = 0; j < (std::abs(u->parent->pos.x - u->pos.x) < epsilon ? 1 : 135); j++)
-			//	{
-			//		
-			//		bewegungsablauf.push_back((u->pos * 135.0f) - glm::vec3{ u->pos.x > u->parent->pos.x ? j : -j, u->pos.y > u->parent->pos.y ? i : -i,0 });
-			//	}
-			//	
-			//}
 			u = u->parent;
 		}
 		for(auto pos : bresenham(u->pos * 135.0f,start))
@@ -230,7 +222,7 @@ namespace Utils {
 	}
 
 
-	bool Pathfinding::is_valid(glm::vec3 pos) const
+	bool Pathfinding::is_valid(const glm::vec3& pos) const
 	{
 		if (!(pos.z < m_map.size() && pos.z >= 0 ))
 			return false;
