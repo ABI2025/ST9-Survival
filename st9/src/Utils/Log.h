@@ -21,7 +21,7 @@ namespace Utils
 }
 #ifdef DIST
 #define LOG_TRACE(...)
-#define LOG_DEBUG(...)         ::Utils::Log::GetLogger()->debug(__VA_ARGS__)
+#define LOG_DEBUG(...)         
 #define LOG_INFO(...)       
 #define LOG_WARN(...)       
 #define LOG_ERROR(...)      
@@ -33,5 +33,5 @@ namespace Utils
 #define LOG_WARN(...)          ::Utils::Log::GetLogger()->warn(__VA_ARGS__)
 #define LOG_ERROR(...)         ::Utils::Log::GetLogger()->error(__VA_ARGS__)
 #define LOG_CRITICAL(...)      ::Utils::Log::GetLogger()->critical(__VA_ARGS__)
+#define LOG_LEVEL(...)         ::Utils::Log::GetLogger()->set_level(__VA_ARGS__)
 #endif
-

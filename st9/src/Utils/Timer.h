@@ -36,7 +36,7 @@ namespace Utils
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_Start;
 	};
 
-	//timer der in einer funktion verwendet werden soll um zu gucken wie lange die funktion dauert 
+	//timer der in einer funktion verwendet werden soll um zu gucken wie lange die funktion dauert(benchmarking) 
 	class ScopedTimer
 	{
 	public:

@@ -1,8 +1,8 @@
 #pragma once
-#include "Random.h"
 #include "Log.h"
-#include "Timer.h"
 #include "Pathfinding.h"
+#include "Random.h"
+#include "Timer.h"
 
 #include <SFML/Graphics.hpp>
 

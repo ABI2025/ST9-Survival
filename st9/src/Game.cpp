@@ -132,7 +132,7 @@ void Game::run_game(int)
 		{
 			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
+			if(pa->is_valid(mouse_pos))
 			{
 				m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::WALL;
 
@@ -142,7 +142,7 @@ void Game::run_game(int)
 		{
 			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
+			if(pa->is_valid(mouse_pos))
 			{
 				m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::NOTHING;
 
