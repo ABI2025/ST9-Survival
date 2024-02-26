@@ -16,6 +16,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tower.cpp" />
     <ClCompile Include="src\projektil.cpp" />
+    <ClCompile Include="src\BuildSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MainBuilding.h" />
@@ -32,7 +33,8 @@
     <ClInclude Include="src\Utils\Timer.h" />
     <ClInclude Include="src\Utils\Utils.h" />
     <ClInclude Include="src\camera.h" />
-    <ClInclude Include="src\Enemymanager.h" />
+    <ClInclude Include="src\EnemyManager.h" />
+    <ClInclude Include="src\BuildSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
@@ -53,7 +55,7 @@
     </ClCompile>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Enemymanager.cpp" />
+    <ClCompile Include="src\EnemyManager.cpp" />
     <ClInclude Include="src\Tower.h" />
     <ClInclude Include="src\projektil.h" />
   </ItemGroup>

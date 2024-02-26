@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include <glm/glm.hpp>
 #include <SFML/Graphics.hpp>
-#include "Utils/Utils.h"
+#include "Utils/Pathfinding.h"
+
 
 class Entity : public sf::Drawable
 {
@@ -11,8 +12,8 @@ protected:
 	std::vector<std::vector<std::vector<sf::Texture>>> m_textures;
 	//Utils::Priority m_priority; //für die gegner klasse
 	glm::vec4 m_hitbox; // x relativ to m_pos , y relativ to m_pos, width , height
-	friend Utils::Pathfinding;
-	friend class Enemymanager;
+	friend class Utils::Pathfinding;
+	friend class EnemyManager;
 public:
 	Entity();
 	~Entity() override;

@@ -1,7 +1,8 @@
-#include "Enemymanager.h"
+#include "EnemyManager.h"
 #include <execution>
+#include "Utils/Utils.h"
 
-Enemymanager::Enemymanager()
+EnemyManager::EnemyManager()
 {
 	//m_enemys.push_back(std::make_shared<Enemy>());
 	//m_enemys[0]->m_id = 0;
@@ -35,7 +36,7 @@ int curr_frame = 0;
 constexpr float time_per_frame = 1 / 60.0f;
 float con_dt = 0.0f;
 thread_local size_t  prev_size = 0;
-void Enemymanager::update(float deltatime)
+void EnemyManager::update(float deltatime)
 {
 	con_dt += deltatime;
 	curr_frame++;
@@ -114,12 +115,12 @@ void Enemymanager::update(float deltatime)
 	}
 }
 
-void Enemymanager::add_enemy()
+void EnemyManager::add_enemy()
 {
 	m_enemys.push_back(std::make_shared<Enemy>());
 	m_enemys.back()->m_id = 0;
 }
-void Enemymanager::draw(sf::RenderWindow& i_window) const
+void EnemyManager::draw(sf::RenderWindow& i_window) const
 {
 #ifndef DIST
 	int counter = 0;
