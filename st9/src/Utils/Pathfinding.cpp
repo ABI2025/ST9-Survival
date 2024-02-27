@@ -9,6 +9,7 @@ namespace Utils {
 
 	void Pathfinding::Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
 	{
+		LOG_INFO("sizeof cell {}", sizeof(cell));
 		if(!s_instance)
 			s_instance = new Pathfinding(i_player,i_map);
 	}
@@ -90,7 +91,7 @@ namespace Utils {
 			return bresenham(dest, start);
 		}
 
-
+		
 		std::vector<std::vector<std::vector<cell>>> m_cellmap =
 			std::vector(m_map.size(),std::vector(m_map[0].size(),
 				std::vector(m_map[0][0].size(),

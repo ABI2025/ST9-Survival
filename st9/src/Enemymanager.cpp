@@ -122,22 +122,13 @@ void EnemyManager::add_enemy()
 }
 void EnemyManager::draw(sf::RenderWindow& i_window) const
 {
-#ifndef DIST
-	int counter = 0;
-#endif
 	glm::vec3 prev_pos (-1);
 	for (const auto& m : m_enemys)
 	{
 		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6))
 		{
-#ifndef DIST
-			counter++;
-#endif
 			i_window.draw(*m);
 		}
 		prev_pos = m->m_pos;
 	}
-#ifndef DIST
-	LOG_INFO("{} enemies drawn", counter);
-#endif
 }
