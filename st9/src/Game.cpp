@@ -13,8 +13,8 @@
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 200;
-constexpr int width = 400;
+constexpr int height = 20;
+constexpr int width  = 40;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 {
@@ -57,11 +57,11 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 
 void Game::render_map(glm::vec3 player_pos)
 {
-	Utils::ScopedTimer ttt("render_map funktion");
+	//Utils::ScopedTimer ttt("render_map funktion");
 	player_pos = round(player_pos / 135.0f);
 
-	const int rendersizex = 5;
-	const int rendersizey = 3;
+	const int rendersizex = 11;
+	const int rendersizey = 7;
 
 	for (int i = player_pos.x - rendersizex; i < player_pos.x + rendersizex; i++)
 	{
@@ -148,7 +148,6 @@ void Game::run_game(int)
 				break;
 			}
 		}
-		LOG_DEBUG("amount of enemies: {}",ma.get_enemies().size());
 		ImGui::SFML::Update(m_window, deltaClock.restart());
 		
 		if(left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
@@ -171,17 +170,17 @@ void Game::run_game(int)
 
 			}
 		}
-		if(m_window.hasFocus())
+		if (m_window.hasFocus()) 
+		{
 			p->update(deltatime);
-
-
-		if(m_window.hasFocus())
 			ma.update(deltatime);
+		}
 
 		{
 			ImGui::Begin("DEBUG WINDOW");
 
 			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime*1000, 1/deltatime);
+			ImGui::TextWrapped("amount of enemies: %d", ma.get_enemies().size());
 			if(ImGui::Button("fix lc/right click"))
 			{
 				left_click = false;
