@@ -13,7 +13,7 @@
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 20;
+constexpr int height = 20;	
 constexpr int width  = 40;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
@@ -95,6 +95,8 @@ void Game::render_tower()
 }
 void Game::run_game(int)
 {
+	static_assert(height <= 20);
+	static_assert(width <= 40);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Camera c(&m_window, p.get());
 	sf::Clock deltaClock;
