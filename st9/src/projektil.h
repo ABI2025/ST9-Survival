@@ -3,7 +3,7 @@
 #include <execution>
 #include <SFML/Graphics.hpp>
 #include <glm/glm.hpp>
-class enemy;
+class Enemy;
 class tower;
 class projectil
 {
@@ -20,6 +20,6 @@ public:
 	int getSpeed();
 	sf::Vector2f getVec2();
 
-	void drawProjectil(sf::RenderTarget&,enemy&);
+	void drawProjectil(sf::RenderTarget&,Enemy&);
 };
 
