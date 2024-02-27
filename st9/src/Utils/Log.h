@@ -21,7 +21,7 @@ namespace Utils
 }
 #ifdef DIST
 #define LOG_TRACE(...)
-#define LOG_DEBUG(...)         ::Utils::Log::GetLogger()->debug(__VA_ARGS__)
+#define LOG_DEBUG(...)         
 #define LOG_INFO(...)       
 #define LOG_WARN(...)       
 #define LOG_ERROR(...)      
