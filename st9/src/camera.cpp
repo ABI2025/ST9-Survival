@@ -39,7 +39,7 @@ void Camera::move_cam_to_player()
 void Camera::move_to_default()
 {
 	m_view.setCenter((float)m_window->getSize().x/2, (float)m_window->getSize().y/2);
-	//m_view.setSize({ (float)m_window->getSize().x,(float)m_window->getSize().y });
+	m_view.setSize({ (float)m_window->getSize().x,(float)m_window->getSize().y });
 	m_window->setView(m_view);
 }
 
