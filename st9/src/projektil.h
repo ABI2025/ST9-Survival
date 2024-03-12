@@ -3,6 +3,7 @@
 #include <execution>
 #include <SFML/Graphics.hpp>
 #include <glm/glm.hpp>
+#include <list>
 class Enemy;
 class tower;
 class projectil
@@ -10,16 +11,18 @@ class projectil
 private:
 	sf::Vector2f m_pos{};
 	int m_speed;
+	static std::list<projectil*> projectiles;
 public:
 	projectil(int, sf::Vector2f);
 	~projectil();
 
 	void setSpeed(int);
-	void setVec2(sf::Vector2f);
+	void setPos(sf::Vector2f);
 
 	int getSpeed();
 	sf::Vector2f getVec2();
 
-	void drawProjectil(sf::RenderTarget&,Enemy&);
+	void drawProjectil(sf::RenderTarget&,Enemy&); // ich werde diese funktion erstmal ignorieren.
+	static void drawALlProjectiles(sf::RenderTarget& , Enemy&);
 };
 

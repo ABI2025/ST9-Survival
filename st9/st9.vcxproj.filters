@@ -15,7 +15,7 @@
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tower.cpp" />
-    <ClCompile Include="src\projektil.cpp" />
+    <ClCompile Include="src\Projektil.cpp" />
     <ClCompile Include="src\BuildSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +57,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\EnemyManager.cpp" />
     <ClInclude Include="src\Tower.h" />
-    <ClInclude Include="src\projektil.h" />
+    <ClInclude Include="src\Projektil.h" />
   </ItemGroup>
 </Project>
