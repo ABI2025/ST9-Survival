@@ -12,15 +12,19 @@ private:
 	sf::Vector2f m_pos{};
 	int m_speed;
 	static std::list<projectil*> projectiles;
+	sf::Vector2f m_pos;
+	sf::Vector2f m_speed;
 public:
-	projectil(int, sf::Vector2f);
+	projectil(sf::Vector2f, sf::Vector2f);
 	~projectil();
 
 	void setSpeed(int);
 	void setPos(sf::Vector2f);
+	void set_Speed(sf::Vector2f);
+	void set_Pos(sf::Vector2f);
 
-	int getSpeed();
-	sf::Vector2f getVec2();
+	sf::Vector2f get_Speed();
+	sf::Vector2f get_Pos();
 
 	void drawProjectil(sf::RenderTarget&,Enemy&); // ich werde diese funktion erstmal ignorieren.
 	static void drawALlProjectiles(sf::RenderTarget& , Enemy&);

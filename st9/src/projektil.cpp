@@ -6,7 +6,7 @@
 #include <cmath>
 #include "Enemy.h"
 
-projectil::projectil(int speed, sf::Vector2f pos) {
+projectil::projectil(sf::Vector2f speed, sf::Vector2f pos) {
 	m_speed = speed;
 	m_pos = pos;
 }
@@ -15,16 +15,16 @@ projectil::~projectil() {
 
 }
 
-void projectil::setSpeed(int speed) {
+void projectil::set_Speed(sf::Vector2f speed) {
 	m_speed = speed;
 }
 void projectil::setPos(sf::Vector2f pos) {
 	m_pos = pos;
 }
-int projectil::getSpeed() {
+sf::Vector2f projectil::get_Speed() {
 	return m_speed;
 }
-sf::Vector2f projectil::getVec2() {
+sf::Vector2f projectil::get_Pos() {
 	return m_pos;
 }
 void projectil::drawProjectil(sf::RenderTarget& window, Enemy& m_enemy ) {
