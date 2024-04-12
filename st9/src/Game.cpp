@@ -142,7 +142,7 @@ void Game::run_game(int)
 				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
 				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					new Projectile(p->get_pos(), glm::vec2( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5), 180);
+					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5, 0), 180);
 				
 				break;
 
@@ -202,7 +202,7 @@ void Game::run_game(int)
 		render_tower();
 		ma.draw(m_window);
 		m_window.draw(*p);
-		Projectile::drawALlProjectiles(m_window);
+		Projectile::drawAllProjectiles(m_window, sf::RenderStates());
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
 		m_window.display();
 	}

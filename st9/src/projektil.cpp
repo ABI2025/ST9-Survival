@@ -1,34 +1,27 @@
-#include "projektil.h"
+#include "Projektil.h"
 #include <algorithm>
 #include "Utils/Log.h"
 
-Projectile::Projectile(glm::vec2 pos, glm::vec2 speed, int lifetime) : m_pos(pos), m_speed(speed), m_lifetime(lifetime) {
+Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime) : Entity(), m_speed(speed), m_lifetime(lifetime) {
+    set_pos(pos); // Use Entity's set_pos
     projectiles.push_back(this);
 }
 
 Projectile::~Projectile() {}
 
 void Projectile::update() {
-    m_pos += m_speed; 
-    m_lifetime--;     
+    glm::vec3 newPos = get_pos() + m_speed;
+    set_pos(newPos);
+    m_lifetime--;
 }
 
-void Projectile::updateAll() { // das können wir nutzen wenn wir frames skippen
-    for (Projectile* p : projectiles) {
-        p->update();
-    }
-
-    cleanUp();
-}
-
-void Projectile::drawProjectil(sf::RenderTarget& target) {
+void Projectile::draw(sf::RenderTarget& target , sf::RenderStates states) const {
     if (m_lifetime > 0) {
         sf::RectangleShape projectileShape(sf::Vector2f(10, 20));
         projectileShape.setFillColor(sf::Color::Red);
-        projectileShape.setPosition(m_pos.x, m_pos.y);
-        target.draw(projectileShape);
+        projectileShape.setPosition(get_pos().x, get_pos().y);
+        target.draw(projectileShape,states);
     }
-    
 }
 
 void Projectile::cleanUp() {
@@ -36,21 +29,24 @@ void Projectile::cleanUp() {
         [](Projectile* p) {
             bool shouldRemove = p->m_lifetime <= 0;
             if (shouldRemove) {
-                delete p; // Lösche das Objekt
+                delete p;
             }
-            return shouldRemove; // Gibt zurück, ob das Element entfernt werden soll
+            return shouldRemove;
         }), projectiles.end());
 }
 
+void Projectile::updateAll() {
+    for (Projectile* p : projectiles) {
+        p->update();
+    }
+    cleanUp();
+}
 
-void Projectile::drawALlProjectiles(sf::RenderTarget& target) { // das muss jeden frame ausgeführt werden
+void Projectile::drawAllProjectiles(sf::RenderTarget& target, sf::RenderStates states) {
+    updateAll();
     for (Projectile* proj : projectiles) {
         if (proj != nullptr && proj->m_lifetime > 0) {
-            proj->update();    
-            proj->drawProjectil(target); 
+            proj->draw(target, states); // Use the inherited draw method
         }
     }
-
-    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
-        [](const Projectile* p) { return p->m_lifetime <= 0; }), projectiles.end());
 }
