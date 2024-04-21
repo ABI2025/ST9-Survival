@@ -1,39 +1,52 @@
-#include "projektil.h"
-#include <chrono>
-#include <execution>
-#include <SFML/Graphics.hpp>
-#include <glm/glm.hpp>
-#include <cmath>
-#include "Enemy.h"
+#include "Projektil.h"
+#include <algorithm>
+#include "Utils/Log.h"
 
-projectil::projectil(sf::Vector2f speed, sf::Vector2f pos) {
-	m_speed = speed;
-	m_pos = pos;
+Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime) : Entity(), m_speed(speed), m_lifetime(lifetime) {
+    set_pos(pos); // Use Entity's set_pos
+    projectiles.push_back(this);
 }
 
-projectil::~projectil() {
+Projectile::~Projectile() {}
 
+void Projectile::update() {
+    glm::vec3 newPos = get_pos() + m_speed;
+    set_pos(newPos);
+    m_lifetime--;
 }
 
-void projectil::set_Speed(sf::Vector2f speed) {
-	m_speed = speed;
+void Projectile::draw(sf::RenderTarget& target , sf::RenderStates states) const {
+    if (m_lifetime > 0) {
+        sf::RectangleShape projectileShape(sf::Vector2f(10, 20));
+        projectileShape.setFillColor(sf::Color::Red);
+        projectileShape.setPosition(get_pos().x, get_pos().y);
+        target.draw(projectileShape,states);
+    }
 }
-void projectil::set_Pos(sf::Vector2f pos) {
-	m_pos = pos;
-}
-sf::Vector2f projectil::get_Speed() {
-	return m_speed;
-}
-sf::Vector2f projectil::get_Pos() {
-	return m_pos;
-}
-void projectil::drawProjectil(sf::RenderTarget& window, Enemy& m_enemy ) {
 
-	sf::RectangleShape projectile(sf::Vector2f(10,20));
-	projectile.setFillColor(sf::Color::Red);
-	m_pos += m_speed;
-	projectile.setPosition(m_pos);
-	projectile.setRotation((-1)*(atan2( projectile.getPosition().x - m_enemy.get_pos().x, projectile.getPosition().y - m_enemy.get_pos().y) * 180 / 3.14159265358979311600 )); //Soll in Richtung Ziel zeigen
+void Projectile::cleanUp() {
+    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
+        [](Projectile* p) {
+            bool shouldRemove = p->m_lifetime <= 0;
+            if (shouldRemove) {
+                delete p;
+            }
+            return shouldRemove;
+        }), projectiles.end());
+}
 
-	window.draw(projectile);
+void Projectile::updateAll() {
+    for (Projectile* p : projectiles) {
+        p->update();
+    }
+    cleanUp();
+}
+
+void Projectile::drawAllProjectiles(sf::RenderTarget& target, sf::RenderStates states) {
+    updateAll();
+    for (Projectile* proj : projectiles) {
+        if (proj != nullptr && proj->m_lifetime > 0) {
+            proj->draw(target, states); // Use the inherited draw method
+        }
+    }
 }

@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "EnemyManager.h"
 #include "MainBuilding.h"
-
+#include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
@@ -141,6 +141,9 @@ void Game::run_game(int)
 					m_open = false;
 				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
+				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
+					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5, 0), 180);
+				
 				break;
 
 			case sf::Event::Closed:
@@ -191,19 +194,16 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-
+		
 		c.move_cam_to_player();
-		m_window.clear();
-
+		m_window.clear(); // hier ist die render order
 		render_map(p->get_pos());
 		mb.MainSprite(m_window);
 		render_tower();
 		ma.draw(m_window);
 		m_window.draw(*p);
-		
-
+		Projectile::drawAllProjectiles(m_window, sf::RenderStates());
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
-
 		m_window.display();
 	}
 	m_tiles.clear();

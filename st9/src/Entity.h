@@ -17,7 +17,7 @@ protected:
 public:
 	Entity();
 	~Entity() override;
-	glm::vec3 get_pos();
+	glm::vec3 get_pos() const;
 	void set_pos(glm::vec3 i_pos);
 	sf::Sprite& get_sprite();
 

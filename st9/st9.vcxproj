@@ -155,7 +155,7 @@
     <ClInclude Include="src\Gui.h" />
     <ClInclude Include="src\Menu.h" />
     <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\projektil.h" />
+    <ClInclude Include="src\Projektil.h" />
     <ClInclude Include="src\Utils\Log.h" />
     <ClInclude Include="src\Utils\Pathfinding.h" />
     <ClInclude Include="src\Utils\Random.h" />
@@ -176,7 +176,7 @@
     <ClCompile Include="src\Gui.cpp" />
     <ClCompile Include="src\Menu.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\projektil.cpp" />
+    <ClCompile Include="src\Projektil.cpp" />
     <ClCompile Include="src\Utils\Log.cpp" />
     <ClCompile Include="src\Utils\Pathfinding.cpp" />
     <ClCompile Include="src\Utils\Random.cpp" />
