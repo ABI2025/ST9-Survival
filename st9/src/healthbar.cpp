@@ -13,12 +13,18 @@ void healthbar::regeneration(int health) {//
 int healthbar::get_health() {
 	return m_health;
 }
-void healthbar::damage_input(int damage) {
+bool healthbar::alive() {
+	if (m_health <= 0) {
+		return false;
+	}
+	return true;
+}
+bool healthbar::damage_input(int damage) {
 	m_health -= damage;
 	if (m_health <= 0) {
-		//funktion die
+		return false;
 	}
-	return;
+	return true;
 }
 void healthbar::draw_healthbar(sf::RenderWindow& window, Player& p) {
 	sf::RectangleShape background(sf::Vector2f(300,40));
