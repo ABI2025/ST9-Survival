@@ -143,7 +143,7 @@ void Game::run_game(int)
 				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
 				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5, 0), 180);
+					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *2.5, 0), 180 , 1 , 1);
 				if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
 					hb.damage_input(1);
 				if (event.key.code == sf::Keyboard::Key::R)
