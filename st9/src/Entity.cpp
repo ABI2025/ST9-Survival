@@ -36,7 +36,7 @@ Entity::~Entity()
 
 }
 
-glm::vec3 Entity::get_pos()
+glm::vec3 Entity::get_pos() const
 {
 	return m_pos;
 }

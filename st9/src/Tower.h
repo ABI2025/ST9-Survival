@@ -1,13 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include "glm/glm.hpp"
 
 class Tower
 {
 	int m_ressourcen;
 	double m_hp;
 	int m_damage;
-	sf::Vector2<float> m_pos;
+	glm::ivec3 m_pos;
 
 public:
 	Tower();
