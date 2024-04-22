@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "healthbar.h"
 #include <complex>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
@@ -194,7 +194,7 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-		
+		healthbar hb{};
 		c.move_cam_to_player();
 		m_window.clear(); // hier ist die render order
 		render_map(p->get_pos());
@@ -203,6 +203,7 @@ void Game::run_game(int)
 		ma.draw(m_window);
 		m_window.draw(*p);
 		Projectile::drawAllProjectiles(m_window, sf::RenderStates());
+		hb.draw_healthbar(m_window,*p.get());
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
 		m_window.display();
 	}
