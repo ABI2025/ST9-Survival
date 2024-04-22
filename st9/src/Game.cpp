@@ -146,6 +146,8 @@ void Game::run_game(int)
 					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5, 0), 180);
 				if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
 					hb.damage_input(1);
+				if (event.key.code == sf::Keyboard::Key::R)
+					hb.regeneration(1);
 				
 				break;
 

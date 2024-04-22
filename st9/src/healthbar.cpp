@@ -2,7 +2,7 @@
 #include "Player.h"
 
 healthbar::healthbar() {
-	m_health = 15;// Aktuelle HP - Standard HP 20
+	m_health = 20;// Aktuelle HP - Standard HP 20
 }
 healthbar::~healthbar() {
 
@@ -39,11 +39,7 @@ void healthbar::draw_healthbar(sf::RenderWindow& window, Player& p) {
 	window.draw(background);
 	window.draw(health_background);
 	window.draw(health);
-	
 }
-
-
-
 
 //void healthbar::draw_healthbar(sf::RenderWindow& window, Player& p) {
 //    // Constants for the health bar dimensions and offsets
