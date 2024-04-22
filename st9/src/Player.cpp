@@ -10,6 +10,7 @@ Player::Player()
     : Entity()
 
 {
+    m_health = 20;
     m_pos = { 720, 720, 0 };
     cell_pos = m_pos / 135.0f;
     prev_cell_pos = m_pos / 135.0f;

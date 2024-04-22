@@ -30,6 +30,8 @@ EnemyManager::EnemyManager()
 
 	textures.resize(1);
 	textures[0].loadFromFile("resources/charakter_R.png");
+	Utils::Pathfinding::get_instance()->calculate_paths();
+
 }
 
 int curr_frame = 0;
@@ -38,6 +40,8 @@ float con_dt = 0.0f;
 thread_local size_t  prev_size = 0;
 void EnemyManager::update(float deltatime)
 {
+	if(s_player_moving)
+		Utils::Pathfinding::get_instance()->calculate_paths();
 	con_dt += deltatime;
 	curr_frame++;
 	std::for_each(std::execution::par,m_enemys.begin(), m_enemys.end(), [this,&deltatime](std::shared_ptr<Enemy>& e)
@@ -56,7 +60,6 @@ void EnemyManager::update(float deltatime)
 			if (e->m_movements.empty() == true || (s_player_moving))
 			{
 				//e->m_hp--;
-				glm::vec3 player = Utils::Pathfinding::get_instance()->find_nearest(e->m_pos, Utils::Priority::player);
 				/*player.x /= 135;
 				player.y /= 135;*/
 			
@@ -65,7 +68,7 @@ void EnemyManager::update(float deltatime)
 				e_pos.y /= 135;*/
 				e->m_movements = Utils::Pathfinding::get_instance()->find_path
 				(
-					player, e_pos
+					e_pos, Utils::Priority::nothing
 				);
 				e->prev_size = e->m_movements.size();
 			}

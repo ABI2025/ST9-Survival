@@ -5,6 +5,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "../Player.h"
+
 
 class Player;
 
@@ -42,7 +44,9 @@ namespace Utils
 		std::shared_ptr<Player> m_player;
 		static Pathfinding* s_instance;
 		std::vector<std::vector<std::vector<Cell>>>& m_map;
-		//std::vector<std::vector<std::vector<cell>>> m_cellmap;
+		std::vector<std::vector<std::vector<cell>>> player_cellmap;
+		std::vector<std::vector<std::vector<cell>>> tower_cellmap;
+		std::vector<std::vector<std::vector<cell>>> nothing_cellmap;
 
 
 		//public methods
@@ -64,20 +68,26 @@ namespace Utils
 			
 			std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
 
-			glm::vec3 find_nearest(const glm::vec3& start, Priority priority);
 
 			/*
-			* dest ist das Ziel 
-			*
 			*
 			* start ist der anfang (position vom gegner / entity)
-			*
-			*/
-			std::vector<glm::vec3> find_path(const glm::vec3& dest, const glm::vec3& start);
-			//private methods
+			* Priority ist auf was der gegner/entity gehen soll
+			* Mögliche Prioritäten sind
+			* Player (wenn player tot dann nothing)
+			* Nothing
+			* Tower
+			 */
+			std::vector<glm::vec3> find_path(const glm::vec3& start, Priority);
 					
 			bool is_valid(const glm::vec3 &) const;
+
+			void calculate_paths();
+
+
+		//private methods
 	private:
+		std::vector<glm::vec3> make_path(const glm::vec3& dest, std::vector<std::vector<std::vector<cell>>>& cellmap);
 		std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start);
 		std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start);
 		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap);

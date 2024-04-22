@@ -1,10 +1,15 @@
 #pragma once
 #include "Entity.h"
+class Entity;
 class Player : public Entity
 {
 public:
     Player();
     void update(float deltatime);
+    bool is_alive()
+    {
+        return m_health > 0;
+    }
     glm::ivec3 getMovementSpeed() const; 
 
 protected:

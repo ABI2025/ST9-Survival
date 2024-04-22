@@ -30,6 +30,7 @@ void Menu::show_menu() {
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);
 	m_window.setFramerateLimit(60);
+	
 	while (m_window.isOpen())
 	{
 
