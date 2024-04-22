@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Enemy.h"
+#include "Projektil.h"
 class EnemyManager
 {
 	std::vector<std::shared_ptr<Enemy>> m_enemys;
@@ -13,7 +14,7 @@ public:
 
 	void add_enemy();
 	std::vector<std::shared_ptr<Enemy>>& get_enemies() { return m_enemys; }
-
+	int naiveEnemyKiller();
 	void draw(sf::RenderWindow& i_window) const;
 };
 

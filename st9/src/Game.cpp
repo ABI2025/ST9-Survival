@@ -142,7 +142,7 @@ void Game::run_game(int)
 				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
 				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5, 0), 180);
+					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 3, p->getMovementSpeed().y *3, 0), 180 , 1 , 1);
 				
 				break;
 
@@ -194,7 +194,7 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-		
+		ma.naiveEnemyKiller();
 		c.move_cam_to_player();
 		m_window.clear(); // hier ist die render order
 		render_map(p->get_pos());
