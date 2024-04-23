@@ -39,10 +39,10 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
 
-	if (!m_background_textures[0].loadFromFile("Resources/Background1.jpg"))throw std::exception("Fehler");
-	if (!m_background_textures[1].loadFromFile("Resources/Background2.jpg"))throw std::exception("Fehler");
-	if (!m_background_textures[2].loadFromFile("Resources/Background3.jpg"))throw std::exception("Fehler");
-	if (!m_background_textures[3].loadFromFile("Resources/Background4.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg"))throw std::exception("Fehler");
 
 	m_background_sprites.resize(4);
 

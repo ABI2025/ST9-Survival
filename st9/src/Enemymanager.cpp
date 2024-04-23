@@ -29,7 +29,7 @@ EnemyManager::EnemyManager()
 	//m_enemys[5]->m_pos = { 135*3,135*3,0 };
 
 	textures.resize(1);
-	textures[0].loadFromFile("resources/gegner1-1.png");
+	textures[0].loadFromFile("resources/images/gegner1-1.png");
 }
 
 int curr_frame = 0;
