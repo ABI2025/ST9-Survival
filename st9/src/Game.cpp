@@ -177,7 +177,9 @@ void Game::run_game(int)
 		}
 		if (m_window.hasFocus()) 
 		{
+		
 			p->update(deltatime);
+			Utils::Pathfinding::get_instance()->calculate_paths();
 			ma.update(deltatime);
 		}
 
