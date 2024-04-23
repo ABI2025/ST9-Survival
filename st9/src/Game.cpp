@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "healthbar.h"
 #include <complex>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
@@ -113,6 +113,7 @@ void Game::run_game(int)
 	render_map(p->get_pos());
 	m_window.display();
 	bool epilepsy = false;
+	healthbar hb{};
 
 	while (m_window.isOpen() && m_open)
 	{
@@ -142,10 +143,12 @@ void Game::run_game(int)
 				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
 				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 1.5, p->getMovementSpeed().y *1.5, 0), 180);
-				
+					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 2.5, p->getMovementSpeed().y *2.5, 0), 180 , 1 , 1);
+				if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
+					hb.damage_input(1);
+				if (event.key.code == sf::Keyboard::Key::R)
+					hb.regeneration(1);
 				break;
-
 			case sf::Event::Closed:
 				m_window.close();
 				break;
@@ -194,7 +197,10 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-		
+		if (!hb.alive()) {
+			m_open = false;
+		}
+		ma.naiveEnemyKiller();
 		c.move_cam_to_player();
 		m_window.clear(); // hier ist die render order
 		render_map(p->get_pos());
@@ -203,6 +209,7 @@ void Game::run_game(int)
 		ma.draw(m_window);
 		m_window.draw(*p);
 		Projectile::drawAllProjectiles(m_window, sf::RenderStates());
+		hb.draw_healthbar(m_window,*p.get());
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
 		m_window.display();
 	}

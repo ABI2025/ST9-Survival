@@ -71,7 +71,7 @@ void EnemyManager::update(float deltatime)
 			}
 			e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
 			//if (curr_frame % 2 == 0) {
-				for (int i = 0; i < 300 * deltatime; i++)
+				for (int i = 0; i < 300 * deltatime; i++) // du hurensohn
 				{
 					if (e->m_movements.empty() == false)
 					{
@@ -84,7 +84,7 @@ void EnemyManager::update(float deltatime)
 					}
 				}
 			//}
-
+				e->m_hitbox = e->m_pos + glm::vec3{40,120,0};
 	}
 	);
 	
@@ -131,4 +131,87 @@ void EnemyManager::draw(sf::RenderWindow& i_window) const
 		}
 		prev_pos = m->m_pos;
 	}
+}
+/*
+int EnemyManager::naiveEnemyKiller(Projectile * projectile) {
+	int hitCount = 0;
+	sf::FloatRect projectileBounds = projectile->get_sprite().getGlobalBounds();
+
+	for (auto& enemy : m_enemys) {
+		if (enemy && enemy->isAlive()) {
+			sf::FloatRect enemyBounds = enemy->get_sprite().getGlobalBounds();
+
+			if (projectileBounds.intersects(enemyBounds)) {
+				enemy->die();  
+				hitCount++;
+			}
+		}
+	}
+
+	return hitCount;
+}
+*/
+#include <glm/gtx/string_cast.hpp> // For glm::to_string
+
+int EnemyManager::naiveEnemyKiller() {
+	int hitCount = 0;
+	std::vector<Projectile*> toRemoveProjectiles;
+
+	for (Projectile* projectile : Projectile::get_projectiles()) {
+		if (projectile->get_penetration() <= 0) {
+			toRemoveProjectiles.push_back(projectile);
+			continue;
+		}
+
+		glm::vec3 projectilePos = projectile->get_pos();
+		glm::vec3 projectileHitbox = projectile->get_hitBox(); // Using the new get_hitBox method
+		glm::vec3 projectileMin = projectilePos;
+		glm::vec3 projectileMax =  projectileHitbox;
+
+		for (auto& enemy : m_enemys) {
+			if (!enemy->isAlive()) {
+				continue;
+			}
+
+			glm::vec3 enemyPos = enemy->get_pos();
+			glm::vec3 enemyHitbox = enemy->get_hitBox(); // Using the new get_hitBox method
+			glm::vec3 enemyMin = enemyPos;
+			glm::vec3 enemyMax = enemyHitbox;
+
+			// Check if hitboxes intersect
+			bool collision = (projectileMax.x > enemyMin.x) &&
+				(projectileMin.x < enemyMax.x) &&
+				(projectileMax.y > enemyMin.y) &&
+				(projectileMin.y < enemyMax.y);
+
+			if (collision) {
+				enemy->take_damage(projectile->get_damage());
+				hitCount++;
+
+				if (enemy->getHp() <= 0) {
+					enemy->die();
+				}
+
+				projectile->decrease_penetration(1);
+				if (projectile->get_penetration() <= 0) {
+					toRemoveProjectiles.push_back(projectile);
+					break;
+				}
+			}
+		}
+	}
+
+	// Clean up projectiles
+	for (Projectile* projectile : toRemoveProjectiles) {
+		Projectile::removeProjectile(projectile);
+	}
+
+	// Clean up dead enemies
+	m_enemys.erase(std::remove_if(m_enemys.begin(), m_enemys.end(),
+		[](const std::shared_ptr<Enemy>& enemy) {
+			return !enemy->isAlive();
+		}),
+		m_enemys.end());
+
+	return hitCount;
 }

@@ -51,6 +51,11 @@ sf::Sprite& Entity::get_sprite()
 	return m_sprite;
 }
 
+glm::vec3 Entity::get_hitBox() const
+{
+	return m_hitbox;
+}
+
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
