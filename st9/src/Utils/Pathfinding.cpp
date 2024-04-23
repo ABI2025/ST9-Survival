@@ -11,7 +11,10 @@ namespace Utils {
 
 	void Pathfinding::Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
 	{
+		LOG_INFO("sizeof Cell {}", sizeof(Cell));
+		LOG_INFO("sizeof cell_map {}", sizeof(cell)*i_map.size()*i_map[0].size()*i_map[0][0].size());
 		LOG_INFO("sizeof cell {}", sizeof(cell));
+		LOG_INFO("sizeof i_map {}", sizeof(Cell)*i_map.size()*i_map[0].size()*i_map[0][0].size());
 		if (!s_instance)
 			s_instance = new Pathfinding(i_player, i_map);
 	}
@@ -48,13 +51,13 @@ namespace Utils {
 
 		case Priority::player:
 			const glm::vec3 dest = m_player->get_pos();
-			LOG_DEBUG("player: x:{} y:{} z:{}", dest.x, dest.y, dest.z);
+			//LOG_DEBUG("player: x:{} y:{} z:{}", dest.x, dest.y, dest.z);
 			if (vec3_almost_equal(dest / 135.0f, start / 135.0f, 1.0f))
 			{
-				LOG_INFO("used brensenham");
+				//LOG_INFO("used brensenham");
 				return bresenham(dest, start);
 			}
-			LOG_INFO("used backtracking");
+			//LOG_INFO("used backtracking");
 
 			return make_path(start, player_cellmap);
 			//return a_star(round(dest), round(start));
@@ -93,8 +96,8 @@ namespace Utils {
 	std::vector<glm::vec3> Pathfinding::make_path(const glm::vec3& start,
 		const std::vector<std::vector<std::vector<cell>>>& cellmap)
 	{
-		ScopedTimer ttt("backtrackening");
-		glm::vec3 rounded_start = round(glm::vec3{ start.x / 135.0f,start.y / 135.0f,0 });
+		//ScopedTimer ttt("backtrackening");
+		const glm::ivec3 rounded_start = round(glm::vec3{ start.x / 135.0f,start.y / 135.0f,0 });
 		std::vector<glm::vec3> bewegungsablauf; // hier wird der bewegungsablauf gespeichert
 		if (!is_valid(rounded_start))
 		{
@@ -152,8 +155,8 @@ namespace Utils {
 	std::vector<glm::vec3> Pathfinding::a_star(const glm::vec3& dest, const glm::vec3& start)
 	{
 		ScopedTimer a_star_t("A*");
-		const glm::vec3 rounded_dest = round(dest / 135.0f);
-		const glm::vec3 rounded_start = round(start / 135.0f);
+		const glm::ivec3 rounded_dest = round(dest / 135.0f);
+		const glm::ivec3 rounded_start = round(start / 135.0f);
 
 		if (!is_valid(rounded_dest) || !is_valid(rounded_start))
 		{
@@ -171,14 +174,14 @@ namespace Utils {
 		//ein vector und jedes mal sortiert kommt aufs selbe hinaus wie mit ner priority queue
 
 		//alle positonen werden in q_vector geladen könnte noch mal optimiert werden
-		for (int i = 0; i < m_map.size(); i++) // z
+		for (uint32_t i = 0; i < m_map.size(); i++) // z
 		{
-			for (int j = 0; j < m_map[i].size(); j++) // y
+			for (uint32_t j = 0; j < m_map[i].size(); j++) // y
 			{
-				for (int k = 0; k < m_map[i][j].size(); k++) // x
+				for (uint32_t k = 0; k < m_map[i][j].size(); k++) // x
 				{
 					m_cellmap[i][j][k].pos = { k, j, i }; // x y z 
-					const glm::vec3 temp = rounded_dest - glm::vec3(k, j, i);
+					const glm::vec3 temp = rounded_dest - glm::ivec3(k, j, i);
 					m_cellmap[i][j][k].h_dist = temp.x + temp.y; // h_dist ist die manhatten distanz zwischen einem punkt und der destination
 					q_vector.push_back(&m_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
 
@@ -196,16 +199,16 @@ namespace Utils {
 		int i = 5;
 		while (!q_vector.empty())
 		{
-			std::sort(q_vector.begin(), q_vector.end(), comp); // sortieren. die zelle mit der niedrigsten distanz ist ganz hinten
+			std::ranges::sort(q_vector, comp); // sortieren. die zelle mit der niedrigsten distanz ist ganz hinten
 			cell* u = q_vector.back(); // hinterstes element wird genommen
 			q_vector.pop_back(); // aus dem vector gelöscht
 			for (cell* v : get_neighbours(u, q_vector, m_cellmap)) // die nachbarn von u durchgehen
 			{
 				const double dist = u->dist + get_dist(u, v); //distanz ausrechnen zwischen u und v 
-				if (dist < m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist) // ist diese niedriger
+				if (dist < m_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
 				{
-					m_cellmap[v->pos.z][v->pos.y][v->pos.x].dist = dist; // wird die distanz von v verändert
-					m_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &m_cellmap[u->pos.z][u->pos.y][u->pos.x];// und u wird als parent von v gesetzt
+					m_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
+					m_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent = &m_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
 				}
 			}
 
@@ -296,9 +299,9 @@ namespace Utils {
 	{
 		if (!(pos.z < m_map.size() && pos.z >= 0))
 			return false;
-		if (!(pos.y < m_map[pos.z].size() && pos.y >= 0))
+		if (!(pos.y < m_map[static_cast<int>(pos.z)].size() && pos.y >= 0))
 			return false;
-		if (!(pos.x < m_map[pos.z][pos.y].size() && pos.x >= 0))
+		if (!(pos.x < m_map[static_cast<int>(pos.z)][static_cast<int>(pos.y)].size() && pos.x >= 0))
 			return false;
 		return true;
 
@@ -361,10 +364,10 @@ namespace Utils {
 					for (const cell* v : get_neighbours(u, q_vector, player_cellmap)) // die nachbarn von u durchgehen
 					{
 						const double dist = u->dist + get_dist(u, v); //distanz ausrechnen zwischen u und v 
-						if (dist < player_cellmap[v->pos.z][v->pos.y][v->pos.x].dist) // ist diese niedriger
+						if (dist < player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
 						{
-							player_cellmap[v->pos.z][v->pos.y][v->pos.x].dist = dist; // wird die distanz von v verändert
-							player_cellmap[v->pos.z][v->pos.y][v->pos.x].parent = &player_cellmap[u->pos.z][u->pos.y][u->pos.x];// und u wird als parent von v gesetzt
+							player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
+							player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent = &player_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
 						}
 					}
 				}
@@ -518,7 +521,7 @@ namespace Utils {
 			//LOG_DEBUG("pos: x: {} y: {} z:{}",pos.x, pos.y, pos.z);
 			//LOG_DEBUG("is_valid pos {}", is_valid(pos));
 			if (is_valid(pos))
-				neighbours.push_back(&m_cellmap[(pos.z)][pos.y][pos.x]);
+				neighbours.push_back(&m_cellmap[static_cast<int>(pos.z)][static_cast<int>(pos.y)][static_cast<int>(pos.x)]);
 
 		}
 		return neighbours;
@@ -526,7 +529,7 @@ namespace Utils {
 
 	double Pathfinding::get_dist(cell* curr, const cell* dest)
 	{
-		switch (m_map[dest->pos.z][dest->pos.y][dest->pos.x])
+		switch (m_map[static_cast<int>(dest->pos.z)][static_cast<int>(dest->pos.y)][static_cast<int>(dest->pos.x)])
 		{
 		case Cell::NOTHING: // fallthrough
 		case Cell::STAIR:
@@ -536,7 +539,7 @@ namespace Utils {
 			return 2;
 
 		case Cell::WALL:
-			return 5;
+			return 10;
 
 		}
 		return 1;

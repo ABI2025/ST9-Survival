@@ -99,7 +99,7 @@ void EnemyManager::update(float deltatime)
 				++it;
 			}
 		}
-		constexpr float epsilon = 1e-6;
+		constexpr float epsilon = 1e-6f;
 
 	auto comp = [](std::shared_ptr<Enemy>& e1, std::shared_ptr<Enemy>& e2)
 		{
@@ -125,7 +125,7 @@ void EnemyManager::draw(sf::RenderWindow& i_window) const
 	glm::vec3 prev_pos (-1);
 	for (const auto& m : m_enemys)
 	{
-		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6))
+		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f))
 		{
 			i_window.draw(*m);
 		}

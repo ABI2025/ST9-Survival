@@ -60,16 +60,16 @@ void Game::render_map(glm::vec3 player_pos)
 	//Utils::ScopedTimer ttt("render_map funktion");
 	player_pos = round(player_pos / 135.0f);
 
-	const int rendersizex = 11;
-	const int rendersizey = 7;
+	constexpr int rendersizex = 11;
+	constexpr int rendersizey = 7;
 
-	for (int i = player_pos.x - rendersizex; i < player_pos.x + rendersizex; i++)
+	for (int i = static_cast<int>(player_pos.x) - rendersizex; i < static_cast<int>(player_pos.x) + rendersizex; i++)
 	{
-		for (int j = player_pos.y - rendersizey; j < player_pos.y + rendersizey; j++)
+		for (int j = static_cast<int>(player_pos.y) - rendersizey; j < static_cast<int>(player_pos.y) + rendersizey; j++)
 		{
 			if (Utils::is_valid({ i,j,0.0f }))
 			{
-				m_background_sprites[m_tiles[i][j][0]].setPosition(i * BACKGROUND_WIDTH, j * BACKGROUND_HEIGHT);
+				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH, static_cast<float>(j) * BACKGROUND_HEIGHT);
 				m_window.draw(m_background_sprites[m_tiles[i][j][0]]);
 			}
 		}
@@ -85,7 +85,7 @@ void Game::render_tower()
 			
 			if (m_map[0][j][i] != Utils::Cell::NOTHING) {
 				sf::RectangleShape rect (sf::Vector2<float>{120,120});
-				rect.setPosition(i * 135, j * 135);
+				rect.setPosition(i * 135.0f, j * 135.0f);
 				
 				m_window.draw(rect);
 			}
@@ -117,7 +117,7 @@ void Game::run_game(int)
 
 	while (m_window.isOpen() && m_open)
 	{
-		double deltatime = delta_timer.Elapsed();
+		float deltatime = delta_timer.Elapsed();
 		delta_timer.Reset();
 		sf::Event event{};
 		while (m_window.pollEvent(event))
@@ -164,7 +164,7 @@ void Game::run_game(int)
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
 			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
 			{
-				m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::WALL;
+				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::WALL;
 
 			}
 		}
@@ -174,7 +174,7 @@ void Game::run_game(int)
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
 			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
 			{
-				m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::NOTHING;
+				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::NOTHING;
 
 			}
 		}

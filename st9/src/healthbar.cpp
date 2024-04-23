@@ -29,13 +29,13 @@ bool healthbar::damage_input(int damage) {
 void healthbar::draw_healthbar(sf::RenderWindow& window, Player& p) {
 	sf::RectangleShape background(sf::Vector2f(300,40));
 	background.setFillColor(sf::Color::White);
-	background.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x / 2 + window.getView().getSize().x * 0.1 - 4, p.get_pos().y - window.getView().getSize().y / 2 + window.getView().getSize().y * 0.1 - 4));
+	background.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x / 2.0f + window.getView().getSize().x * 0.1f - 4, p.get_pos().y - window.getView().getSize().y / 2.0f + window.getView().getSize().y * 0.1f - 4));
 	sf::RectangleShape health_background(sf::Vector2f(292, 32));
 	health_background.setFillColor(sf::Color::Black);
-	health_background.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x / 2 + window.getView().getSize().x * 0.1, p.get_pos().y - window.getView().getSize().y / 2 + window.getView().getSize().y * 0.1));
-	sf::RectangleShape health(sf::Vector2f(292*m_health/20, 32));
+	health_background.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x / 2.0f + window.getView().getSize().x * 0.1f, p.get_pos().y - window.getView().getSize().y / 2.0f + window.getView().getSize().y * 0.1f));
+	sf::RectangleShape health(sf::Vector2f(292.0f*m_health /20.0f, 32));
 	health.setFillColor(sf::Color::Red);
-	health.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x/2 + window.getView().getSize().x * 0.1, p.get_pos().y - window.getView().getSize().y/2 + window.getView().getSize().y*0.1));
+	health.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x/2 + window.getView().getSize().x * 0.1f, p.get_pos().y - window.getView().getSize().y/2.0f + window.getView().getSize().y*0.1f));
 	window.draw(background);
 	window.draw(health_background);
 	window.draw(health);
