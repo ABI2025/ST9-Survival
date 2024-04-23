@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include <glm/glm.hpp>
 #include <SFML/Graphics.hpp>
-#include "Utils/Pathfinding.h"
 
+namespace Utils {
+	class Pathfinding;
+}
 
 class Entity : public sf::Drawable
 {
