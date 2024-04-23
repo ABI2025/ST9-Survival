@@ -83,8 +83,8 @@ namespace Utils {
 	std::vector<glm::vec3> Pathfinding::a_star(const glm::vec3& dest, const glm::vec3& start)
 	{
 		ScopedTimer a_star_t("A*");
-		const glm::vec3 rounded_dest = round(dest /135.0f);
-		const glm::vec3 rounded_start= round(start /135.0f);
+		const glm::vec3 rounded_dest = (dest /135.0f);
+		const glm::vec3 rounded_start= (start /135.0f);
 
 		if(!is_valid(rounded_dest) || !is_valid(rounded_start))
 		{

@@ -181,7 +181,9 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
         LOG_CRITICAL("button works");
     }
     ImGui::End();
+    
     target.draw(m_sprite, states);
+    
 }
 
 glm::ivec3 Player::getMovementSpeed() const {

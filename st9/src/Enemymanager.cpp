@@ -29,7 +29,7 @@ EnemyManager::EnemyManager()
 	//m_enemys[5]->m_pos = { 135*3,135*3,0 };
 
 	textures.resize(1);
-	textures[0].loadFromFile("resources/charakter_R.png");
+	textures[0].loadFromFile("resources/gegner1-1.png");
 }
 
 int curr_frame = 0;
@@ -84,7 +84,7 @@ void EnemyManager::update(float deltatime)
 					}
 				}
 			//}
-				e->m_hitbox = e->m_pos + glm::vec3{40,120,0};
+				e->m_hitbox = e->m_pos + glm::vec3{55,110,0};
 	}
 	);
 	
@@ -165,7 +165,7 @@ int EnemyManager::naiveEnemyKiller() {
 
 		glm::vec3 projectilePos = projectile->get_pos();
 		glm::vec3 projectileHitbox = projectile->get_hitBox(); // Using the new get_hitBox method
-		glm::vec3 projectileMin = projectilePos;
+		glm::vec3 projectileMin = projectilePos; // warum????
 		glm::vec3 projectileMax =  projectileHitbox;
 
 		for (auto& enemy : m_enemys) {
@@ -176,7 +176,7 @@ int EnemyManager::naiveEnemyKiller() {
 			glm::vec3 enemyPos = enemy->get_pos();
 			glm::vec3 enemyHitbox = enemy->get_hitBox(); // Using the new get_hitBox method
 			glm::vec3 enemyMin = enemyPos;
-			glm::vec3 enemyMax = enemyHitbox;
+			glm::vec3 enemyMax = enemyHitbox; // btw chat gpt ist richtig inkompetent
 
 			// Check if hitboxes intersect
 			bool collision = (projectileMax.x > enemyMin.x) &&

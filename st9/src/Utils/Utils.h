@@ -15,7 +15,7 @@ namespace Utils
 		WALL,
 		DEFENSE,
 		STAIR,
-
+		TURRET,
 
 
 	};
