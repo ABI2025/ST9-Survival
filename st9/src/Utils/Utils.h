@@ -42,8 +42,9 @@ namespace Utils
 	inline bool vec3_almost_equal(const glm::vec3& vec1, const glm::vec3& vec2, float maxDifference = 1.0f) {
 		const float xDiff = std::fabs(vec1.x - vec2.x);
 		const float yDiff = std::fabs(vec1.y - vec2.y);
+		const float zDiff = std::fabs(vec1.z - vec2.z);
 
-		return (xDiff <= maxDifference) && (yDiff <= maxDifference);
+		return (xDiff <= maxDifference) && (yDiff <= maxDifference) && (zDiff <= maxDifference);
 	}
 
 	template<typename T,glm::qualifier P> sf::Vector2<T> convert_to_sf_vec2(glm::vec<2,T,P> vec)

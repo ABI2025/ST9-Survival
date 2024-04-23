@@ -106,13 +106,13 @@ void Game::run_game(int)
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
 	bool right_click = false;
 	bool left_click = false;
-	EnemyManager ma;
 	m_tiles = erstelleMap();
 	MainBuilding mb;
 	m_window.clear();
 	render_map(p->get_pos());
 	m_window.display();
 	bool epilepsy = false;
+	EnemyManager ma;
 
 	while (m_window.isOpen() && m_open)
 	{

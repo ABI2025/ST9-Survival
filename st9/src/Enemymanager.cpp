@@ -40,11 +40,12 @@ float con_dt = 0.0f;
 thread_local size_t  prev_size = 0;
 void EnemyManager::update(float deltatime)
 {
-	if(s_player_moving)
-		Utils::Pathfinding::get_instance()->calculate_paths();
+	//if(s_player_moving)
+Utils::Pathfinding::get_instance()->calculate_paths();
 	con_dt += deltatime;
 	curr_frame++;
-	std::for_each(std::execution::par,m_enemys.begin(), m_enemys.end(), [this,&deltatime](std::shared_ptr<Enemy>& e)
+	std::for_each(std::execution::par,m_enemys.begin(), m_enemys.end(), [this,&deltatime]
+	(std::shared_ptr<Enemy>& e)
 	{
 			{
 				if (e == nullptr)
@@ -68,9 +69,10 @@ void EnemyManager::update(float deltatime)
 				e_pos.y /= 135;*/
 				e->m_movements = Utils::Pathfinding::get_instance()->find_path
 				(
-					e_pos, Utils::Priority::nothing
+					e_pos, Utils::Priority::player
 				);
 				e->prev_size = e->m_movements.size();
+				LOG_INFO("size of path {}", e->prev_size);
 			}
 			e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
 			//if (curr_frame % 2 == 0) {
