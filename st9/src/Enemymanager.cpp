@@ -52,54 +52,54 @@ void EnemyManager::update(float deltatime)
 					return;
 				}
 
-			}
-			if (e->m_movements.empty() == true || (s_player_moving))
-			{
-				//e->m_hp--;
-				glm::vec3 player = Utils::Pathfinding::get_instance()->find_nearest(e->m_pos, Utils::Priority::player);
-				/*player.x /= 135;
-				player.y /= 135;*/
-			
-				glm::vec3 e_pos = e->m_pos;
-				/*e_pos.x /= 135;
-				e_pos.y /= 135;*/
-				e->m_movements = Utils::Pathfinding::get_instance()->find_path
-				(
-					player, e_pos
-				);
-				e->prev_size = e->m_movements.size();
-			}
-			e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
-			//if (curr_frame % 2 == 0) {
-				for (int i = 0; i < 300 * deltatime; i++) // du hurensohn
-				{
-					if (e->m_movements.empty() == false)
-					{
-						glm::vec3 temp = e->m_movements[e->m_movements.size() - 1];
-						/*temp.x *= 135;
-						temp.y *= 135;*/
-						e->m_pos = temp;
-						e->m_sprite.setPosition(temp.x, temp.y);
-						e->m_movements.pop_back();
-					}
 				}
-			//}
-				e->m_hitbox = e->m_pos + glm::vec3{55,110,0};
-	}
-	);
-	
-	for (std::vector<std::shared_ptr<Enemy>>::iterator it = m_enemys.begin(); it != m_enemys.end();)
-	{
-		if (*it == nullptr)
-		{
-			it = m_enemys.erase(it);
+				if (e->m_movements.empty() == true || (s_player_moving))
+				{
+					//e->m_hp--;
+					/*player.x /= 135;
+					player.y /= 135;*/
+				
+					glm::vec3 e_pos = e->m_pos;
+					/*e_pos.x /= 135;
+					e_pos.y /= 135;*/
+					e->m_movements = Utils::Pathfinding::get_instance()->find_path
+					(
+						e_pos, Utils::Priority::player
+					);
+					e->prev_size = e->m_movements.size();
+				}
+				e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
+				//if (curr_frame % 2 == 0) {
+					for (int i = 0; i < 300 * deltatime; i++)
+					{
+						if (e->m_movements.empty() == false)
+						{
+							glm::vec3 temp = e->m_movements[e->m_movements.size() - 1];
+							/*temp.x *= 135;
+							temp.y *= 135;*/
+							e->m_pos = temp;
+							e->m_sprite.setPosition(temp.x, temp.y);
+							e->m_movements.pop_back();
+						}
+					}
+				//}
+				e->m_hitbox = e->m_pos + glm::vec3{ 55,110,0 };
+
 		}
-		else
+		);
+		
+		for (std::vector<std::shared_ptr<Enemy>>::iterator it = m_enemys.begin(); it != m_enemys.end();)
 		{
-			++it;
+			if (*it == nullptr)
+			{
+				it = m_enemys.erase(it);
+			}
+			else
+			{
+				++it;
+			}
 		}
-	}
-	constexpr float epsilon = 1e-6;
+		constexpr float epsilon = 1e-6;
 
 	auto comp = [](std::shared_ptr<Enemy>& e1, std::shared_ptr<Enemy>& e2)
 		{
