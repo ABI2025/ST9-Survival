@@ -43,7 +43,7 @@ void Projectile::updateAll() {
     cleanUp();
 }
 
-void Projectile::drawAllProjectiles(sf::RenderTarget& target, sf::RenderStates states) {
+void Projectile::drawAllProjectiles(sf::RenderTarget& target, sf::RenderStates states) {//von Elias (Seinem ego gehts gut)
     updateAll();
     for (Projectile* proj : projectiles) {
         if (proj != nullptr && proj->m_lifetime > 0) {
