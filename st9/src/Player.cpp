@@ -23,21 +23,21 @@ Player::Player()
         }
     }
 
-    m_textures[0][0][0].loadFromFile("Resources/charakter_L.png");
-    m_textures[0][0][1].loadFromFile("Resources/charakter_L1.png");
-    m_textures[0][0][2].loadFromFile("Resources/charakter_L2.png");
+    m_textures[0][0][0].loadFromFile("Resources/images/charakter_L.png");
+    m_textures[0][0][1].loadFromFile("Resources/images/charakter_L1.png");
+    m_textures[0][0][2].loadFromFile("Resources/images/charakter_L2.png");
 
-    m_textures[0][1][0].loadFromFile("Resources/charakter_R.png");
-    m_textures[0][1][1].loadFromFile("Resources/charakter_R1.png");
-    m_textures[0][1][2].loadFromFile("Resources/charakter_R2.png");
+    m_textures[0][1][0].loadFromFile("Resources/images/charakter_R.png");
+    m_textures[0][1][1].loadFromFile("Resources/images/charakter_R1.png");
+    m_textures[0][1][2].loadFromFile("Resources/images/charakter_R2.png");
 
-    m_textures[1][0][0].loadFromFile("Resources/charakter_HL.png");
-    m_textures[1][0][1].loadFromFile("Resources/charakter_HL1.png");
-    m_textures[1][0][2].loadFromFile("Resources/charakter_HL2.png");
+    m_textures[1][0][0].loadFromFile("Resources/images/charakter_HL.png");
+    m_textures[1][0][1].loadFromFile("Resources/images/charakter_HL1.png");
+    m_textures[1][0][2].loadFromFile("Resources/images/charakter_HL2.png");
 
-    m_textures[1][1][0].loadFromFile("Resources/charakter_HR.png");
-    m_textures[1][1][1].loadFromFile("Resources/charakter_HR1.png");
-    m_textures[1][1][2].loadFromFile("Resources/charakter_HR2.png");
+    m_textures[1][1][0].loadFromFile("Resources/images/charakter_HR.png");
+    m_textures[1][1][1].loadFromFile("Resources/images/charakter_HR1.png");
+    m_textures[1][1][2].loadFromFile("Resources/images/charakter_HR2.png");
     m_sprite.setTexture(m_textures[0][0][0]);
 
 }

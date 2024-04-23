@@ -2,7 +2,7 @@
 #include "Utils/Utils.h"
 #include "Game.h"
 #include "Gui.h"
-#include "../Resources/Roboto-Regular.embed"
+#include "../Resources/Images/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
 
 constexpr int NUM_BUTTONS = 3;
@@ -25,7 +25,7 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
 void Menu::show_menu() {
 	Game::erstelle_game(m_window);
 	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("Resources/Hitmarker.wav")) LOG_ERROR("fuck");
+	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.wav")) LOG_ERROR("fuck");
 	sf::Sound sound;
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);

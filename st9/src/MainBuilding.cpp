@@ -3,7 +3,7 @@
 
 MainBuilding::MainBuilding()
 {
-	m_texture.loadFromFile("Resources/Spawn.png");
+	m_texture.loadFromFile("Resources/images/Spawn.png");
 	m_sprite.setTexture(m_texture);
 	m_sprite.setPosition(0, 0);
 }
