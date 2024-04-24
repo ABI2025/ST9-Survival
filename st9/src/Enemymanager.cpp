@@ -40,8 +40,8 @@ void EnemyManager::update(float deltatime)
 {
 	con_dt += deltatime;
 	curr_frame++;
-	std::for_each(std::execution::par,m_enemys.begin(), m_enemys.end(), [this,&deltatime](std::shared_ptr<Enemy>& e)
-	{
+	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime](std::shared_ptr<Enemy>& e)
+		{
 			{
 				if (e == nullptr)
 					return;
@@ -51,59 +51,53 @@ void EnemyManager::update(float deltatime)
 					e.reset();
 					return;
 				}
+			}
+			if (e->m_movements.empty() == true || (s_player_moving))
+			{
 
-				}
-				if (e->m_movements.empty() == true || (s_player_moving))
+				const glm::vec3 e_pos = e->m_pos;
+
+				e->m_movements = Utils::Pathfinding::get_instance()->find_path
+				(
+					e_pos, Utils::Priority::tower
+				);
+				e->prev_size = e->m_movements.size();
+			}
+			e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
+			for (int i = 0; i < 300 * deltatime; i++)
+			{
+				if (e->m_movements.empty() == false)
 				{
-					//e->m_hp--;
-					/*player.x /= 135;
-					player.y /= 135;*/
-				
-					glm::vec3 e_pos = e->m_pos;
-					/*e_pos.x /= 135;
-					e_pos.y /= 135;*/
-					e->m_movements = Utils::Pathfinding::get_instance()->find_path
-					(
-						e_pos, Utils::Priority::player
-					);
-					e->prev_size = e->m_movements.size();
+					const glm::vec3 temp = e->m_movements[e->m_movements.size() - 1];
+					/*temp.x *= 135;
+					temp.y *= 135;*/
+					e->m_pos = temp;
+					e->m_sprite.setPosition(temp.x, temp.y);
+					e->m_movements.pop_back();
 				}
-				e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
-				//if (curr_frame % 2 == 0) {
-					for (int i = 0; i < 300 * deltatime; i++)
-					{
-						if (e->m_movements.empty() == false)
-						{
-							glm::vec3 temp = e->m_movements[e->m_movements.size() - 1];
-							/*temp.x *= 135;
-							temp.y *= 135;*/
-							e->m_pos = temp;
-							e->m_sprite.setPosition(temp.x, temp.y);
-							e->m_movements.pop_back();
-						}
-					}
-				//}
-				e->m_hitbox = e->m_pos + glm::vec3{ 55,110,0 };
+			}
+
+			e->m_hitbox = e->m_pos + glm::vec3{ 55,110,0 };
 
 		}
-		);
-		
-		for (std::vector<std::shared_ptr<Enemy>>::iterator it = m_enemys.begin(); it != m_enemys.end();)
-		{
-			if (*it == nullptr)
-			{
-				it = m_enemys.erase(it);
-			}
-			else
-			{
-				++it;
-			}
-		}
-		constexpr float epsilon = 1e-6f;
+	);
 
-	auto comp = [](std::shared_ptr<Enemy>& e1, std::shared_ptr<Enemy>& e2)
+	for (auto it = m_enemys.begin(); it != m_enemys.end();)
+	{
+		if (*it == nullptr)
 		{
-			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos,epsilon);
+			it = m_enemys.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	constexpr float epsilon = 1e-6f;
+
+	auto comp = [](const std::shared_ptr<Enemy>& e1, const std::shared_ptr<Enemy>& e2)
+		{
+			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
 		};
 
 	std::ranges::sort(m_enemys, comp);
@@ -122,7 +116,7 @@ void EnemyManager::add_enemy()
 }
 void EnemyManager::draw(sf::RenderWindow& i_window) const
 {
-	glm::vec3 prev_pos (-1);
+	glm::vec3 prev_pos(-1);
 	for (const auto& m : m_enemys)
 	{
 		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f))
@@ -142,7 +136,7 @@ int EnemyManager::naiveEnemyKiller(Projectile * projectile) {
 			sf::FloatRect enemyBounds = enemy->get_sprite().getGlobalBounds();
 
 			if (projectileBounds.intersects(enemyBounds)) {
-				enemy->die();  
+				enemy->die();
 				hitCount++;
 			}
 		}
@@ -166,7 +160,7 @@ int EnemyManager::naiveEnemyKiller() {
 		glm::vec3 projectilePos = projectile->get_pos();
 		glm::vec3 projectileHitbox = projectile->get_hitBox(); // Using the new get_hitBox method
 		glm::vec3 projectileMin = projectilePos; // warum????
-		glm::vec3 projectileMax =  projectileHitbox;
+		glm::vec3 projectileMax = projectileHitbox;
 
 		for (auto& enemy : m_enemys) {
 			if (!enemy->isAlive()) {

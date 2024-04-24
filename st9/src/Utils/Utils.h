@@ -12,8 +12,8 @@ namespace Utils
 	enum class Cell
 	{
 		NOTHING = 0,
-		WALL,
 		DEFENSE,
+		WALL,
 		STAIR,
 		TURRET,
 

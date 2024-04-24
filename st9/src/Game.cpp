@@ -9,12 +9,13 @@
 #include "Player.h"
 #include "EnemyManager.h"
 #include "MainBuilding.h"
+#include "BuildSystem.h"
 #include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 20;	
-constexpr int width  = 40;
+constexpr int height = 20;
+constexpr int width = 40;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 {
@@ -52,7 +53,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	m_background_sprites[3].setTexture(m_background_textures[3]);
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 
-	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}",m_map.size(), m_map[0].size(), m_map[0][0].size());
+	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
 void Game::render_map(glm::vec3 player_pos)
@@ -82,12 +83,35 @@ void Game::render_tower()
 	{
 		for (int j = 0; j < height; j++)
 		{
-			
-			if (m_map[0][j][i] != Utils::Cell::NOTHING) {
-				sf::RectangleShape rect (sf::Vector2<float>{120,120});
+			switch (m_map[0][j][i])
+			{
+			case Utils::Cell::WALL:
+			{
+				sf::RectangleShape rect(sf::Vector2<float>{120, 120});
 				rect.setPosition(i * 135.0f, j * 135.0f);
-				
+
 				m_window.draw(rect);
+			}
+			break;
+			case Utils::Cell::TURRET:
+			{
+				sf::RectangleShape rect(sf::Vector2<float>{120, 120});
+				rect.setPosition(i * 135.0f, j * 135.0f);
+				rect.setFillColor(sf::Color::Blue);
+
+				m_window.draw(rect);
+			}
+			break;
+			case Utils::Cell::DEFENSE:
+			{
+				sf::RectangleShape rect(sf::Vector2<float>{120, 120});
+				rect.setPosition(i * 135.0f, j * 135.0f);
+				rect.setFillColor(sf::Color::Red);
+				m_window.draw(rect);
+			}
+			break;
+			default:
+				break;
 			}
 		}
 	}
@@ -114,7 +138,8 @@ void Game::run_game(int)
 	m_window.display();
 	bool epilepsy = false;
 	healthbar hb{};
-
+	BuildSystem buildsystem;
+	Utils::Cell selected = Utils::Cell::NOTHING;
 	while (m_window.isOpen() && m_open)
 	{
 		float deltatime = delta_timer.Elapsed();
@@ -133,7 +158,7 @@ void Game::run_game(int)
 				break;
 			case sf::Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Button::Left)
-					left_click = true ;
+					left_click = true;
 				if (event.mouseButton.button == sf::Mouse::Button::Right)
 					right_click = true;
 				break;
@@ -143,7 +168,7 @@ void Game::run_game(int)
 				if (event.key.code == sf::Keyboard::Key::E)
 					ma.add_enemy();
 				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					new Projectile(glm::vec3(p->get_pos()), glm::vec3( p->getMovementSpeed().x  * 2.5, p->getMovementSpeed().y *2.5, 0), 180 , 0.1 , 5);
+					new Projectile(glm::vec3(p->get_pos()), glm::vec3(p->getMovementSpeed().x * 2.5, p->getMovementSpeed().y * 2.5, 0), 180, 0.1, 5);
 				if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
 					hb.damage_input(1);
 				if (event.key.code == sf::Keyboard::Key::R)
@@ -157,28 +182,30 @@ void Game::run_game(int)
 			}
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		
-		if(left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+
+
+		selected = buildsystem.display();
+
+		if (left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 		{
 			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
+			if (Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
 			{
-				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::WALL;
-
+				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = selected;
 			}
 		}
-		if(right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+		if (right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 		{
 			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-			if(Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
+			if (Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
 			{
 				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::NOTHING;
 
 			}
 		}
-		if (m_window.hasFocus()) 
+		if (m_window.hasFocus())
 		{
 			p->update(deltatime);
 			Utils::Pathfinding::get_instance()->calculate_paths();
@@ -188,9 +215,9 @@ void Game::run_game(int)
 		{
 			ImGui::Begin("DEBUG WINDOW");
 
-			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime*1000, 1/deltatime);
+			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000, 1 / deltatime);
 			ImGui::TextWrapped("amount of enemies: %d", ma.get_enemies().size());
-			if(ImGui::Button("fix lc/right click"))
+			if (ImGui::Button("fix lc/right click"))
 			{
 				left_click = false;
 				right_click = false;
@@ -210,7 +237,7 @@ void Game::run_game(int)
 		ma.draw(m_window);
 		m_window.draw(*p);
 		Projectile::drawAllProjectiles(m_window, sf::RenderStates());
-		hb.draw_healthbar(m_window,*p.get());
+		hb.draw_healthbar(m_window, *p.get());
 		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
 		m_window.display();
 	}

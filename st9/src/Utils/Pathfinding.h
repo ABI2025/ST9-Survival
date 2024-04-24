@@ -87,11 +87,11 @@ namespace Utils
 
 		//private methods
 	private:
-		std::vector<glm::vec3> make_path(const glm::vec3& dest, const std::vector<std::vector<std::vector<cell>>>& cellmap);
-		std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start);
-		std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start);
-		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap);
-		double get_dist(cell*, const cell*);
+		std::vector<glm::vec3> make_path(const glm::vec3& dest, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
+		//std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start); //wird zurzeit nicht verwendet
+		std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start) const;
+		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
+		double get_dist(cell*, const cell*) const;
 
 	};
 

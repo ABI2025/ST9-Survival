@@ -175,12 +175,12 @@ void Player::update(float deltatime)
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    ImGui::Begin("test", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-    if (ImGui::ImageButton("test", m_sprite, { 50.0f,135.0f }))
-    {
-        LOG_CRITICAL("button works");
-    }
-    ImGui::End();
+    //ImGui::Begin("test", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+    //if (ImGui::ImageButton("test", m_sprite, { 50.0f,135.0f }))
+    //{
+    //    LOG_CRITICAL("button works");
+    //}
+    //ImGui::End();
     
     target.draw(m_sprite, states);
     
