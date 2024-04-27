@@ -4,25 +4,32 @@
 #include "Gui.h"
 #include "../Resources/Images/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
+#include "SFML/Opengl.hpp"
 
 constexpr int NUM_BUTTONS = 3;
-Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game") {
+Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
+{
 	m_name_button = { "Start","Options","Exit" };
 	init_sfml_imgui(m_window);
-	font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
+	m_font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
 	// Initialisiere Buttons direkt im Konstruktor
-	buttons[0].first = sf::FloatRect(1920 / 2 - 100, 1080 / 2 - 200, 200, 50); // Start-Button
-	buttons[0].second = false;
+	m_buttons[0].first = sf::FloatRect(1920.0f / 2.0f - 100.0f, 1080.0f / 2.0f - 200.0f, 200.0f, 50.0f); // Start-Button
+	m_buttons[0].second = false;
 
-	buttons[1].first = sf::FloatRect(1920 / 2 - 100, 1080 / 2 - 100, 200, 50); // Optionen
-	buttons[1].second = false;
+	m_buttons[1].first = sf::FloatRect(1920.0f / 2.0f - 100.0f, 1080.0f / 2.0f - 100.0f, 200.0f, 50.0f); // Optionen
+	m_buttons[1].second = false;
 
-	buttons[2].first = sf::FloatRect(1920 / 2 - 100, 1080 / 2 - 0, 200, 50); // Schlieﬂen
-	buttons[2].second = false;
+	m_buttons[2].first = sf::FloatRect(1920.0f / 2.0f - 100.0f, 1080.0f / 2.0f - 0.0f, 200.0f, 50.0f); // Schlieﬂen
+	m_buttons[2].second = false;
 
+	LOG_INFO("  OpenGL Info:");
+	LOG_INFO("  Vendor: {0}", (const char*)glGetString(GL_VENDOR));
+	LOG_INFO("  Renderer: {0}", (const char*)glGetString(GL_RENDERER));
+	LOG_INFO("  Version: {0}", (const char*)glGetString(GL_VERSION));
 }
 
-void Menu::show_menu() {
+void Menu::show_menu()
+{
 	Game::erstelle_game(m_window);
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.wav")) LOG_ERROR("fuck");
@@ -33,7 +40,7 @@ void Menu::show_menu() {
 	while (m_window.isOpen())
 	{
 
-		sf::Event event;
+		sf::Event event{};
 		while (m_window.pollEvent(event)) 
 		{
 			switch (event.type)
@@ -46,45 +53,46 @@ void Menu::show_menu() {
 			case sf::Event::Closed:
 					m_window.close();
 				break;
+			default:
+					break;
 			}
 
 		}
 
 		sf::FloatRect mouse = { sf::Vector2f(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))), {1, 1} };
 
-		int buttonIndex = -1;
+		int button_index = -1;
 		for (int i = 0; i < NUM_BUTTONS; ++i) 
 		{
-			if (buttons[i].first.contains(mouse.left, mouse.top)) 
+			if (m_buttons[i].first.contains(mouse.left, mouse.top)) 
 			{
-				buttonIndex = i;
-				if (!buttons[i].second)
+				button_index = i;
+				if (!m_buttons[i].second)
 				{
 					sound.play();
 				}
-				buttons[i].second = true;
+				m_buttons[i].second = true;
 				//break; //entfernt weil es theoretisch mˆglich ist, dass jemand von einem zum anderen frame von einem knopf zum andern geht.
 			}
 			else
-				buttons[i].second = false;
+				m_buttons[i].second = false;
 		}
 
-		if (buttonIndex != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+		if (button_index != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
 		{
-			switch (buttonIndex)
+			switch (button_index)
 			{
 			case 0: // Start-Button
 				Game::get_game()->run_game(0);
 				break;
 			case 1: // Optionen
-				//LOG_ERROR("irgendwas ist schrecklich");
+				
 				break;
 			case 2: // Schlieﬂen
-				//LOG_DEBUG("das darfst du nicht");
 				m_window.close();
 				break;
 			default:
-				LOG_WARN("how the ...");
+				LOG_ERROR("what in the memory corruption");
 				break;
 			}
 		}
@@ -92,12 +100,12 @@ void Menu::show_menu() {
 		m_window.clear();
 
 		// Zeichne sichtbare Buttons und Labels
-		for (const auto& button : buttons) 
+		for (const auto& [rect, pressed] : m_buttons) 
 		{
-			sf::RectangleShape buttonShape(sf::Vector2f(button.first.width, button.first.height));
-			buttonShape.setPosition(button.first.left, button.first.top);
-			buttonShape.setFillColor(button.second ? sf::Color(183, 65, 14) : sf::Color::Red); // Farbe der Buttons
-			m_window.draw(buttonShape);
+			sf::RectangleShape button_shape(sf::Vector2f(rect.width, rect.height));
+			button_shape.setPosition(rect.left, rect.top);
+			button_shape.setFillColor(pressed ? sf::Color(183, 65, 14) : sf::Color::Red); // Farbe der Buttons
+			m_window.draw(button_shape);
 		}
 		draw_button_labels(NUM_BUTTONS);
 
@@ -105,18 +113,18 @@ void Menu::show_menu() {
 	}
 }
 
-void Menu::draw_button_labels(int numButtons)
+void Menu::draw_button_labels(const int numButtons)
 {
 	for (int i = 0; i < numButtons; i++) 
 	{
-		sf::Text buttonText;
-		buttonText.setFont(font); // Stelle sicher, dass die Schriftart geladen ist
-		buttonText.setString(m_name_button[i]); // Setze den Button-Text
-		buttonText.setCharacterSize(24); // W‰hle eine Textgrˆﬂe
-		buttonText.setPosition(buttons[i].first.left + 20, buttons[i].first.top + 10); // Positioniere den Text innerhalb des Buttons
-		buttonText.setFillColor(sf::Color::White); // Textfarbe
+		sf::Text button_text;
+		button_text.setFont(m_font); // Stelle sicher, dass die Schriftart geladen ist
+		button_text.setString(m_name_button[i]); // Setze den Button-Text
+		button_text.setCharacterSize(24); // W‰hle eine Textgrˆﬂe
+		button_text.setPosition(m_buttons[i].first.left + 20, m_buttons[i].first.top + 10); // Positioniere den Text innerhalb des Buttons
+		button_text.setFillColor(sf::Color::White); // Textfarbe
 
-		m_window.draw(buttonText);
+		m_window.draw(button_text);
 	}
 }
 

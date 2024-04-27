@@ -11,9 +11,9 @@ private:
 	sf::RenderWindow* m_window;
 	sf::View m_view;
 public:
-	Camera(sf::RenderWindow* window);
+	explicit Camera(sf::RenderWindow* window);
 
-	Camera(sf::RenderWindow* window, Player* player);
+	explicit Camera(sf::RenderWindow* window, Player* player);
 
 	~Camera();
 
@@ -33,5 +33,5 @@ public:
 
 	void move_to_pos(sf::Vector2f vec);
 
-	void move_to_pos(sf::View view);
+	void move_to_pos(const sf::View& view);
 };

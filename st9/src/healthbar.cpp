@@ -1,39 +1,45 @@
 #include "healthbar.h"
-#include "Player.h"
+#include "entities/Player/Player.h"
 
-healthbar::healthbar() {
+healthbar::healthbar()
+{
 	m_health = 20;// Aktuelle HP - Standard HP 20
 }
-healthbar::~healthbar() {
 
-}
-void healthbar::regeneration(int health) {// 
+void healthbar::regeneration(const int health)
+{// 
 	m_health += health;
 }
-int healthbar::get_health() {
+int healthbar::get_health() const
+{
 	return m_health;
 }
-bool healthbar::alive() {
-	if (m_health <= 0) {
+bool healthbar::alive() const
+{
+	if (m_health <= 0)
+	{
 		return false;
 	}
 	return true;
 }
-bool healthbar::damage_input(int damage) {
+bool healthbar::damage_input(const int damage)
+{
 	m_health -= damage;
-	if (m_health <= 0) {
+	if (m_health <= 0)
+	{
 		return false;
 	}
 	return true;
 }
-void healthbar::draw_healthbar(sf::RenderWindow& window, Player& p) {
+void healthbar::draw_healthbar(sf::RenderWindow& window, Player& p) const
+{
 	sf::RectangleShape background(sf::Vector2f(300,40));
 	background.setFillColor(sf::Color::White);
 	background.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x / 2.0f + window.getView().getSize().x * 0.1f - 4, p.get_pos().y - window.getView().getSize().y / 2.0f + window.getView().getSize().y * 0.1f - 4));
 	sf::RectangleShape health_background(sf::Vector2f(292, 32));
 	health_background.setFillColor(sf::Color::Black);
 	health_background.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x / 2.0f + window.getView().getSize().x * 0.1f, p.get_pos().y - window.getView().getSize().y / 2.0f + window.getView().getSize().y * 0.1f));
-	sf::RectangleShape health(sf::Vector2f(292.0f*m_health /20.0f, 32));
+	sf::RectangleShape health(sf::Vector2f(292.0f*static_cast<float>(m_health) /20.0f, 32));
 	health.setFillColor(sf::Color::Red);
 	health.setPosition(sf::Vector2f(p.get_pos().x - window.getView().getSize().x/2 + window.getView().getSize().x * 0.1f, p.get_pos().y - window.getView().getSize().y/2.0f + window.getView().getSize().y*0.1f));
 	window.draw(background);

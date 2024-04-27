@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-#include "../Player.h"
+#include "entities/Player/Player.h"
+
 #include "Utils.h"
 
 namespace Utils {
 	Pathfinding* Pathfinding::s_instance = nullptr;
-
 
 	void Pathfinding::Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
 	{
@@ -25,7 +25,6 @@ namespace Utils {
 		s_instance = nullptr;
 	}
 
-
 	Pathfinding* Pathfinding::get_instance()
 	{
 		if (!s_instance)
@@ -33,7 +32,7 @@ namespace Utils {
 		return s_instance;
 	}
 
-	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& start, Priority p)
+	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& start, Priority p) const
 	{
 		/*
 		if(!m_player->is_alive() && p == Priority::player)
@@ -44,10 +43,10 @@ namespace Utils {
 		switch (p)
 		{
 		case Priority::nothing:
-			return make_path(start, nothing_cellmap);
+			return make_path(start, m_nothing_cellmap);
 			break;
 		case Priority::tower:
-			return make_path(start, tower_cellmap);
+			return make_path(start, m_tower_cellmap);
 			break;
 
 		case Priority::player:
@@ -60,7 +59,7 @@ namespace Utils {
 			}
 			//LOG_INFO("used backtracking");
 
-			return make_path(start, player_cellmap);
+			return make_path(start, m_player_cellmap);
 			break;
 
 
@@ -69,7 +68,6 @@ namespace Utils {
 		return {};
 
 	}
-
 
 	Pathfinding::Pathfinding(const std::shared_ptr<Player>& i_player, std::vector<std::vector<std::vector<Utils::Cell>>>& i_map)
 		: m_player(i_player), m_map(i_map)
@@ -265,7 +263,6 @@ namespace Utils {
 		return route;
 	}
 
-
 	bool Pathfinding::is_valid(const glm::vec3& pos) const
 	{
 		if (!(pos.z < m_map.size() && pos.z >= 0))
@@ -280,7 +277,7 @@ namespace Utils {
 
 	void Pathfinding::calculate_paths()
 	{
-		ScopedTimer calc_path("calculate_paths");
+		//ScopedTimer calc_path("calculate_paths");
 		//run dijkstra ez
 
 		//priority player
@@ -293,7 +290,7 @@ namespace Utils {
 					start.x, start.y, start.z);
 
 			}
-			player_cellmap =
+			m_player_cellmap =
 				std::vector(m_map.size(),
 					std::vector(m_map[0].size(),
 						std::vector(m_map[0][0].size(),
@@ -310,8 +307,8 @@ namespace Utils {
 				{
 					for (int k = 0; k < m_map[i][j].size(); k++) // x
 					{
-						player_cellmap[i][j][k].pos = { k, j, i }; // x y z 
-						q_vector.push_back(&player_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
+						m_player_cellmap[i][j][k].pos = { k, j, i }; // x y z 
+						q_vector.push_back(&m_player_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
 					}
 				}
 			}
@@ -321,7 +318,7 @@ namespace Utils {
 			}
 			else
 			{
-				player_cellmap[start.z][start.y][start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
+				m_player_cellmap[start.z][start.y][start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
 				auto comp = [](const cell* c1, const cell* c2)->bool //eine funktion um die zellen mit einander zu vergleichen
 					{
 						return (c1->dist) > (c2->dist);
@@ -332,13 +329,13 @@ namespace Utils {
 					std::ranges::sort(q_vector, comp); // sortieren. die zelle mit der niedrigsten distanz ist ganz hinten
 					cell* u = q_vector.back(); // hinterstes element wird genommen
 					q_vector.pop_back(); // aus dem vector gelöscht
-					for (const cell* v : get_neighbours(u, q_vector, player_cellmap)) // die nachbarn von u durchgehen
+					for (const cell* v : get_neighbours(u, q_vector, m_player_cellmap)) // die nachbarn von u durchgehen
 					{
 						const double dist = u->dist + get_dist(u, v); //distanz ausrechnen zwischen u und v 
-						if (dist < player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
+						if (dist < m_player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
 						{
-							player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
-							player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent = &player_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
+							m_player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
+							m_player_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent = &m_player_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
 						}
 					}
 				}
@@ -371,7 +368,7 @@ namespace Utils {
 			//}
 
 			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
-			nothing_cellmap =
+			m_nothing_cellmap =
 				std::vector(m_map.size(), std::vector(m_map[0].size(),
 					std::vector(m_map[0][0].size(),
 						cell{ {0,0,0},DBL_MAX,DBL_MAX,nullptr })));
@@ -385,8 +382,8 @@ namespace Utils {
 				{
 					for (uint32_t k = 0; k < m_map[i][j].size(); k++) // x
 					{
-						nothing_cellmap[i][j][k].pos = { k, j, i }; // x y z 
-						q_vector.push_back(&nothing_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
+						m_nothing_cellmap[i][j][k].pos = { k, j, i }; // x y z 
+						q_vector.push_back(&m_nothing_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
 					}
 				}
 			}
@@ -396,22 +393,22 @@ namespace Utils {
 				};
 			for (auto start : start_points)
 			{
-				nothing_cellmap[start.z][start.y][start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
-				nothing_cellmap[start.z][start.y][start.x].parent = nullptr; //distanz am start zu 0 setzen als startpunk
+				m_nothing_cellmap[start.z][start.y][start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
+				m_nothing_cellmap[start.z][start.y][start.x].parent = nullptr; //distanz am start zu 0 setzen als startpunk
 			}
 			while (!q_vector.empty())
 			{
 				std::ranges::sort(q_vector, comp); // sortieren. die zelle mit der niedrigsten distanz ist ganz hinten
 				cell* u = q_vector.back(); // hinterstes element wird genommen
 				q_vector.pop_back(); // aus dem vector gelöscht
-				for (const cell* v : get_neighbours(u, q_vector, nothing_cellmap)) // die nachbarn von u durchgehen
+				for (const cell* v : get_neighbours(u, q_vector, m_nothing_cellmap)) // die nachbarn von u durchgehen
 				{
 					const double dist = u->dist + get_dist(u, v); //distanz ausrechnen zwischen u und v 
-					if (dist < nothing_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
+					if (dist < m_nothing_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
 					{
-						nothing_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
-						nothing_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent =
-							&nothing_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
+						m_nothing_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
+						m_nothing_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent =
+							&m_nothing_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
 					}
 				}
 			}
@@ -435,7 +432,7 @@ namespace Utils {
 				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			}
 			{
-				tower_cellmap =
+				m_tower_cellmap =
 					std::vector(m_map.size(), std::vector(m_map[0].size(),
 						std::vector(m_map[0][0].size(),
 							cell{ {0,0,0},DBL_MAX,DBL_MAX,nullptr })));
@@ -449,8 +446,8 @@ namespace Utils {
 					{
 						for (uint32_t k = 0; k < m_map[i][j].size(); k++) // x
 						{
-							tower_cellmap[i][j][k].pos = { k, j, i }; // x y z 
-							q_vector.push_back(&tower_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
+							m_tower_cellmap[i][j][k].pos = { k, j, i }; // x y z 
+							q_vector.push_back(&m_tower_cellmap[i][j][k]); // hinzufugen der zelle zu q_vector
 						}
 					}
 				}
@@ -460,22 +457,22 @@ namespace Utils {
 					};
 				for (auto start : start_points)
 				{
-					tower_cellmap[start.z][start.y][start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
-					tower_cellmap[start.z][start.y][start.x].parent = nullptr; //distanz am start zu 0 setzen als startpunk
+					m_tower_cellmap[start.z][start.y][start.x].dist = 0; //distanz am start zu 0 setzen als startpunkt
+					m_tower_cellmap[start.z][start.y][start.x].parent = nullptr; //distanz am start zu 0 setzen als startpunk
 				}
 				while (!q_vector.empty())
 				{
 					std::ranges::sort(q_vector, comp); // sortieren. die zelle mit der niedrigsten distanz ist ganz hinten
 					cell* u = q_vector.back(); // hinterstes element wird genommen
 					q_vector.pop_back(); // aus dem vector gelöscht
-					for (const cell* v : get_neighbours(u, q_vector, tower_cellmap)) // die nachbarn von u durchgehen
+					for (const cell* v : get_neighbours(u, q_vector, m_tower_cellmap)) // die nachbarn von u durchgehen
 					{
 						const double dist = u->dist + get_dist(u, v); //distanz ausrechnen zwischen u und v 
-						if (dist < tower_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
+						if (dist < m_tower_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist) // ist diese niedriger
 						{
-							tower_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
-							tower_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent =
-								&tower_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
+							m_tower_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].dist = dist; // wird die distanz von v verändert
+							m_tower_cellmap[static_cast<int>(v->pos.z)][static_cast<int>(v->pos.y)][static_cast<int>(v->pos.x)].parent =
+								&m_tower_cellmap[static_cast<int>(u->pos.z)][static_cast<int>(u->pos.y)][static_cast<int>(u->pos.x)];// und u wird als parent von v gesetzt
 						}
 					}
 				}

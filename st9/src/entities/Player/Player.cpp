@@ -2,50 +2,49 @@
 #include "Utils/Log.h"
 #include <iostream>
 
-#include "EnemyManager.h"
+#include "entities/EnemyManager.h"
 #include "imgui.h"
 #include "imgui-sfml.h"
 
 Player::Player()
-    : Entity()
+	: Entity(), prev_pos(), m_geld(0), m_health(0), speed()
 
 {
-    m_pos = { 720, 720, 0 };
-    cell_pos = m_pos / 135.0f;
-    prev_cell_pos = m_pos / 135.0f;
-    m_textures.resize(2);
-    for (auto& t : m_textures)
-    {
-        t.resize(3);
-        for (auto& tt : t)
-        {
-            tt.resize(3);
-        }
-    }
+	m_pos = {720, 720, 0};
+	cell_pos = m_pos / 135.0f;
+	prev_cell_pos = m_pos / 135.0f;
+	m_textures.resize(2);
+	for (auto& t : m_textures)
+	{
+		t.resize(3);
+		for (auto& tt : t)
+		{
+			tt.resize(3);
+		}
+	}
 
-    m_textures[0][0][0].loadFromFile("Resources/images/charakter_L.png");
-    m_textures[0][0][1].loadFromFile("Resources/images/charakter_L1.png");
-    m_textures[0][0][2].loadFromFile("Resources/images/charakter_L2.png");
+	m_textures[0][0][0].loadFromFile("Resources/images/charakter_L.png");
+	m_textures[0][0][1].loadFromFile("Resources/images/charakter_L1.png");
+	m_textures[0][0][2].loadFromFile("Resources/images/charakter_L2.png");
 
-    m_textures[0][1][0].loadFromFile("Resources/images/charakter_R.png");
-    m_textures[0][1][1].loadFromFile("Resources/images/charakter_R1.png");
-    m_textures[0][1][2].loadFromFile("Resources/images/charakter_R2.png");
+	m_textures[0][1][0].loadFromFile("Resources/images/charakter_R.png");
+	m_textures[0][1][1].loadFromFile("Resources/images/charakter_R1.png");
+	m_textures[0][1][2].loadFromFile("Resources/images/charakter_R2.png");
 
-    m_textures[1][0][0].loadFromFile("Resources/images/charakter_HL.png");
-    m_textures[1][0][1].loadFromFile("Resources/images/charakter_HL1.png");
-    m_textures[1][0][2].loadFromFile("Resources/images/charakter_HL2.png");
+	m_textures[1][0][0].loadFromFile("Resources/images/charakter_HL.png");
+	m_textures[1][0][1].loadFromFile("Resources/images/charakter_HL1.png");
+	m_textures[1][0][2].loadFromFile("Resources/images/charakter_HL2.png");
 
-    m_textures[1][1][0].loadFromFile("Resources/images/charakter_HR.png");
-    m_textures[1][1][1].loadFromFile("Resources/images/charakter_HR1.png");
-    m_textures[1][1][2].loadFromFile("Resources/images/charakter_HR2.png");
-    m_sprite.setTexture(m_textures[0][0][0]);
-
+	m_textures[1][1][0].loadFromFile("Resources/images/charakter_HR.png");
+	m_textures[1][1][1].loadFromFile("Resources/images/charakter_HR1.png");
+	m_textures[1][1][2].loadFromFile("Resources/images/charakter_HR2.png");
+	m_sprite.setTexture(m_textures[0][0][0]);
 }
 
 static int i = 0;
 static int prevleft_right = 0;
 static int prevfront_back = 0;
-void Player::update(float deltatime)
+void Player::update(const float deltatime)
 {
     float speed_scalar = 1.0f;
     int left_right = -1;
@@ -127,7 +126,7 @@ void Player::update(float deltatime)
 
     if (dir != glm::vec3{ 0,0,0 }) //um undefiniertes verhalten zu verhindern und zur optimierung
     {
-        dir = glm::normalize(dir);
+        dir = normalize(dir);
         /*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
         dir *= 300 * speed_scalar * deltatime;
         m_pos += dir;
@@ -140,9 +139,6 @@ void Player::update(float deltatime)
             prev_pos = cell_pos;
             EnemyManager::set_player_moving(true);
         }
-        else
-            EnemyManager::set_player_moving(false);
-
 
 
         /*LOG_TRACE("before normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
@@ -167,13 +163,12 @@ void Player::update(float deltatime)
     }
     else
     {
-        EnemyManager::set_player_moving(false);
         m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
 }
 
-void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
     //ImGui::Begin("test", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
     //if (ImGui::ImageButton("test", m_sprite, { 50.0f,135.0f }))
@@ -186,6 +181,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
     
 }
 
-glm::ivec3 Player::getMovementSpeed() const {
+glm::ivec3 Player::get_movement_speed() const {
     return speed;
 }

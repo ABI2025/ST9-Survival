@@ -5,15 +5,15 @@
 class MainBuilding
 {
 	int m_hp;
-	int m_pos_x;
-	int m_pos_y;
+	float m_pos_x;
+	float m_pos_y;
 	sf::Sprite m_sprite;
 	sf::Texture m_texture;
 
 
 	public:
 		MainBuilding();
-		void MainSprite(sf::RenderWindow&);
+		void main_sprite(sf::RenderWindow&) const;
 		
 
 };

@@ -12,7 +12,8 @@ project "st9"
     "../%{IncludeDir.glm}",
     "../%{IncludeDir.spd_log}",
     "../%{IncludeDir.SFML}",
-    "../%{IncludeDir.ImGui}"
+    "../%{IncludeDir.ImGui}",
+    "src"
    }
    defines {"SFML_STATIC"}
  

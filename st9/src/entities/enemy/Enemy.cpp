@@ -6,19 +6,19 @@
 void Enemy::update()
 {
 }
-bool Enemy::isAlive() const
+bool Enemy::is_alive() const
 {
 	return m_hp > 0;
 }
 
-void Enemy::take_damage(double damage) {
+void Enemy::take_damage(const double damage) {
     m_hp -= damage; 
     if (m_hp <= 0) {
         die();
     }
 }
-double Enemy::getHp()
+double Enemy::get_hp() const
 {
     return m_hp;
 }
-void Enemy::die() {};
+void Enemy::die() {}

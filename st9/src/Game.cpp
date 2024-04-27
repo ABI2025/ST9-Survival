@@ -4,10 +4,12 @@
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
 #include <imgui.h>
+#include <SFML/Audio.hpp>
+
 #include "Camera.h"
 #include "imgui-SFML.h"
-#include "Player.h"
-#include "EnemyManager.h"
+#include "entities/Player/Player.h"
+#include "entities/EnemyManager.h"
 #include "MainBuilding.h"
 #include "BuildSystem.h"
 #include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
@@ -17,9 +19,9 @@ constexpr int BACKGROUND_WIDTH = 135;
 constexpr int height = 20;
 constexpr int width = 40;
 
-std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
+std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map()
 {
-	std::vector<std::vector<std::array<uint8_t, 2>>> KARTE;
+	std::vector<std::vector<std::array<uint8_t, 2>>> karte;
 	std::array<uint8_t, 2> single_cell = { 0,0 };
 	for (int i = 0; i < width; i++)
 	{
@@ -30,9 +32,9 @@ std::vector<std::vector<std::array<uint8_t, 2>>> erstelleMap()
 			inner_map.emplace_back(single_cell);
 
 		}
-		KARTE.emplace_back(inner_map);
+		karte.emplace_back(inner_map);
 	}
-	return KARTE;
+	return karte;
 }
 
 Game::Game(sf::RenderWindow& window) :m_window(window)
@@ -40,10 +42,10 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
 
-	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg"))throw std::exception("Fehler");
-	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg"))throw std::exception("Fehler");
-	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg"))throw std::exception("Fehler");
-	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg"))throw std::exception("Fehler");
+	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
 
 	m_background_sprites.resize(4);
 
@@ -51,6 +53,15 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	m_background_sprites[1].setTexture(m_background_textures[1]);
 	m_background_sprites[2].setTexture(m_background_textures[2]);
 	m_background_sprites[3].setTexture(m_background_textures[3]);
+
+
+	m_building_textures.resize(4);
+
+	if (!m_building_textures[0].loadFromFile("Resources/images/1111.png"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_building_textures[1].loadFromFile("Resources/images/Top.png"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_building_textures[2].loadFromFile("Resources/images/buttom.png"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png"))LOG_ERROR("texture konnte nicht geladen werden");
+
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
@@ -77,8 +88,9 @@ void Game::render_map(glm::vec3 player_pos)
 	}
 }
 
-void Game::render_tower()
+void Game::render_tower() const
 {
+	sf::Sprite sprite;
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -87,30 +99,29 @@ void Game::render_tower()
 			{
 			case Utils::Cell::WALL:
 			{
-				sf::RectangleShape rect(sf::Vector2<float>{120, 120});
-				rect.setPosition(i * 135.0f, j * 135.0f);
 
-				m_window.draw(rect);
+				sprite.setTexture(m_building_textures[0]);
+				sprite.setPosition(i * 135.0f
+					, j * 135.0f);
+				m_window.draw(sprite);
 			}
 			break;
-			case Utils::Cell::TURRET:
-			{
-				sf::RectangleShape rect(sf::Vector2<float>{120, 120});
-				rect.setPosition(i * 135.0f, j * 135.0f);
-				rect.setFillColor(sf::Color::Blue);
-
-				m_window.draw(rect);
-			}
-			break;
+			case Utils::Cell::TURRET: //fallthrough
 			case Utils::Cell::DEFENSE:
 			{
-				sf::RectangleShape rect(sf::Vector2<float>{120, 120});
-				rect.setPosition(i * 135.0f, j * 135.0f);
-				rect.setFillColor(sf::Color::Red);
-				m_window.draw(rect);
+				sprite.setTexture(m_building_textures[2]);
+				sprite.setPosition(i * 135.0f
+					, j * 135.0f);
+				m_window.draw(sprite);
+
+				sprite.setTexture(m_building_textures[1]);
+				sprite.setPosition(i * 135.0f
+					, j * 135.0f);
+				m_window.draw(sprite);
 			}
 			break;
-			default:
+			case Utils::Cell::NOTHING:
+			case Utils::Cell::STAIR:
 				break;
 			}
 		}
@@ -121,102 +132,162 @@ void Game::run_game(int)
 {
 	static_assert(height <= 20);
 	static_assert(width <= 40);
+
+
 	std::shared_ptr<Player> p = std::make_shared<Player>();
+
 	Camera c(&m_window, p.get());
 	sf::Clock deltaClock;
 	Utils::Timer delta_timer;
 
 	Utils::Pathfinding::Init(p, m_map);
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
+
 	bool right_click = false;
 	bool left_click = false;
+
 	EnemyManager ma;
-	m_tiles = erstelleMap();
 	MainBuilding mb;
+	healthbar hb{};
+	BuildSystem buildsystem;
+
+	sf::SoundBuffer buffer1;
+	if (!buffer1.loadFromFile("resources/Sounds/Heilung.wav")) LOG_ERROR("fuck");
+	sf::Sound sound1;
+	sound1.setBuffer(buffer1);
+	sound1.setVolume(50.0f);
+
+	sf::SoundBuffer buffer2;
+	if (!buffer2.loadFromFile("resources/Sounds/Error.mp3")) LOG_ERROR("fuck");
+	sf::Sound sound2;
+	sound2.setBuffer(buffer2);
+	sound2.setVolume(50.0f);
+
+	sf::SoundBuffer buffer3;
+	if (!buffer3.loadFromFile("resources/Sounds/Schuss.wav")) LOG_ERROR("fuck");
+	sf::Sound sound3;
+	sound3.setBuffer(buffer3);
+	sound3.setVolume(50.0f);
+
+	sf::SoundBuffer buffer4;
+	if (!buffer4.loadFromFile("resources/Sounds/Lademusik.wav")) LOG_ERROR("fuck");
+	sf::Sound sound4;
+	sound4.setBuffer(buffer4);
+	sound4.setVolume(50.0f);
+
+	m_tiles = erstelle_map();
+
 	m_window.clear();
 	render_map(p->get_pos());
 	m_window.display();
-	bool epilepsy = false;
-	healthbar hb{};
-	BuildSystem buildsystem;
+
+	sound4.play();
 	Utils::Cell selected = Utils::Cell::NOTHING;
+	bool first_run = true;
 	while (m_window.isOpen() && m_open)
 	{
+		EnemyManager::set_updated_tower(false);
+		EnemyManager::set_player_moving(false);
 		float deltatime = delta_timer.Elapsed();
 		delta_timer.Reset();
 		sf::Event event{};
-		while (m_window.pollEvent(event))
+
+		while (m_window.pollEvent(event)) //Hier werden alle möglichen Events wie tasten und so weiter gehandled
 		{
-			ImGui::SFML::ProcessEvent(m_window, event);
-			switch (event.type)
+			ImGui::SFML::ProcessEvent(m_window, event);//Imgui Funktion die die Events handled für imgui
+			//if (m_window.hasFocus())//falls das spiel nicht 
+			//{
+				switch (event.type)
+				{
+
+				case sf::Event::MouseButtonReleased: //Warum kein fallthrough und einfach left_click != left_click wegen eines Bug
+					if (event.mouseButton.button == sf::Mouse::Button::Left)
+						left_click = false;
+					if (event.mouseButton.button == sf::Mouse::Button::Right)
+						right_click = false;
+					break;
+				case sf::Event::MouseButtonPressed:
+					if (event.mouseButton.button == sf::Mouse::Button::Left)
+						left_click = true;
+					if (event.mouseButton.button == sf::Mouse::Button::Right)
+						right_click = true;
+					break;
+
+
+				case sf::Event::KeyPressed: //TODO: nicht alles hier machen bitte und logik weiter unten machen
+					if (event.key.code == sf::Keyboard::Key::Escape)
+						m_open = false;
+					if (event.key.code == sf::Keyboard::Key::E)
+						ma.add_enemy();
+					if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
+					{
+						sound3.play();
+						new Projectile(glm::vec3(p->get_pos()), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
+					}
+					if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
+					{
+						sound2.play();
+						hb.damage_input(1);
+					}
+					if (event.key.code == sf::Keyboard::Key::R)
+					{
+						sound1.play();
+						hb.regeneration(1);
+					}
+					break;
+				case sf::Event::Closed:
+					m_window.close();
+					break;
+				default:
+					break;
+				}
+			//}
+		}
+		ImGui::SFML::Update(m_window, deltaClock.restart());//Imgui funktion damit alles geupdatet wird
+
+		{//Buildsystem
+			selected = buildsystem.display();
+
+			if (left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 			{
-			case sf::Event::MouseButtonReleased:
-				if (event.mouseButton.button == sf::Mouse::Button::Left)
-					left_click = false;
-				if (event.mouseButton.button == sf::Mouse::Button::Right)
-					right_click = false;
-				break;
-			case sf::Event::MouseButtonPressed:
-				if (event.mouseButton.button == sf::Mouse::Button::Left)
-					left_click = true;
-				if (event.mouseButton.button == sf::Mouse::Button::Right)
-					right_click = true;
-				break;
-			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::Key::Escape)
-					m_open = false;
-				if (event.key.code == sf::Keyboard::Key::E)
-					ma.add_enemy();
-				if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					new Projectile(glm::vec3(p->get_pos()), glm::vec3(p->getMovementSpeed().x * 2.5, p->getMovementSpeed().y * 2.5, 0), 180, 0.1, 5);
-				if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
-					hb.damage_input(1);
-				if (event.key.code == sf::Keyboard::Key::R)
-					hb.regeneration(1);
-				break;
-			case sf::Event::Closed:
-				m_window.close();
-				break;
-			default:
-				break;
+				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+
+				glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
+
+				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING)
+				{
+					//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
+					m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = selected;
+					EnemyManager::set_updated_tower(true);
+				}
+			}
+			if (right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+			{
+				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+				glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
+				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING)
+				{
+					//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
+					m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::NOTHING;
+					EnemyManager::set_updated_tower(true);
+				}
 			}
 		}
-		ImGui::SFML::Update(m_window, deltaClock.restart());
 
 
-		selected = buildsystem.display();
-
-		if (left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
-		{
-			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
-			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-			if (Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
-			{
-				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = selected;
-			}
-		}
-		if (right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
-		{
-			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
-			glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-			if (Utils::Pathfinding::get_instance()->is_valid(mouse_pos))
-			{
-				m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::NOTHING;
-
-			}
-		}
-		if (m_window.hasFocus())
+		if (m_window.hasFocus())//Siel logik sollte hier rein
 		{
 			p->update(deltatime);
-			Utils::Pathfinding::get_instance()->calculate_paths();
+			if(EnemyManager::should_update() || first_run)
+				pa->calculate_paths();
 			ma.update(deltatime);
 		}
 
-		{
+		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
 
-			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000, 1 / deltatime);
-			ImGui::TextWrapped("amount of enemies: %d", ma.get_enemies().size());
+			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
+			ImGui::TextWrapped("amount of enemies: %llu", ma.get_enemies().size());
 			if (ImGui::Button("fix lc/right click"))
 			{
 				left_click = false;
@@ -228,18 +299,27 @@ void Game::run_game(int)
 		if (!hb.alive()) {
 			m_open = false;
 		}
-		ma.naiveEnemyKiller();
+		ma.naive_enemy_killer();
+
 		c.move_cam_to_player();
-		m_window.clear(); // hier ist die render order
-		render_map(p->get_pos());
-		mb.MainSprite(m_window);
-		render_tower();
-		ma.draw(m_window);
-		m_window.draw(*p);
-		Projectile::drawAllProjectiles(m_window, sf::RenderStates());
-		hb.draw_healthbar(m_window, *p.get());
-		ImGui::SFML::Render(m_window); // muss als letztes gezeichnet werden wegen z achse (damit es ganz oben ist)
-		m_window.display();
+
+		{//Rendern (Bitte keine als zu große logik ab hier)
+
+			//hier ist die render order
+			m_window.clear();//das momentane fenster wird gecleared
+
+			render_map(p->get_pos()); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+			mb.main_sprite(m_window); 
+			render_tower();
+			ma.draw(m_window);
+			m_window.draw(*p);
+			Projectile::draw_all_projectiles(m_window);
+			hb.draw_healthbar(m_window, *p);
+			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)
+
+			m_window.display();
+		}
+		first_run = false;
 	}
 	m_tiles.clear();
 	m_open = true;
@@ -260,7 +340,7 @@ Game* Game::get_game()
 	return s_game;
 }
 
-void Game::set_map(Utils::Cell& cell, int x, int y, int z) {
+void Game::set_map(const Utils::Cell& cell, int x, int y, int z) {
 	if (
 		z < m_map.size() && z >= 0 &&
 		y < m_map[z].size() && y >= 0 &&

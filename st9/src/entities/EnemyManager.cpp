@@ -28,8 +28,8 @@ EnemyManager::EnemyManager()
 	//m_enemys[5]->m_id = 0;
 	//m_enemys[5]->m_pos = { 135*3,135*3,0 };
 
-	textures.resize(1);
-	textures[0].loadFromFile("resources/images/gegner1-1.png");
+	m_textures.resize(1);
+	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
 }
 
 int curr_frame = 0;
@@ -63,7 +63,7 @@ void EnemyManager::update(float deltatime)
 				);
 				e->prev_size = e->m_movements.size();
 			}
-			e->m_sprite.setTexture(this->textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
+			e->m_sprite.setTexture(this->m_textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
 			for (int i = 0; i < 300 * deltatime; i++)
 			{
 				if (e->m_movements.empty() == false)
@@ -109,6 +109,25 @@ void EnemyManager::update(float deltatime)
 	}
 }
 
+glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 pos) const
+{
+	glm::vec2 nearst (-1);
+	double dist = DBL_MAX;
+	for (const auto& enemy : m_enemys)
+	{
+		const double temp = sqrt(pow(pos.x - enemy->m_pos.x, 2) + pow(pos.y - enemy->m_pos.y, 2));
+		if(temp < dist)
+		{
+			dist = temp;
+			nearst = { enemy->m_pos.x,enemy->m_pos.y };
+		}
+	}
+	if (dist > radius) 
+		return { -1.0f,-1.0f };
+
+	return nearst;
+}
+
 void EnemyManager::add_enemy()
 {
 	m_enemys.push_back(std::make_shared<Enemy>());
@@ -145,50 +164,50 @@ int EnemyManager::naiveEnemyKiller(Projectile * projectile) {
 	return hitCount;
 }
 */
-#include <glm/gtx/string_cast.hpp> // For glm::to_string
+//#include <glm/gtx/string_cast.hpp> // For glm::to_string
 
-int EnemyManager::naiveEnemyKiller() {
-	int hitCount = 0;
-	std::vector<Projectile*> toRemoveProjectiles;
+int EnemyManager::naive_enemy_killer() {
+	int hit_count = 0;
+	std::vector<Projectile*> to_remove_projectiles;
 
 	for (Projectile* projectile : Projectile::get_projectiles()) {
 		if (projectile->get_penetration() <= 0) {
-			toRemoveProjectiles.push_back(projectile);
+			to_remove_projectiles.push_back(projectile);
 			continue;
 		}
 
-		glm::vec3 projectilePos = projectile->get_pos();
-		glm::vec3 projectileHitbox = projectile->get_hitBox(); // Using the new get_hitBox method
-		glm::vec3 projectileMin = projectilePos; // warum????
-		glm::vec3 projectileMax = projectileHitbox;
+		glm::vec3 projectile_pos = projectile->get_pos();
+		glm::vec3 projectile_hitbox = projectile->get_hit_box(); // Using the new get_hitBox method
+		glm::vec3 projectile_min = projectile_pos; // warum????
+		glm::vec3 projectile_max = projectile_hitbox;
 
 		for (auto& enemy : m_enemys) {
-			if (!enemy->isAlive()) {
+			if (!enemy->is_alive()) {
 				continue;
 			}
 
-			glm::vec3 enemyPos = enemy->get_pos();
-			glm::vec3 enemyHitbox = enemy->get_hitBox(); // Using the new get_hitBox method
-			glm::vec3 enemyMin = enemyPos;
-			glm::vec3 enemyMax = enemyHitbox; // btw chat gpt ist richtig inkompetent
+			glm::vec3 enemy_pos = enemy->get_pos();
+			glm::vec3 enemy_hitbox = enemy->get_hit_box(); // Using the new get_hitBox method
+			glm::vec3 enemy_min = enemy_pos;
+			glm::vec3 enemy_max = enemy_hitbox; // btw chat gpt ist richtig inkompetent
 
 			// Check if hitboxes intersect
-			bool collision = (projectileMax.x > enemyMin.x) &&
-				(projectileMin.x < enemyMax.x) &&
-				(projectileMax.y > enemyMin.y) &&
-				(projectileMin.y < enemyMax.y);
+			bool collision = projectile_max.x > enemy_min.x &&
+				projectile_min.x < enemy_max.x &&
+				projectile_max.y > enemy_min.y &&
+				projectile_min.y < enemy_max.y;
 
 			if (collision) {
 				enemy->take_damage(projectile->get_damage());
-				hitCount++;
+				hit_count++;
 
-				if (enemy->getHp() <= 0) {
+				if (enemy->get_hp() <= 0) {
 					enemy->die();
 				}
 
 				projectile->decrease_penetration(1);
 				if (projectile->get_penetration() <= 0) {
-					toRemoveProjectiles.push_back(projectile);
+					to_remove_projectiles.push_back(projectile);
 					break;
 				}
 			}
@@ -196,16 +215,15 @@ int EnemyManager::naiveEnemyKiller() {
 	}
 
 	// Clean up projectiles
-	for (Projectile* projectile : toRemoveProjectiles) {
-		Projectile::removeProjectile(projectile);
+	for (Projectile* projectile : to_remove_projectiles) {
+		Projectile::remove_projectile(projectile);
 	}
 
 	// Clean up dead enemies
-	m_enemys.erase(std::remove_if(m_enemys.begin(), m_enemys.end(),
-		[](const std::shared_ptr<Enemy>& enemy) {
-			return !enemy->isAlive();
-		}),
-		m_enemys.end());
+	std::erase_if(m_enemys,[](const std::shared_ptr<Enemy>& enemy)->bool
+		{
+	              	return !enemy->is_alive();
+		});
 
-	return hitCount;
+	return hit_count;
 }

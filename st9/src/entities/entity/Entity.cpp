@@ -41,7 +41,7 @@ glm::vec3 Entity::get_pos() const
 	return m_pos;
 }
 
-void Entity::set_pos(glm::vec3 i_pos)
+void Entity::set_pos(const glm::vec3 i_pos)
 {
 	m_pos = i_pos;
 }
@@ -51,12 +51,12 @@ sf::Sprite& Entity::get_sprite()
 	return m_sprite;
 }
 
-glm::vec3 Entity::get_hitBox() const
+glm::vec3 Entity::get_hit_box() const
 {
 	return m_hitbox;
 }
 
-void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Entity::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
 }

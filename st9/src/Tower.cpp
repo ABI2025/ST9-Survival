@@ -1,6 +1,6 @@
 #include "Tower.h"
 
-Tower::Tower()
+Tower::Tower() : m_pos(0)
 {
 	m_ressourcen = 0;
 	m_hp = 0;

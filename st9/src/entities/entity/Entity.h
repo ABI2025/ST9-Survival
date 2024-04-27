@@ -22,7 +22,7 @@ public:
 	glm::vec3 get_pos() const;
 	void set_pos(glm::vec3 i_pos);
 	sf::Sprite& get_sprite();
-	glm::vec3 get_hitBox() const;
+	glm::vec3 get_hit_box() const;
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states)const override;

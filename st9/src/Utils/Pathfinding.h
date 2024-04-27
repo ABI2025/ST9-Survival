@@ -4,13 +4,8 @@
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
+#include "entities/Player/Player.h"
 
-#include "../Player.h"
-
-
-class Player;
-
-//nicht benutzen ist nicht fertig warte auf die Implementation von Player (soweit, dass ich mir wichtige daten holen kann)
 
 namespace Utils
 {
@@ -44,9 +39,9 @@ namespace Utils
 		std::shared_ptr<Player> m_player;
 		static Pathfinding* s_instance;
 		std::vector<std::vector<std::vector<Cell>>>& m_map;
-		std::vector<std::vector<std::vector<cell>>> player_cellmap;
-		std::vector<std::vector<std::vector<cell>>> tower_cellmap;
-		std::vector<std::vector<std::vector<cell>>> nothing_cellmap;
+		std::vector<std::vector<std::vector<cell>>> m_player_cellmap;
+		std::vector<std::vector<std::vector<cell>>> m_tower_cellmap;
+		std::vector<std::vector<std::vector<cell>>> m_nothing_cellmap;
 
 
 		//public methods
@@ -66,32 +61,32 @@ namespace Utils
 		static Pathfinding* get_instance();
 
 
-		std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
+		[[nodiscard]]  std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
 
 
 		/*
 		*
 		* start ist der anfang (position vom gegner / entity)
 		* Priority ist auf was der gegner/entity gehen soll
-		* Mögliche Prioritäten sind
-		* Player (wenn player tot dann nothing)
+		* Moegliche Prioritaeten sind
+		* Player 
 		* Nothing
 		* Tower
 		 */
-		std::vector<glm::vec3> find_path(const glm::vec3& start, Priority);
+		[[nodiscard]] std::vector<glm::vec3> find_path(const glm::vec3& start, Priority) const;
 
-		bool is_valid(const glm::vec3&) const;
+		[[nodiscard]] bool is_valid(const glm::vec3&) const;
 
 		void calculate_paths();
 
 
 		//private methods
 	private:
-		std::vector<glm::vec3> make_path(const glm::vec3& dest, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
+		[[nodiscard]] std::vector<glm::vec3> make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
 		//std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start); //wird zurzeit nicht verwendet
-		std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start) const;
-		std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
-		double get_dist(cell*, const cell*) const;
+		[[nodiscard]] std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start) const;
+		[[nodiscard]] std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
+		[[nodiscard]] double get_dist(cell*, const cell*) const;
 
 	};
 

@@ -8,14 +8,14 @@ private:
 	int m_health;
 public:
 	healthbar();
-	~healthbar();
+	~healthbar() = default;
 	void regeneration(int);
 
-	int get_health();
+	[[nodiscard]] int get_health() const;
 
-	bool damage_input(int);
-	bool alive();
-	void draw_healthbar(sf::RenderWindow&, Player&);
+	[[nodiscard]] bool damage_input(int);
+	[[nodiscard]] bool alive() const;
+	void draw_healthbar(sf::RenderWindow&, Player&) const;
 
 };
 

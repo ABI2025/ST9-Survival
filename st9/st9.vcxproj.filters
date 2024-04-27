@@ -1,51 +1,69 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\MainBuilding.cpp" />
-    <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameWindow.cpp" />
-    <ClCompile Include="src\Gui.cpp" />
-    <ClCompile Include="src\Menu.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Utils\Log.cpp" />
-    <ClCompile Include="src\Utils\Pathfinding.cpp" />
-    <ClCompile Include="src\Utils\Random.cpp" />
-    <ClCompile Include="src\camera.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Tower.cpp" />
-    <ClCompile Include="src\Projektil.cpp" />
-    <ClCompile Include="src\BuildSystem.cpp" />
-    <ClCompile Include="src\healthbar.cpp" />
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entities">
+      <UniqueIdentifier>{AA3F76DB-960C-D1E6-BF25-BF8EAB510675}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entities\Player">
+      <UniqueIdentifier>{862D3896-F2B8-A55A-FBC9-284F67D4015B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entities\enemy">
+      <UniqueIdentifier>{77051A44-63D3-0D4A-4C67-7E7038D4E9AE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entities\entity">
+      <UniqueIdentifier>{D6DC62C7-4268-D08B-4B79-5380B7832C8C}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\MainBuilding.h" />
-    <ClInclude Include="src\Enemy.h" />
-    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\BuildSystem.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GameWindow.h" />
     <ClInclude Include="src\Gui.h" />
+    <ClInclude Include="src\MainBuilding.h" />
     <ClInclude Include="src\Menu.h" />
-    <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Utils\Log.h" />
-    <ClInclude Include="src\Utils\Pathfinding.h" />
-    <ClInclude Include="src\Utils\Random.h" />
-    <ClInclude Include="src\Utils\Timer.h" />
-    <ClInclude Include="src\Utils\Utils.h" />
+    <ClInclude Include="src\Tower.h" />
+    <ClInclude Include="src\Utils\Log.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Pathfinding.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Random.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
     <ClInclude Include="src\camera.h" />
-    <ClInclude Include="src\EnemyManager.h" />
-    <ClInclude Include="src\BuildSystem.h" />
+    <ClInclude Include="src\entities\EnemyManager.h">
+      <Filter>entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\Player\Player.h">
+      <Filter>entities\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\enemy\Enemy.h">
+      <Filter>entities\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\entity\Entity.h">
+      <Filter>entities\entity</Filter>
+    </ClInclude>
     <ClInclude Include="src\healthbar.h" />
+    <ClInclude Include="src\projektil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\BuildSystem.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\Gui.cpp" />
+    <ClCompile Include="src\MainBuilding.cpp" />
     <ClCompile Include="src\Menu.cpp" />
-    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Tower.cpp" />
     <ClCompile Include="src\Utils\Log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -56,9 +74,20 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\entities\EnemyManager.cpp">
+      <Filter>entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\Player\Player.cpp">
+      <Filter>entities\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\enemy\Enemy.cpp">
+      <Filter>entities\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\entity\Entity.cpp">
+      <Filter>entities\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\healthbar.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\EnemyManager.cpp" />
-    <ClInclude Include="src\Tower.h" />
-    <ClInclude Include="src\Projektil.h" />
+    <ClCompile Include="src\projektil.cpp" />
   </ItemGroup>
 </Project>

@@ -24,6 +24,9 @@ int Main(int argc, char** argv)
 {
     Utils::Init();
     Menu::get()->show_menu();
+    return 0;
+}
+
 	/*  Utils::Init();
     Utils::ScopedTimer scoped_timer("scoped");
   std::vector<uint32_t> arr;
@@ -197,5 +200,3 @@ int Main(int argc, char** argv)
     //}
    // ImGui::SFML::Shutdown();
    */
-    return 0;
-}

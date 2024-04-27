@@ -13,10 +13,10 @@ class BuildSystem
    
     std::vector<sf::Texture> m_textures;
     std::vector<sf::Sprite> m_sprites;
-    Utils::Cell selected;
+    Utils::Cell m_selected;
 public:
 
-    BuildSystem() : selected(Utils::Cell::NOTHING)
+    BuildSystem() : m_selected(Utils::Cell::NOTHING)
     {
         m_textures.resize(4);
         m_textures[0].loadFromFile("resources/images/charakter_HL.png");
@@ -39,28 +39,11 @@ public:
             std::string t = "test" + std::to_string(i);
             if (ImGui::ImageButton(t.c_str(), m_sprites[i], {135.0f,135.0f}))
             {
-                LOG_INFO("it works ig");
-	            switch (i)
-	            {
-	            case 0:
-                    selected = Utils::Cell::NOTHING;
-                    break;
-	            case 1:
-                    selected = Utils::Cell::DEFENSE;
-                    break;
-                case 2:
-                    selected = Utils::Cell::TURRET;
-                    break;
-	            case 3:
-                    selected = Utils::Cell::WALL;
-                    break;
-	            default:
-                        break;
-	   
-	            }
+                //LOG_INFO("it works ig");
+                m_selected = static_cast<Utils::Cell>(i);
             }
         }
         ImGui::End();
-        return selected;
+        return m_selected;
     }
 };

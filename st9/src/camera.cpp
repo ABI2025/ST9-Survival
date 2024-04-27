@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "Player.h"
+#include "entities/Player/Player.h"
 
 Camera::Camera(sf::RenderWindow* window)
 	:m_player(nullptr), m_window(window)
@@ -43,29 +43,29 @@ void Camera::move_to_default()
 	m_window->setView(m_view);
 }
 
-void Camera::set_window_size(int x, int y)
+void Camera::set_window_size(const int x, const int y)
 {
 	m_view.setSize(static_cast<float>(x), static_cast<float>(y));
 	m_window->setView(m_view);
 }
 
-void Camera::move_to_pos(int x, int y)
+void Camera::move_to_pos(const int x, const int y)
 {
 	m_view.setCenter(static_cast<float>(x),static_cast<float>(y));
 	m_view.setSize({ static_cast<float>(m_window->getSize().x),static_cast<float>(m_window->getSize().y) });
 	m_window->setView(m_view);
 }
 
-void Camera::move_to_pos(sf::Vector2f v)
+void Camera::move_to_pos(const sf::Vector2f vec)
 {
-	m_view.setCenter(v);
+	m_view.setCenter(vec);
 	m_view.setSize({ static_cast<float>(m_window->getSize().x),static_cast<float>(m_window->getSize().y) });
 	m_window->setView(m_view);
 }
 
-void Camera::move_to_pos(sf::View v)
+void Camera::move_to_pos(const sf::View& view)
 {
-	m_view = v;
+	m_view = view;
 	m_view.setSize({ static_cast<float>(m_window->getSize().x),static_cast<float>(m_window->getSize().y) });
 	m_window->setView(m_view);
 }

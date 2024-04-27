@@ -14,10 +14,10 @@ bool init_sfml_imgui(sf::RenderWindow& window)
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows // funktioniert nicht weil die sfml backends das nicht haben
 
-    ImFontConfig fontConfig;
-    fontConfig.FontDataOwnedByAtlas = false;
-    ImFont* robotoFont = io.Fonts->AddFontFromMemoryTTF((void*)g_RobotoRegular, sizeof(g_RobotoRegular), 20.0f, &fontConfig);
-    io.FontDefault = robotoFont;
+    ImFontConfig font_config;
+    font_config.FontDataOwnedByAtlas = false;
+    ImFont* roboto_font = io.Fonts->AddFontFromMemoryTTF((void*)g_RobotoRegular, sizeof(g_RobotoRegular), 20.0f, &font_config);
+    io.FontDefault = roboto_font;
     ImGui::SFML::UpdateFontTexture();
 
     // Setup Dear ImGui style
@@ -33,6 +33,6 @@ bool init_sfml_imgui(sf::RenderWindow& window)
     return true;
 }
 
-Gui::Gui(std::initializer_list<GuiElement> gui_elements) : m_elements(gui_elements)
+Gui::Gui(const std::initializer_list<GuiElement> gui_elements) : m_elements(gui_elements)
 { 
 }

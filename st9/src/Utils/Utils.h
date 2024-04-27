@@ -12,10 +12,10 @@ namespace Utils
 	enum class Cell
 	{
 		NOTHING = 0,
+		TURRET,
 		DEFENSE,
 		WALL,
 		STAIR,
-		TURRET,
 
 
 	};
@@ -42,7 +42,6 @@ namespace Utils
 	inline bool vec3_almost_equal(const glm::vec3& vec1, const glm::vec3& vec2, float maxDifference = 1.0f) { 
 		const float xDiff = std::fabs(vec1.x - vec2.x);
 		const float yDiff = std::fabs(vec1.y - vec2.y);
-		// warum zur hölle tut die funktion vecc3 almost equal nur die x und y checken?
 		return (xDiff <= maxDifference) && (yDiff <= maxDifference);
 	}
 
@@ -57,13 +56,12 @@ namespace Utils
 	}
 	inline bool hitboxCollision(const glm::vec3& posA, const glm::vec3& hitboxA, // wird nicht genutzt, fix ich nochm wird noch schöner
 		const glm::vec3& posB, const glm::vec3& hitboxB) {
+		const glm::vec3 minA = posA;
+		const glm::vec3 maxA = posA + hitboxA;
 
-		glm::vec3 minA = posA;
-		glm::vec3 maxA = posA + hitboxA;
 
-
-		glm::vec3 minB = posB;
-		glm::vec3 maxB = posB + hitboxB;
+		const glm::vec3 minB = posB;
+		const glm::vec3 maxB = posB + hitboxB;
 
 		return maxA.x >= minB.x && minA.x <= maxB.x &&
 			maxA.y >= minB.y && minA.y <= maxB.y &&

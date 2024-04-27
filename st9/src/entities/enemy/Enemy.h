@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "entities/entity/Entity.h"
 
 class Enemy :
     public Entity
@@ -15,8 +15,8 @@ class Enemy :
        Enemy() = default;
        void die();
        void update();
-       bool isAlive() const ;
+       bool is_alive() const ;
        void take_damage(double damage);
-       double getHp();
+       double get_hp() const;
 };
 

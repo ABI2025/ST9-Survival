@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <glm/glm.hpp>
 #include <vector>
-#include "Entity.h" 
+#include "entities/entity/Entity.h"
 
 class Projectile : public Entity { 
 private:
@@ -10,7 +10,7 @@ private:
     int m_lifetime;
     double m_damage;
     int m_penetration; // das projectil soll verschwinden wenn das 0 erreicht
-    inline static std::vector<Projectile*> projectiles;
+    inline static std::vector<Projectile*> s_projectiles;
 
 public:
     Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime , double damage, int penetration);
@@ -19,10 +19,10 @@ public:
     double get_damage() const;
     void decrease_penetration(int);
     void update();
-    static void removeProjectile(Projectile* projectile);
-    static void updateAll();
-    static void drawAllProjectiles(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
+    static void remove_projectile(Projectile* projectile);
+    static void update_all();
+    static void draw_all_projectiles(sf::RenderTarget& target,const sf::RenderStates& states = sf::RenderStates::Default);
     static std::vector<Projectile*>& get_projectiles();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-    static void cleanUp();
+    static void clean_up();
 };
