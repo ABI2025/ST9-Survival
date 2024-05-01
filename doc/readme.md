@@ -41,10 +41,17 @@ LOG_DEBUG("");
 # Pathfinding
 
 ### how it works
-Immer wenn sich was an der Karte und/oder der Position des Sielers geäntert wurde wird der Dijkstra Algorithmus genutzt um vom Spieler und/oder Türmen aus Kosten und Pfad zu jeder Zelle auszurechnen
+Immer wenn sich was an der Karte und/oder der Position des Sielers verändert hat wird der Dijkstra Algorithmus genutzt um vom Spieler und/oder Türmen aus Kosten und Pfad zu jeder Zelle auszurechnen, anschließend wird dann mittels Backtracking ein Pfad genneriert.
 
 
-```c++				
+```c++
+// Initialisierung eines Vektors, der alle Zellen enthaelt
+// Eine PriorityQueue waere eigentlich besser, aber es gibt Probleme damit.
+// Ein Vektor wird verwendet, und Sortierung fuehrt zum gleichen Ergebnis wie mit einer PriorityQueue.
+std::vector<cell*> q_vector;
+```
+Hierzwischen sind noch ein par Checks um undefiniertes verhalten zu verhindern
+```c++
 while (!q_vector.empty())
 {
     std::ranges::sort(q_vector, comp); // Sortiere den q_Vector nach Distanz absteigend.
@@ -73,7 +80,25 @@ while (!q_vector.empty())
 
 ### usage
 ```c++
+
+
 Utils::Pathfinding* instance = Utils::Pathfinding::get_instance();
+instance->calculate_paths(); //wenn die pfade vorher noch nicht berechnet worden
 glm::vec3 start = entity->get_pos(); //position vom entity
-std::vector<glm::vec3> path = instance->find_path(start, );
+std::vector<glm::vec3> path = instance->find_path(start,entity->get_priority());
+entity->set_path(path);
+```
+
+#### Bei mehreren entities macht man einmal calculate paths und ruft dann in einer schleife immer wieder die Funktion find_path auf.
+
+```c++
+Utils::Pathfinding* instance = Utils::Pathfinding::get_instance();
+instance->calculate_paths(); //wenn die pfade vorher noch nicht berechnet worden
+for(auto& entity : entities)
+{
+glm::vec3 start = entity->get_pos(); //position vom entity
+std::vector<glm::vec3> path = instance->find_path(start, entity->get_priority());
+entity->set_path(path);
+}
+
 ```
