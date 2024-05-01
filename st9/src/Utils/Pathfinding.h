@@ -30,9 +30,9 @@ namespace Utils
 	private:
 		struct cell
 		{
-			glm::vec3 pos;
+			glm::ivec3 pos;
 			double dist;
-			double h_dist;
+			//double h_dist;
 			cell* parent;
 		};
 
@@ -83,9 +83,9 @@ namespace Utils
 		//private methods
 	private:
 		[[nodiscard]] std::vector<glm::vec3> make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
-		//std::vector<glm::vec3> a_star(const glm::vec3& dest, const glm::vec3& start); //wird zurzeit nicht verwendet
+		void dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
 		[[nodiscard]] std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start) const;
-		[[nodiscard]] std::vector<cell*> get_neighbours(const cell*, const std::vector<cell*>&, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
+		[[nodiscard]] std::vector<cell*> get_neighbours(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
 		[[nodiscard]] double get_dist(cell*, const cell*) const;
 
 	};

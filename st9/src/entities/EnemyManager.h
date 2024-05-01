@@ -11,9 +11,12 @@ class EnemyManager
 	inline static bool s_player_moving = false;
 	inline static bool s_tower_update = false;
 public:
-	static void set_player_moving(const bool i_moving) { s_player_moving = i_moving;}
-	static void set_updated_tower(const bool i_tower_update) { s_tower_update = i_tower_update;}
-	[[nodiscard]] static bool should_update() { return s_tower_update || s_player_moving; }
+	static void set_player_moving(const bool i_moving)
+	{ s_player_moving = i_moving;}
+	static void set_updated_tower(const bool i_tower_update)
+	{ s_tower_update = i_tower_update;}
+	[[nodiscard]] static bool should_update()
+	{ return s_tower_update || s_player_moving; }
 	EnemyManager();
 	void update(float deltatime);
 

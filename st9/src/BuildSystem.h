@@ -23,8 +23,10 @@ public:
         m_textures[1].loadFromFile("resources/images/top.png");
         m_textures[2].loadFromFile("resources/images/top.png");
         m_textures[3].loadFromFile("resources/images/1111.png");
+
         m_sprites.resize(4);
-        m_sprites[0].setTexture(m_textures[0]);
+
+    	m_sprites[0].setTexture(m_textures[0]);
         m_sprites[1].setTexture(m_textures[1]);
         m_sprites[2].setTexture(m_textures[2]);
         m_sprites[3].setTexture(m_textures[3]);

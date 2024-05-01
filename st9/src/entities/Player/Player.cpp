@@ -56,70 +56,26 @@ void Player::update(const float deltatime)
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        //if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ 0.0f,-1.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
-        //{
-            //if (Utils::Pathfinding::get_instance()->get_map()[0][(m_pos.y - 1 * 300.0f * deltatime * speed_scalar) / 135][m_pos.x / 135] != Utils::Cell::WALL)
-            //{
-                //dir += glm::vec3(0, -1, 0);
-            //}
-        //}
-       //else
-        //{
         dir += glm::vec3(0, -1, 0);
-        //}
 
         front_back = 1;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-
-        //if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ 0.0f,1.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
-        //{
-         //   if (Utils::Pathfinding::get_instance()->get_map()[0][(m_pos.y + 1 * 300.0f * deltatime * speed_scalar) / 135][m_pos.x / 135] != Utils::Cell::WALL)
-          //  {
-           //     dir += glm::vec3(0, 1, 0);
-                // }
-        //}
-        //else
-        //{
         dir += glm::vec3(0, 1, 0);
-        // }
 
-        front_back = 0;
+    	front_back = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-
-        // if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ -1.0f,0.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
-        // {
-        //     if (Utils::Pathfinding::get_instance()->get_map()[0][m_pos.y / 135][(m_pos.x - 1 * 300.0f * deltatime * speed_scalar) / 135] != Utils::Cell::WALL)
-        //     {
-         //    	dir += glm::vec3(-1, 0, 0);
-       //      }
-       //          
-       //  }
-       //  else
-       //  {
         dir += glm::vec3(-1, 0, 0);
-        //  }
 
         left_right = 0;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        //if (Utils::Pathfinding::get_instance()->is_valid((m_pos + (glm::vec3{ 1.0f,0.0f,0.0f } * 300.0f * deltatime * speed_scalar)) / 135.0f))
-        //{
-        //    if (Utils::Pathfinding::get_instance()->get_map()[0][m_pos.y / 135][(m_pos.x + 1 * 300.0f * deltatime * speed_scalar) / 135] != Utils::Cell::WALL)
-        //    {
-        //        dir += glm::vec3(1, 0, 0);
-        //    }
-        //
-        //}
-        //else
-        //{
         dir += glm::vec3(1, 0, 0);
-        //}
-
+   
         left_right = 1;
     }
 
@@ -170,15 +126,7 @@ void Player::update(const float deltatime)
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
-    //ImGui::Begin("test", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-    //if (ImGui::ImageButton("test", m_sprite, { 50.0f,135.0f }))
-    //{
-    //    LOG_CRITICAL("button works");
-    //}
-    //ImGui::End();
-    
     target.draw(m_sprite, states);
-    
 }
 
 glm::ivec3 Player::get_movement_speed() const {

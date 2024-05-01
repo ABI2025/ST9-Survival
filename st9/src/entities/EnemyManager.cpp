@@ -52,14 +52,14 @@ void EnemyManager::update(float deltatime)
 					return;
 				}
 			}
-			if (e->m_movements.empty() == true || (s_player_moving))
+			if (e->m_movements.empty() == true || should_update())
 			{
 
 				const glm::vec3 e_pos = e->m_pos;
 
 				e->m_movements = Utils::Pathfinding::get_instance()->find_path
 				(
-					e_pos, Utils::Priority::tower
+					e_pos, Utils::Priority::player
 				);
 				e->prev_size = e->m_movements.size();
 			}
@@ -68,7 +68,7 @@ void EnemyManager::update(float deltatime)
 			{
 				if (e->m_movements.empty() == false)
 				{
-					const glm::vec3 temp = e->m_movements[e->m_movements.size() - 1];
+					const glm::vec3 temp = e->m_movements.back();
 					/*temp.x *= 135;
 					temp.y *= 135;*/
 					e->m_pos = temp;

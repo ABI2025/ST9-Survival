@@ -3,6 +3,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Log.h"
+
 namespace Utils
 {
 
@@ -11,7 +13,9 @@ namespace Utils
 	public:
 		static void Init()
 		{
-			s_RandomEngine.seed(std::random_device()());
+			const auto random_val = std::random_device()();
+			LOG_INFO("seed: {}", random_val);
+			s_RandomEngine.seed(random_val);
 		}
 		static void set_seed(uint32_t i_seed)
 		{

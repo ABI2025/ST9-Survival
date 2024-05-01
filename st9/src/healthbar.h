@@ -13,7 +13,7 @@ public:
 
 	[[nodiscard]] int get_health() const;
 
-	[[nodiscard]] bool damage_input(int);
+	bool damage_input(int);
 	[[nodiscard]] bool alive() const;
 	void draw_healthbar(sf::RenderWindow&, Player&) const;
 

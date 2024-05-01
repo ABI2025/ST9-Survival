@@ -152,25 +152,25 @@ void Game::run_game(int)
 	BuildSystem buildsystem;
 
 	sf::SoundBuffer buffer1;
-	if (!buffer1.loadFromFile("resources/Sounds/Heilung.wav")) LOG_ERROR("fuck");
+ 	if (!buffer1.loadFromFile("resources/Sounds/Heilung.wav")) LOG_ERROR("simson pls fix");
 	sf::Sound sound1;
 	sound1.setBuffer(buffer1);
 	sound1.setVolume(50.0f);
 
 	sf::SoundBuffer buffer2;
-	if (!buffer2.loadFromFile("resources/Sounds/Error.mp3")) LOG_ERROR("fuck");
+	if (!buffer2.loadFromFile("resources/Sounds/Error.mp3")) LOG_ERROR("simson pls fix");
 	sf::Sound sound2;
 	sound2.setBuffer(buffer2);
 	sound2.setVolume(50.0f);
 
 	sf::SoundBuffer buffer3;
-	if (!buffer3.loadFromFile("resources/Sounds/Schuss.wav")) LOG_ERROR("fuck");
+	if (!buffer3.loadFromFile("resources/Sounds/Schuss.wav")) LOG_ERROR("simson pls fix");
 	sf::Sound sound3;
 	sound3.setBuffer(buffer3);
 	sound3.setVolume(50.0f);
 
 	sf::SoundBuffer buffer4;
-	if (!buffer4.loadFromFile("resources/Sounds/Lademusik.wav")) LOG_ERROR("fuck");
+	if (!buffer4.loadFromFile("resources/Sounds/Lademusik.wav")) LOG_ERROR("simson pls fix");
 	sf::Sound sound4;
 	sound4.setBuffer(buffer4);
 	sound4.setVolume(50.0f);
@@ -186,15 +186,16 @@ void Game::run_game(int)
 	bool first_run = true;
 	while (m_window.isOpen() && m_open)
 	{
+	
 		EnemyManager::set_updated_tower(false);
 		EnemyManager::set_player_moving(false);
 		float deltatime = delta_timer.Elapsed();
 		delta_timer.Reset();
 		sf::Event event{};
 
-		while (m_window.pollEvent(event)) //Hier werden alle möglichen Events wie tasten und so weiter gehandled
+		while (m_window.pollEvent(event)) //Hier werden alle moeglichen Events wie tasten und so weiter gehandled
 		{
-			ImGui::SFML::ProcessEvent(m_window, event);//Imgui Funktion die die Events handled für imgui
+			ImGui::SFML::ProcessEvent(m_window, event);//Imgui Funktion die die Events handled fuer imgui
 			//if (m_window.hasFocus())//falls das spiel nicht 
 			//{
 				switch (event.type)
@@ -222,7 +223,7 @@ void Game::run_game(int)
 					if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
 					{
 						sound3.play();
-						new Projectile(glm::vec3(p->get_pos()), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
+						new Projectile(p->get_pos(), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
 					}
 					if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
 					{
@@ -265,7 +266,7 @@ void Game::run_game(int)
 			{
 				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 				glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING)
+				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] != Utils::Cell::NOTHING)
 				{
 					//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
 					m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::NOTHING;
@@ -275,11 +276,13 @@ void Game::run_game(int)
 		}
 
 
-		if (m_window.hasFocus())//Siel logik sollte hier rein
+		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
 			p->update(deltatime);
-			if(EnemyManager::should_update() || first_run)
+			if (first_run == true || EnemyManager::should_update() == true)
+			{
 				pa->calculate_paths();
+			}
 			ma.update(deltatime);
 		}
 
