@@ -152,25 +152,37 @@ void Game::run_game(int)
 	BuildSystem buildsystem;
 
 	sf::SoundBuffer buffer1;
- 	if (!buffer1.loadFromFile("resources/Sounds/Heilung.wav")) LOG_ERROR("simson pls fix");
+	if (!buffer1.loadFromFile("resources/Sounds/Heilung.wav"))
+	{
+		LOG_ERROR("simson pls fix");
+	}
 	sf::Sound sound1;
 	sound1.setBuffer(buffer1);
 	sound1.setVolume(50.0f);
 
 	sf::SoundBuffer buffer2;
-	if (!buffer2.loadFromFile("resources/Sounds/Error.mp3")) LOG_ERROR("simson pls fix");
+	if (!buffer2.loadFromFile("resources/Sounds/Error.mp3"))
+	{
+		LOG_ERROR("simson pls fix");
+	}
 	sf::Sound sound2;
 	sound2.setBuffer(buffer2);
 	sound2.setVolume(50.0f);
 
 	sf::SoundBuffer buffer3;
-	if (!buffer3.loadFromFile("resources/Sounds/Schuss.wav")) LOG_ERROR("simson pls fix");
+	if (!buffer3.loadFromFile("resources/Sounds/Schuss.wav")) 
+	{
+		LOG_ERROR("simson pls fix");
+	}
 	sf::Sound sound3;
 	sound3.setBuffer(buffer3);
 	sound3.setVolume(50.0f);
 
 	sf::SoundBuffer buffer4;
-	if (!buffer4.loadFromFile("resources/Sounds/Lademusik.wav")) LOG_ERROR("simson pls fix");
+	if (!buffer4.loadFromFile("resources/Sounds/Lademusik.wav")) 
+	{
+		LOG_ERROR("simson pls fix");
+	}
 	sf::Sound sound4;
 	sound4.setBuffer(buffer4);
 	sound4.setVolume(50.0f);
@@ -183,6 +195,7 @@ void Game::run_game(int)
 
 	sound4.play();
 	Utils::Cell selected = Utils::Cell::NOTHING;
+	std::vector<glm::ivec3> towers;
 	bool first_run = true;
 	while (m_window.isOpen() && m_open)
 	{
@@ -253,23 +266,59 @@ void Game::run_game(int)
 			{
 				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
 
-				glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
+				glm::ivec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
 
-				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING)
+				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][mouse_pos.y][mouse_pos.x] != selected)
 				{
 					//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-					m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = selected;
+					if(selected == Utils::Cell::TURRET || selected == Utils::Cell::DEFENSE)
+						towers.emplace_back(mouse_pos);
+					if((m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET)
+						&& (selected != Utils::Cell::TURRET && selected != Utils::Cell::DEFENSE))
+					{
+						for (auto it = towers.begin(); it != towers.end();)
+						{
+							if ((*it).x == mouse_pos.x && (*it).y == mouse_pos.y)
+							{
+								LOG_INFO("success 2");
+								it = towers.erase(it);
+							}
+							else
+								++it;
+
+							if (it == towers.end())
+								break;
+						}
+					}
+
+					m_map[0][mouse_pos.y][mouse_pos.x] = selected;
 					EnemyManager::set_updated_tower(true);
 				}
 			}
 			if (right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 			{
 				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
-				glm::vec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] != Utils::Cell::NOTHING)
+				glm::ivec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
+				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][mouse_pos.y][mouse_pos.x] != Utils::Cell::NOTHING)
 				{
 					//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-					m_map[0][static_cast<int>(mouse_pos.y)][static_cast<int>(mouse_pos.x)] = Utils::Cell::NOTHING;
+					 
+					{
+						for(auto it = towers.begin(); it != towers.end();)
+						{
+							if ((*it).x == mouse_pos.x && (*it).y == mouse_pos.y)
+							{
+								it = towers.erase(it);
+							}
+							else
+								++it;
+
+							if (it == towers.end())
+								break;
+						}
+					}
+
+					m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::NOTHING;
 					EnemyManager::set_updated_tower(true);
 				}
 			}
@@ -278,12 +327,17 @@ void Game::run_game(int)
 
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
+			Utils::Timer logic_timer;
+			
 			p->update(deltatime);
 			if (first_run == true || EnemyManager::should_update() == true)
 			{
-				pa->calculate_paths();
+				pa->calculate_paths(towers);
 			}
 			ma.update(deltatime);
+			ImGui::Begin("DEBUG WINDOW");
+			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
+			ImGui::End();
 		}
 
 		{//Debug Fenster
@@ -299,7 +353,8 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-		if (!hb.alive()) {
+		if (!hb.alive()) 
+		{
 			m_open = false;
 		}
 		ma.naive_enemy_killer();

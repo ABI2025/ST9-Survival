@@ -149,17 +149,18 @@ namespace Utils {
 		// Ueberpruefen, ob die Zellkarte die richtige Groesse hat, und gegebenenfalls neu initialisieren
 		if (cellmap.size() != m_map.size() || cellmap[0].size() != m_map[0].size() || cellmap[0][0].size() != m_map[0][0].size())
 		{
+			// Neuinitialisierung der Zellkarte
 			cellmap =
 				std::vector(m_map.size(),
 					std::vector(m_map[0].size(),
 						std::vector(m_map[0][0].size(),
 							cell{ {0,0,0},DBL_MAX,nullptr })));
 			// Alle Positionen werden in q_vector geladen (koennte noch optimiert werden)
-			for (int i = 0; i < m_map.size(); i++) // z
+			for (uint32_t i = 0; i < m_map.size(); i++) // z
 			{
-				for (int j = 0; j < m_map[i].size(); j++) // y
+				for (uint32_t j = 0; j < m_map[i].size(); j++) // y
 				{
-					for (int k = 0; k < m_map[i][j].size(); k++) // x
+					for (uint32_t k = 0; k < m_map[i][j].size(); k++) // x
 					{
 						cellmap[i][j][k].pos = { k, j, i }; // x y z 
 						q_vector.push_back(&cellmap[i][j][k]); // Zelle zu q_vector hinzufuegen
@@ -172,11 +173,11 @@ namespace Utils {
 		else
 		{
 			// alle Positionen in q_vector laden (koennte noch optimiert werden)
-			for (int i = 0; i < m_map.size(); i++) // z
+			for (uint32_t i = 0; i < m_map.size(); i++) // z
 			{
-				for (int j = 0; j < m_map[i].size(); j++) // y
+				for (uint32_t j = 0; j < m_map[i].size(); j++) // y
 				{
-					for (int k = 0; k < m_map[i][j].size(); k++) // x
+					for (uint32_t k = 0; k < m_map[i][j].size(); k++) // x
 					{
 						cellmap[i][j][k].pos = { k, j, i }; // x y z 
 						cellmap[i][j][k].dist = DBL_MAX;
@@ -189,20 +190,21 @@ namespace Utils {
 
 
 		{// Setze die Distanz der Startpunkte auf 0 und deren Eltern auf nullptr
-			int amount_valid = start_points.size();
+			size_t amount_valid = start_points.size();
 			for (const auto start : start_points)
 			{
 				if (!is_valid(start))
 				{
 					amount_valid--;
 				}
+				else
 				{
 					cellmap[start.z][start.y][start.x].dist = 0; // Distanz am Startpunkt auf 0 setzen
 					cellmap[start.z][start.y][start.x].parent = nullptr; // Elternknoten auf nullptr setzen
 				}
 
 			}
-			if (amount_valid <= 0)
+			if (amount_valid == 0)
 			{
 				LOG_ERROR("keine gueltigen start punkte verfuegbar");
 				return;
@@ -211,9 +213,9 @@ namespace Utils {
 
 		// Vergleichsfunktion fuer Zellen, um sie absteigend nach Distanz zu sortieren
 		auto comp = [](const cell* c1, const cell* c2)->bool
-			{
-				return (c1->dist) > (c2->dist);
-			};
+		{
+			return (c1->dist) > (c2->dist);
+		};
 
 		// Haupt-Dijkstra-Algorithmus
 		while (!q_vector.empty())
@@ -305,7 +307,7 @@ namespace Utils {
 		{
 			std::ranges::reverse(route);
 		}
-		return route; // Rückgabe der generierten Route
+		return route; // Rueckgabe der generierten Route
 	}
 
 
@@ -321,11 +323,10 @@ namespace Utils {
 
 	}
 
-	void Pathfinding::calculate_paths()
+	void Pathfinding::calculate_paths(std::vector<glm::ivec3>& towers)
 	{
 		//priority player
 		{
-			//ScopedTimer player("priority player");
 			const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
 			if (!is_valid(start))
 			{
@@ -338,10 +339,10 @@ namespace Utils {
 		//priority nothing
 		{
 			std::vector<glm::ivec3> start_points;
-			//for(auto towers: get_alltowers())
-			//{
-			//	start_points.push_back(tower.get_pos()/135.0f);
-			//}
+			for(auto tower : towers)
+			{
+				start_points.push_back(tower);
+			}
 			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
 		}
@@ -349,10 +350,10 @@ namespace Utils {
 		//priority tower
 		{
 			std::vector<glm::ivec3> start_points;
-			//for(auto towers: get_alltowers())
-			//{
-			//	start_points.push_back(tower.get_pos()/135.0f);
-			//}
+			for (auto tower : towers)
+			{
+				start_points.push_back(tower);
+			}
 			if (start_points.empty() == true)
 			{
 				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
@@ -362,26 +363,25 @@ namespace Utils {
 	}
 
 	static std::vector<glm::ivec3> dirs({ {0,0,-1},{0,0,1}, {0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
-	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const Pathfinding::cell* current, std::vector<std::vector<std::vector<Pathfinding::cell>>>& m_cellmap) const
+	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
 	{
 		std::vector<cell*> neighbours;
-		LOG_TRACE("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
+		//LOG_TRACE("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
 		for (auto dir : dirs)
 		{
-			glm::vec3 pos = current->pos + dir;
+			glm::ivec3 pos = current->pos + dir;
 
-			LOG_TRACE("pos: x: {} y: {} z:{}",pos.x, pos.y, pos.z);
-			LOG_TRACE("is_valid pos {}", is_valid(pos));
+			//LOG_TRACE("pos: x: {} y: {} z:{}",pos.x, pos.y, pos.z);
+			//LOG_TRACE("is_valid pos {}", is_valid(pos));
 			if (is_valid(pos))
-				neighbours.push_back(&m_cellmap[static_cast<int>(pos.z)][static_cast<int>(pos.y)][static_cast<int>(pos.x)]);
+				neighbours.push_back(&m_cellmap[pos.z][pos.y][pos.x]);
 
 		}
 		return neighbours;
 	}
-
 	double Pathfinding::get_dist(cell* curr, const cell* dest) const
 	{
-		switch (m_map[static_cast<int>(dest->pos.z)][static_cast<int>(dest->pos.y)][static_cast<int>(dest->pos.x)])
+		switch (m_map[dest->pos.z][dest->pos.y][dest->pos.x])
 		{
 		case Cell::NOTHING: // fallthrough
 		case Cell::STAIR:

@@ -38,7 +38,7 @@ namespace Utils
 
 		std::shared_ptr<Player> m_player;
 		static Pathfinding* s_instance;
-		std::vector<std::vector<std::vector<Cell>>>& m_map;
+		const std::vector<std::vector<std::vector<Cell>>>& m_map;
 		std::vector<std::vector<std::vector<cell>>> m_player_cellmap;
 		std::vector<std::vector<std::vector<cell>>> m_tower_cellmap;
 		std::vector<std::vector<std::vector<cell>>> m_nothing_cellmap;
@@ -61,7 +61,7 @@ namespace Utils
 		static Pathfinding* get_instance();
 
 
-		[[nodiscard]]  std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
+		[[nodiscard]] const std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
 
 
 		/*
@@ -77,7 +77,7 @@ namespace Utils
 
 		[[nodiscard]] bool is_valid(const glm::vec3&) const;
 
-		void calculate_paths();
+		void calculate_paths(std::vector<glm::ivec3>& towers);
 
 
 		//private methods

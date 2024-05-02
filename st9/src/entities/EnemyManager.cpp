@@ -59,7 +59,7 @@ void EnemyManager::update(float deltatime)
 
 				e->m_movements = Utils::Pathfinding::get_instance()->find_path
 				(
-					e_pos, Utils::Priority::player
+					e_pos, e->get_priority()
 				);
 				e->prev_size = e->m_movements.size();
 			}
@@ -131,6 +131,8 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 pos) const
 void EnemyManager::add_enemy()
 {
 	m_enemys.push_back(std::make_shared<Enemy>());
+	m_enemys.back()->m_priority = static_cast<Utils::Priority>(Utils::Random::UInt(0, 2));
+	LOG_INFO("priority: {}", static_cast<int>(m_enemys.back()->m_priority));
 	m_enemys.back()->m_id = 0;
 }
 void EnemyManager::draw(sf::RenderWindow& i_window) const

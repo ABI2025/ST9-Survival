@@ -14,10 +14,10 @@
 
 # Log
 
-### how it works
+## how it works
 
 
-### usage
+## usage
 ![when to use which log](res/log.png)
 
 ```c++
@@ -26,21 +26,21 @@ LOG_DEBUG("");
 ```
 # Random
 
-### how it works
+## how it works
 
 
-### usage
+## usage
 
 # Timer
 
-### how it works
+## how it works
 
 
-### usage
+## usage
 
 # Pathfinding
 
-### how it works
+## how it works
 Immer wenn sich was an der Karte und/oder der Position des Sielers verändert hat wird der Dijkstra Algorithmus genutzt um vom Spieler und/oder Türmen aus Kosten und Pfad zu jeder Zelle auszurechnen, anschließend wird dann mittels Backtracking ein Pfad genneriert.
 
 
@@ -50,7 +50,36 @@ Immer wenn sich was an der Karte und/oder der Position des Sielers verändert ha
 // Ein Vektor wird verwendet, und Sortierung fuehrt zum gleichen Ergebnis wie mit einer PriorityQueue.
 std::vector<cell*> q_vector;
 ```
+<!---
 Hierzwischen sind noch ein par Checks um undefiniertes verhalten zu verhindern
+--->
+
+```c++
+{// Setze die Distanz der Startpunkte auf 0 und deren Eltern auf nullptr
+    size_t amount_valid = start_points.size();
+	for (const auto start : start_points)
+	{
+	    if (!is_valid(start))
+		{
+		    amount_valid--;
+		}
+		else
+		{
+		    cellmap[start.z][start.y][start.x].dist = 0; // Distanz am Startpunkt auf 0 setzen
+			cellmap[start.z][start.y][start.x].parent = nullptr; // Elternknoten auf nullptr setzen
+		}
+
+	}
+	if (amount_valid <= 0) //falls es keien gueltigen Start punkte gibt wird das pathfinden abgebrochen
+	{
+        LOG_ERROR("keine gueltigen start punkte verfuegbar");
+	return;
+	}
+}
+```
+
+
+
 ```c++
 while (!q_vector.empty())
 {
@@ -78,10 +107,8 @@ while (!q_vector.empty())
 
 
 
-### usage
+## usage
 ```c++
-
-
 Utils::Pathfinding* instance = Utils::Pathfinding::get_instance();
 instance->calculate_paths(); //wenn die pfade vorher noch nicht berechnet worden
 glm::vec3 start = entity->get_pos(); //position vom entity
@@ -89,7 +116,7 @@ std::vector<glm::vec3> path = instance->find_path(start,entity->get_priority());
 entity->set_path(path);
 ```
 
-#### Bei mehreren entities macht man einmal calculate paths und ruft dann in einer schleife immer wieder die Funktion find_path auf.
+Bei mehreren entities macht man einmal calculate paths und ruft dann in einer schleife immer wieder die Funktion find_path auf.
 
 ```c++
 Utils::Pathfinding* instance = Utils::Pathfinding::get_instance();
