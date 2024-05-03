@@ -12,12 +12,13 @@ namespace Utils
 	enum class Priority;
 	enum class Cell;
 
-
+	//Pathfinding ist ein Singleton
 	class Pathfinding
 	{
 		// Kunstruktor / destruktor
 		Pathfinding(const std::shared_ptr<Player>&, std::vector<std::vector<std::vector<Cell>>>& map);
 	public:
+
 		Pathfinding() = delete;
 		Pathfinding(const Pathfinding&) = delete;
 		Pathfinding(Pathfinding&&) = delete;
@@ -28,6 +29,8 @@ namespace Utils
 		~Pathfinding();
 		//private member
 	private:
+
+		//simple zell Struktur zum speichern von Daten beim Pathfinden
 		struct cell
 		{
 			glm::ivec3 pos;
@@ -47,17 +50,17 @@ namespace Utils
 		//public methods
 	public:
 		/*
-		* Init nimmt die Karte und den Player an und speichert sie als referenzen
-		*
-		*
-		*
+		 Init nimmt die Karte und den Player an und speichert sie als referenzen
+		
+		
+		
 		 */
 		static void Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Cell>>>& i_map);
 
-		//die klasse löschen, damit keine artifakte und sonstiges dableiben
+		// Die klasse loeschen, damit keine artifakte und sonstiges dableiben
 		static void Delete();
 
-		//Bevor get_instance gerufen wird, erstmal Init Rufen
+		// Zuerst Init rufen sonst funktioniert nichts
 		static Pathfinding* get_instance();
 
 
@@ -65,13 +68,13 @@ namespace Utils
 
 
 		/*
-		*
-		* start ist der anfang (position vom gegner / entity)
-		* Priority ist auf was der gegner/entity gehen soll
-		* Moegliche Prioritaeten sind
-		* Player 
-		* Nothing
-		* Tower
+		
+		 start ist der anfang (position vom gegner / entity)
+		 Priority ist auf was der gegner/entity gehen soll
+		 Moegliche Prioritaeten sind
+		 Player 
+		 Nothing
+		 Tower
 		 */
 		[[nodiscard]] std::vector<glm::vec3> find_path(const glm::vec3& start, Priority) const;
 
@@ -82,11 +85,11 @@ namespace Utils
 
 		//private methods
 	private:
-		[[nodiscard]] std::vector<glm::vec3> make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
-		void dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
-		[[nodiscard]] std::vector<glm::vec3> bresenham(const glm::vec3& dest, const glm::vec3& start) const;
-		[[nodiscard]] std::vector<cell*> get_neighbours(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
-		[[nodiscard]] double get_dist(cell*, const cell*) const;
+		[[nodiscard]] std::vector<glm::vec3>	make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
+					  void						dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
+		[[nodiscard]] std::vector<glm::vec3>	bresenham(const glm::vec3& dest, const glm::vec3& start) const;
+		[[nodiscard]] std::vector<cell*>		get_neighbours(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
+		[[nodiscard]] double					get_dist(cell*, const cell*) const;
 
 	};
 

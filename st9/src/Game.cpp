@@ -130,10 +130,6 @@ void Game::render_tower() const
 }
 void Game::run_game(int)
 {
-	static_assert(height <= 20);
-	static_assert(width <= 40);
-
-
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 
 	Camera c(&m_window, p.get());
