@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Sounds.h" />
     <ClInclude Include="src\BuildSystem.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GameWindow.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\projektil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Sounds.cpp" />
     <ClCompile Include="src\BuildSystem.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />

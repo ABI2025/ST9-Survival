@@ -13,6 +13,7 @@
 #include "MainBuilding.h"
 #include "BuildSystem.h"
 #include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
+#include "Sounds.h"
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
@@ -63,6 +64,9 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png"))LOG_ERROR("texture konnte nicht geladen werden");
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
+
+
+
 
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
@@ -130,6 +134,14 @@ void Game::render_tower() const
 }
 void Game::run_game(int)
 {
+	static_assert(height <= 20);
+	static_assert(width <= 40);
+
+	m_sounds.load_buffer("resources/Sounds/Heilung.wav", true);
+	m_sounds.load_buffer("resources/Sounds/Error.mp3", false);
+	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false);
+	m_sounds.load_buffer("resources/Sounds/Lademusik.wav", false);
+
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 
 	Camera c(&m_window, p.get());
@@ -147,41 +159,6 @@ void Game::run_game(int)
 	healthbar hb{};
 	BuildSystem buildsystem;
 
-	sf::SoundBuffer buffer1;
-	if (!buffer1.loadFromFile("resources/Sounds/Heilung.wav"))
-	{
-		LOG_ERROR("simson pls fix");
-	}
-	sf::Sound sound1;
-	sound1.setBuffer(buffer1);
-	sound1.setVolume(50.0f);
-
-	sf::SoundBuffer buffer2;
-	if (!buffer2.loadFromFile("resources/Sounds/Error.mp3"))
-	{
-		LOG_ERROR("simson pls fix");
-	}
-	sf::Sound sound2;
-	sound2.setBuffer(buffer2);
-	sound2.setVolume(50.0f);
-
-	sf::SoundBuffer buffer3;
-	if (!buffer3.loadFromFile("resources/Sounds/Schuss.wav")) 
-	{
-		LOG_ERROR("simson pls fix");
-	}
-	sf::Sound sound3;
-	sound3.setBuffer(buffer3);
-	sound3.setVolume(50.0f);
-
-	sf::SoundBuffer buffer4;
-	if (!buffer4.loadFromFile("resources/Sounds/Lademusik.wav")) 
-	{
-		LOG_ERROR("simson pls fix");
-	}
-	sf::Sound sound4;
-	sound4.setBuffer(buffer4);
-	sound4.setVolume(50.0f);
 
 	m_tiles = erstelle_map();
 
@@ -189,9 +166,10 @@ void Game::run_game(int)
 	render_map(p->get_pos());
 	m_window.display();
 
-	sound4.play();
 	Utils::Cell selected = Utils::Cell::NOTHING;
+
 	std::vector<glm::ivec3> towers;
+
 	bool first_run = true;
 	while (m_window.isOpen() && m_open)
 	{
@@ -207,6 +185,7 @@ void Game::run_game(int)
 			ImGui::SFML::ProcessEvent(m_window, event);//Imgui Funktion die die Events handled fuer imgui
 			//if (m_window.hasFocus())//falls das spiel nicht 
 			//{
+			
 				switch (event.type)
 				{
 
@@ -225,25 +204,34 @@ void Game::run_game(int)
 
 
 				case sf::Event::KeyPressed: //TODO: nicht alles hier machen bitte und logik weiter unten machen
-					if (event.key.code == sf::Keyboard::Key::Escape)
+					if (event.key.code == sf::Keyboard::Key::Escape) 
+					{
+						/*m_sounds.pause_all(false);
+						m_open = showpausemenu();
+						m_sounds.play_all();*/
 						m_open = false;
+					}
 					if (event.key.code == sf::Keyboard::Key::E)
 						ma.add_enemy();
 					if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
 					{
-						sound3.play();
+						m_sounds.add_sound(2);
 						new Projectile(p->get_pos(), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
 					}
 					if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
 					{
-						sound2.play();
+						m_sounds.add_sound(1);
 						hb.damage_input(1);
 					}
 					if (event.key.code == sf::Keyboard::Key::R)
 					{
-						sound1.play();
 						hb.regeneration(1);
 					}
+					break;
+				case sf::Event::LostFocus://bitte pausenbildschirm 
+					/*m_sounds.pause_all(false);
+					m_open = showpausemenu();
+					m_sounds.play_all();*/
 					break;
 				case sf::Event::Closed:
 					m_window.close();
@@ -252,6 +240,7 @@ void Game::run_game(int)
 					break;
 				}
 			//}
+
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());//Imgui funktion damit alles geupdatet wird
 
@@ -334,6 +323,7 @@ void Game::run_game(int)
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
 			ImGui::End();
+			m_sounds.cleanup(false);
 		}
 
 		{//Debug Fenster
@@ -375,6 +365,8 @@ void Game::run_game(int)
 		}
 		first_run = false;
 	}
+
+	m_sounds.clear_all();
 	m_tiles.clear();
 	m_open = true;
 	c.move_to_default();

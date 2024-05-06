@@ -4,6 +4,8 @@
 #include "Utils/Utils.h"
 #include <SFML/Graphics.hpp>
 
+#include "Sounds.h"
+
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map();
 
 class Game
@@ -30,5 +32,7 @@ private:
 	std::vector<sf::Texture> m_background_textures;
 	std::vector<sf::Texture> m_building_textures;
 	std::vector<std::vector<std::array<uint8_t, 2>>> m_tiles;
+	Sounds m_sounds;
+
 	bool m_open = true;
 };
