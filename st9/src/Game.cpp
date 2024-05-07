@@ -133,15 +133,17 @@ void Game::run_game(int)
 {
 	static_assert(height <= 20);
 	static_assert(width <= 40);
-
-	m_sounds.load_buffer("resources/Sounds/Heilung.wav", true);
-	m_sounds.load_buffer("resources/Sounds/Error.mp3", false);
-	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false);
-	m_sounds.load_buffer("resources/Sounds/Lademusik.wav", false);
+	m_sounds.add_group("player");
+	m_sounds.add_group("music");
+	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false,"player");
+	m_sounds.load_buffer("resources/Sounds/Error.mp3", false,"player");
+	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false,"player");
+	m_sounds.load_buffer("resources/Sounds/Lademusik.mp3", true,"music");
 	m_sounds.set_volume(50, -1);
 	m_sounds.set_volume(50, 0);
 	m_sounds.set_volume(50, 1);
-	m_sounds.set_volume(50, 2);
+
+	m_sounds.add_sound("music", 0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 
 	Camera c(&m_window, p.get());
@@ -171,6 +173,7 @@ void Game::run_game(int)
 	std::vector<glm::ivec3> towers;
 
 	bool first_run = true;
+	float lautstarke[3] = { 50.0f,50.0f,50.0f };
 	while (m_window.isOpen() && m_open)
 	{
 	
@@ -215,16 +218,17 @@ void Game::run_game(int)
 						ma.add_enemy();
 					if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
 					{
-						m_sounds.add_sound(2);
+						m_sounds.add_sound("player", 2);
 						new Projectile(p->get_pos(), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
 					}
-					if (event.key.code == sf::Keyboard::Key::L) //Deppresion.exe 
+					if (event.key.code == sf::Keyboard::Key::L) //Depression.exe 
 					{
-						m_sounds.add_sound(1);
+						m_sounds.add_sound("player",1);
 						hb.damage_input(1);
 					}
 					if (event.key.code == sf::Keyboard::Key::R)
 					{
+						m_sounds.add_sound("player", 0);
 						hb.regeneration(1);
 					}
 					break;
@@ -332,6 +336,12 @@ void Game::run_game(int)
 				left_click = false;
 				right_click = false;
 			}
+			ImGui::SliderFloat("Allgemein", lautstarke, 0, 100);
+			ImGui::SliderFloat("Player", &lautstarke[1], 0, 100);
+			ImGui::SliderFloat("Musik", &lautstarke[2], 0, 100);
+			m_sounds.set_volume(lautstarke[0], -1);
+			m_sounds.set_volume(lautstarke[1], 0);
+			m_sounds.set_volume(lautstarke[2], 1);
 			ImGui::End();
 		}
 

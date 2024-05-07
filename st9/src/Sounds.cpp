@@ -1,88 +1,136 @@
 #include "Sounds.h"
-
+#include <ranges>
 #include "Utils/Log.h"
+
+Sounds::Sounds()
+{
+	m_volumes[-1] = 1.0f;
+}
 
 Sounds::~Sounds()
 {
 }
 
-void Sounds::add_sound(int id)
+void Sounds::add_sound(int group_id,int id)
 {
-	if (!(id < 0 || id >= m_sounds.size())) 
+	if (!(group_id < 0 || group_id >= m_.size()))
 	{
-		if (!m_sounds[id].second)
+		if (!(id < 0 || id >= m_buffers[m_[group_id]].size())) 
 		{
-			m_sounds[id].first.emplace_back(m_buffers[id]);
-			m_sounds[id].first.back().play();
-			m_sounds[id].first.back().setVolume(volumes[-1] * volumes[id] * 100);
-		}
-		else
-		{
-			if(m_sounds[id].first.empty())
+			if (!m_sounds[m_[group_id]][id].second)
 			{
-				m_sounds[id].first.emplace_back(m_buffers[id]);
-				m_sounds[id].first.back().play();
-				m_sounds[id].first.back().setVolume(volumes[-1]*volumes[id]*100);
+				m_sounds[m_[group_id]][id].first.emplace_back(m_buffers[m_[group_id]][id]);
+				m_sounds[m_[group_id]][id].first.back().play();
+				m_sounds[m_[group_id]][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
 			}
+			else
+			{
+				if (m_sounds[m_[group_id]][id].first.empty())
+				{
+					m_sounds[m_[group_id]][id].first.emplace_back(m_buffers[m_[group_id]][id]);
+					m_sounds[m_[group_id]][id].first.back().play();
+					m_sounds[m_[group_id]][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+				}
 
+			}
+		}
+	}
+}
+
+void Sounds::add_sound(const std::string& group_id, int id)
+{
+
+	if (m_sounds.contains(group_id) && m_buffers.contains(group_id))
+	{
+		if (!(id < 0 || id >= m_buffers[group_id].size()))
+		{
+			if (!m_sounds[group_id][id].second)
+			{
+				m_sounds[group_id][id].first.emplace_back(m_buffers[group_id][id]);
+				m_sounds[group_id][id].first.back().play();
+				m_sounds[group_id][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+			}
+			else
+			{
+				if (m_sounds[group_id][id].first.empty())
+				{
+					m_sounds[group_id][id].first.emplace_back(m_buffers[group_id][id]);
+					m_sounds[group_id][id].first.back().play();
+					m_sounds[group_id][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+				}
+
+			}
 		}
 	}
 }
 
 void Sounds::cleanup(bool priority_ignorieren)
 {
-	for (auto& [sounds, priority] : m_sounds)
+	for (auto& all_sounds : m_sounds | std::views::values) 
 	{
-		if(priority && !priority_ignorieren)
+		for (auto& [sounds, priority] : all_sounds)
 		{
-			int i = 0;
-			for(auto& sound : sounds)
+			if (priority && !priority_ignorieren)
 			{
-				if(sound.getStatus() == sf::SoundSource::Stopped)
-					sound.play();
-				i++;
-			}
-			if (i > 1)
-				LOG_CRITICAL("hilfe");
-		}
-		if (!priority || priority_ignorieren) 
-		{
-			for (auto it = sounds.begin(); it != sounds.end();)
-			{
-				if (it->getStatus() == sf::SoundSource::Stopped)
+				int i = 0;
+				for (auto& sound : sounds)
 				{
-					it = sounds.erase(it);
+					if (sound.getStatus() == sf::SoundSource::Stopped)
+						sound.play();
+					i++;
 				}
-				else
+				if (i > 1)
+					LOG_CRITICAL("hilfe");
+			}
+			if (!priority || priority_ignorieren)
+			{
+				for (auto it = sounds.begin(); it != sounds.end();)
 				{
-					++it;
+					if (it->getStatus() == sf::SoundSource::Stopped)
+					{
+						it = sounds.erase(it);
+					}
+					else
+					{
+						++it;
+					}
 				}
 			}
 		}
 	}
 }
 
-void Sounds::load_buffer(const std::string& location, bool priority)
+void Sounds::load_buffer(const std::string& location, bool priority,const std::string& group)
 {
 	sf::SoundBuffer temp_buffer;
 	temp_buffer.loadFromFile(location);
-	m_buffers.push_back(temp_buffer);
+	m_buffers[group].push_back(temp_buffer);
 	std::deque<sf::Sound> temp_deque;
-	m_sounds.emplace_back(temp_deque, priority);
-	volumes.insert({m_sounds.size() ,1.0f});
+	m_sounds[group].emplace_back(temp_deque,priority);
+	m_volumes.insert({static_cast<int>(m_sounds.size()) ,1.0f });
+}
+
+void Sounds::add_group(const std::string& group)
+{
+	m_buffers.insert({ group, {} });
+	m_sounds.insert({ group, {} });
+	m_.push_back(group);
 }
 
 void Sounds::pause_all(bool priority_ignorieren)
 {
-	for (auto& [sounds, priority]: m_sounds)
+	for (auto& all_sounds : m_sounds | std::views::values)
 	{
-		if (!priority || priority_ignorieren) 
+		for (auto& [sounds, priority] : all_sounds)
 		{
-			for (auto& sound : sounds)
+			if (!priority || priority_ignorieren)
 			{
-				if (sound.getStatus() != sf::SoundSource::Stopped)
+				for (auto& sound : sounds)
 				{
-					sound.pause();
+					if (sound.getStatus() != sf::SoundSource::Stopped)
+					{
+						sound.pause();
+					}
 				}
 			}
 		}
@@ -91,13 +139,16 @@ void Sounds::pause_all(bool priority_ignorieren)
 
 void Sounds::play_all()
 {
-	for (auto& sounds : m_sounds | std::views::keys)
+	for (auto& all_sounds : m_sounds | std::views::values)
 	{
-		for (auto& sound : sounds)
+		for (auto& sounds : all_sounds | std::views::keys)
 		{
-			if (sound.getStatus() != sf::SoundSource::Playing)
+			for (auto& sound : sounds)
 			{
-				sound.play();
+				if (sound.getStatus() != sf::SoundSource::Playing)
+				{
+					sound.play();
+				}
 			}
 		}
 	}
@@ -111,34 +162,37 @@ void Sounds::clear_all()
 
 void Sounds::set_volume(float volume, int id)
 {
-	if (volume > 0 && volume <= 100) 
+	if (volume >= 0 && volume <= 100) 
 	{
 		if (id == -1)
 		{
-			volumes[-1] = volume/100;
-			for (int i = 0; i < m_sounds.size(); ++i)
+			m_volumes[-1] = volume/100;
+			for (uint32_t i = 0; i < m_sounds.size(); ++i)
 			{
-				for (auto& sound : m_sounds[i].first)
+				for (auto& sounds : m_sounds[m_[i]] | std::views::keys)
 				{
-					sound.setVolume(volumes[-1] * volumes[i] * 100);
-				}
-			}
-
-		}
-		else
-		{
-			for(int i = 0; i < m_sounds.size(); ++i)
-			{
-				if(i == id)
-				{
-					volumes[i] = volume/100;
-					for(auto& sound :m_sounds[i].first)
+					for (auto& sound : sounds)
 					{
-						sound.setVolume(volumes[-1] * volumes[i] * 100);
+						sound.setVolume(m_volumes[-1] * m_volumes[i]);
 					}
 				}
 			}
 		}
-
+		else
+		{
+			if (id >= 0 && id < m_volumes.size())
+			{
+				m_volumes[id] = volume / 100;
+				
+				for (auto& sounds : m_sounds[m_[id]] | std::views::keys)
+				{
+					for (auto& sound : sounds)
+					{
+						sound.setVolume(m_volumes[-1] * m_volumes[id]);
+					}
+				}
+				
+			}
+		}
 	}
 }
