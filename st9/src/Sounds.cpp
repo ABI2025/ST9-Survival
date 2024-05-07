@@ -14,6 +14,7 @@ void Sounds::add_sound(int id)
 		{
 			m_sounds[id].first.emplace_back(m_buffers[id]);
 			m_sounds[id].first.back().play();
+			m_sounds[id].first.back().setVolume(volumes[-1] * volumes[id] * 100);
 		}
 		else
 		{
@@ -21,6 +22,7 @@ void Sounds::add_sound(int id)
 			{
 				m_sounds[id].first.emplace_back(m_buffers[id]);
 				m_sounds[id].first.back().play();
+				m_sounds[id].first.back().setVolume(volumes[-1]*volumes[id]*100);
 			}
 
 		}
@@ -67,6 +69,7 @@ void Sounds::load_buffer(const std::string& location, bool priority)
 	m_buffers.push_back(temp_buffer);
 	std::deque<sf::Sound> temp_deque;
 	m_sounds.emplace_back(temp_deque, priority);
+	volumes.insert({m_sounds.size() ,1.0f});
 }
 
 void Sounds::pause_all(bool priority_ignorieren)
@@ -88,7 +91,7 @@ void Sounds::pause_all(bool priority_ignorieren)
 
 void Sounds::play_all()
 {
-	for (auto& [sounds, priority] : m_sounds)
+	for (auto& sounds : m_sounds | std::views::keys)
 	{
 		for (auto& sound : sounds)
 		{
@@ -104,4 +107,38 @@ void Sounds::clear_all()
 {
 	m_sounds.clear();
 	m_buffers.clear();
+}
+
+void Sounds::set_volume(float volume, int id)
+{
+	if (volume > 0 && volume <= 100) 
+	{
+		if (id == -1)
+		{
+			volumes[-1] = volume/100;
+			for (int i = 0; i < m_sounds.size(); ++i)
+			{
+				for (auto& sound : m_sounds[i].first)
+				{
+					sound.setVolume(volumes[-1] * volumes[i] * 100);
+				}
+			}
+
+		}
+		else
+		{
+			for(int i = 0; i < m_sounds.size(); ++i)
+			{
+				if(i == id)
+				{
+					volumes[i] = volume/100;
+					for(auto& sound :m_sounds[i].first)
+					{
+						sound.setVolume(volumes[-1] * volumes[i] * 100);
+					}
+				}
+			}
+		}
+
+	}
 }

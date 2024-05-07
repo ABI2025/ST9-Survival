@@ -43,10 +43,10 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
 
-	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
-	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
-	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
-	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 
 	m_background_sprites.resize(4);
 
@@ -58,15 +58,12 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 
 	m_building_textures.resize(4);
 
-	if (!m_building_textures[0].loadFromFile("Resources/images/1111.png"))LOG_ERROR("texture konnte nicht geladen werden");
-	if (!m_building_textures[1].loadFromFile("Resources/images/Top.png"))LOG_ERROR("texture konnte nicht geladen werden");
-	if (!m_building_textures[2].loadFromFile("Resources/images/buttom.png"))LOG_ERROR("texture konnte nicht geladen werden");
-	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png"))LOG_ERROR("texture konnte nicht geladen werden");
+	if (!m_building_textures[0].loadFromFile("Resources/images/1111.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_building_textures[1].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_building_textures[2].loadFromFile("Resources/images/buttom.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
-
-
-
 
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
@@ -141,7 +138,10 @@ void Game::run_game(int)
 	m_sounds.load_buffer("resources/Sounds/Error.mp3", false);
 	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false);
 	m_sounds.load_buffer("resources/Sounds/Lademusik.wav", false);
-
+	m_sounds.set_volume(50, -1);
+	m_sounds.set_volume(50, 0);
+	m_sounds.set_volume(50, 1);
+	m_sounds.set_volume(50, 2);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 
 	Camera c(&m_window, p.get());
@@ -229,9 +229,7 @@ void Game::run_game(int)
 					}
 					break;
 				case sf::Event::LostFocus://bitte pausenbildschirm 
-					/*m_sounds.pause_all(false);
-					m_open = showpausemenu();
-					m_sounds.play_all();*/
+
 					break;
 				case sf::Event::Closed:
 					m_window.close();
@@ -268,11 +266,10 @@ void Game::run_game(int)
 								LOG_INFO("success 2");
 								it = towers.erase(it);
 							}
-							else
+							else 
+							{
 								++it;
-
-							if (it == towers.end())
-								break;
+							}
 						}
 					}
 
@@ -287,7 +284,7 @@ void Game::run_game(int)
 				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][mouse_pos.y][mouse_pos.x] != Utils::Cell::NOTHING)
 				{
 					//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-					 
+					if(m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET)
 					{
 						for(auto it = towers.begin(); it != towers.end();)
 						{
@@ -296,10 +293,9 @@ void Game::run_game(int)
 								it = towers.erase(it);
 							}
 							else
+							{
 								++it;
-
-							if (it == towers.end())
-								break;
+							}
 						}
 					}
 
