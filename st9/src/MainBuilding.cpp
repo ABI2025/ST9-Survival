@@ -1,7 +1,7 @@
 #include "MainBuilding.h"
 
 
-MainBuilding::MainBuilding(): m_hp(0), m_pos_x(0), m_pos_y(0)
+MainBuilding::MainBuilding(): m_hp(0), m_pos_x(135*20), m_pos_y(135*10)
 {
 	m_texture.loadFromFile("Resources/images/Spawn.png");
 	m_sprite.setTexture(m_texture);

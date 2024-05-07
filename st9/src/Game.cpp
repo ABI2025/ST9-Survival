@@ -17,8 +17,8 @@
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 20;
-constexpr int width = 40;
+constexpr int height = 21;
+constexpr int width = 41;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map()
 {
