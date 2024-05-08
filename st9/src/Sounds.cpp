@@ -107,7 +107,7 @@ void Sounds::load_buffer(const std::string& location, bool priority,const std::s
 	m_buffers[group].push_back(temp_buffer);
 	std::deque<sf::Sound> temp_deque;
 	m_sounds[group].emplace_back(temp_deque,priority);
-	m_volumes.insert({static_cast<int>(m_sounds.size()) ,1.0f });
+	
 }
 
 void Sounds::add_group(const std::string& group)
@@ -115,6 +115,8 @@ void Sounds::add_group(const std::string& group)
 	m_buffers.insert({ group, {} });
 	m_sounds.insert({ group, {} });
 	m_.push_back(group);
+	m_volumes.insert({ static_cast<int>(m_sounds.size()-1) ,1.0f });
+	
 }
 
 void Sounds::pause_all(bool priority_ignorieren)
@@ -180,7 +182,7 @@ void Sounds::set_volume(float volume, int id)
 		}
 		else
 		{
-			if (id >= 0 && id < m_volumes.size())
+			if (m_volumes.contains(id))
 			{
 				m_volumes[id] = volume / 100;
 				

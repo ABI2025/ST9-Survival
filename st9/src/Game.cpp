@@ -131,8 +131,6 @@ void Game::render_tower() const
 }
 void Game::run_game(int)
 {
-	static_assert(height <= 20);
-	static_assert(width <= 40);
 	m_sounds.add_group("player");
 	m_sounds.add_group("music");
 	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false,"player");
