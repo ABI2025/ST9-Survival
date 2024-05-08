@@ -48,7 +48,7 @@ Immer wenn sich was an der Karte und/oder der Position des Sielers verändert ha
 // Initialisierung eines Vektors, der alle Zellen enthaelt
 // Eine PriorityQueue waere eigentlich besser, aber es gibt Probleme damit.
 // Ein Vektor wird verwendet, und Sortierung fuehrt zum gleichen Ergebnis wie mit einer PriorityQueue.
-std::vector<cell*> q_vector;
+std::vector<cell*> cells;
 ```
 <!---
 Hierzwischen sind noch ein par Checks um undefiniertes verhalten zu verhindern
@@ -61,19 +61,18 @@ Hierzwischen sind noch ein par Checks um undefiniertes verhalten zu verhindern
 	{
 	    if (!is_valid(start))
 		{
-		    amount_valid--;
-		}
-		else
-		{
-		    cellmap[start.z][start.y][start.x].dist = 0; // Distanz am Startpunkt auf 0 setzen
+		amount_valid--;
+	    }
+	    else
+	    {
+	        cellmap[start.z][start.y][start.x].dist = 0; // Distanz am Startpunkt auf 0 setzen
 			cellmap[start.z][start.y][start.x].parent = nullptr; // Elternknoten auf nullptr setzen
-		}
-
+	    }
 	}
 	if (amount_valid <= 0) //falls es keien gueltigen Start punkte gibt wird das pathfinden abgebrochen
 	{
-        LOG_ERROR("keine gueltigen start punkte verfuegbar");
-	return;
+		LOG_ERROR("keine gueltigen start punkte verfuegbar");
+	    return;
 	}
 }
 ```
@@ -81,26 +80,26 @@ Hierzwischen sind noch ein par Checks um undefiniertes verhalten zu verhindern
 
 
 ```c++
-while (!q_vector.empty())
+while (!cells.empty())
 {
-    std::ranges::sort(q_vector, comp); // Sortiere den q_Vector nach Distanz absteigend.
+    std::ranges::sort(cells, comp); // Sortiere den q_Vector nach Distanz absteigend.
 
-	cell* current = q_vector.back(); // Nehme das letzte Element aus dem q_Vector.
-    q_vector.pop_back(); // Loesche das letzte Element aus dem q_Vector.
+    cell* current = cells.back(); // Nehme das letzte Element aus dem q_Vector.
+    cells.pop_back(); // Loesche das letzte Element aus dem q_Vector.
 
-    for (cell* v : get_neighbours(current, cellmap)) // Hole die Nachbarn von current.
+    for (cell* neighbor : get_neighbors(current, cellmap)) // Hole die Nachbarn von current.
     {
-	    // Berechne die Distanz zwischen current und v.
-	    const double dist = current->dist + get_dist(current, v);
+		// Berechne die Distanz zwischen current und v.
+		const double dist = current->dist + get_dist(current, neighbor);
 
 		// Vergleiche die berechnete Distanz mit der in v gespeicherten Distanz.
-	    if (dist < v->dist)
+		if (dist < neighbor->dist)
 		{
-			// Aktualisiere die Distanz und den Parent von v.
-			v->dist = dist;
-		    v->parent = current;
+	    	// Aktualisiere die Distanz und den Parent von v.
+ 	    	neighbor->dist = dist;
+	    	neighbor->parent = current;
 		}
-	}
+    }
 }
 ```
 
@@ -123,9 +122,9 @@ Utils::Pathfinding* instance = Utils::Pathfinding::get_instance();
 instance->calculate_paths(); //wenn die pfade vorher noch nicht berechnet worden
 for(auto& entity : entities)
 {
-glm::vec3 start = entity->get_pos(); //position vom entity
-std::vector<glm::vec3> path = instance->find_path(start, entity->get_priority());
-entity->set_path(path);
+    glm::vec3 start = entity->get_pos(); //position vom entity
+    std::vector<glm::vec3> path = instance->find_path(start, entity->get_priority());
+    entity->set_path(path);
 }
 
 ```
