@@ -10,6 +10,7 @@ class EnemyManager
 	
 	inline static bool s_player_moving = false;
 	inline static bool s_tower_update = false;
+	std::vector<std::vector<int>> enemys_per_cell;
 public:
 	static void set_player_moving(const bool i_moving)
 	{ s_player_moving = i_moving;}
@@ -25,7 +26,7 @@ public:
 	[[nodiscard]] std::vector<std::shared_ptr<Enemy>>& get_enemies() { return m_enemys; }
 	int naive_enemy_killer();
 
-	void draw(sf::RenderWindow& i_window) const;
+	void draw(sf::RenderTarget& i_window) const;
 
 };
 

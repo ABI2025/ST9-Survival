@@ -12,7 +12,7 @@ class Game
 {
 public:
 	void render_map(glm::vec3 player_pos);
-	void render_tower() const;
+	void render_tower();
 	static void erstelle_game(sf::RenderWindow&);
 	static Game* get_game();
 
@@ -24,6 +24,9 @@ public:
 
 	Game(Game&) = delete;
 private:
+	sf::RenderTexture texture;
+
+
 	inline static Game* s_game;
 	explicit Game(sf::RenderWindow&);
 	sf::RenderWindow& m_window; 

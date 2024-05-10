@@ -5,6 +5,7 @@
 #include "entities/EnemyManager.h"
 #include "imgui.h"
 #include "imgui-sfml.h"
+#include "Sounds.h"
 
 Player::Player()
 	: Entity(), prev_pos(), m_geld(0), m_health(0), speed()
@@ -44,13 +45,17 @@ Player::Player()
 static int i = 0;
 static int prevleft_right = 0;
 static int prevfront_back = 0;
+
 void Player::update(const float deltatime)
 {
     float speed_scalar = 1.0f;
     int left_right = -1;
     int front_back = -1;
     glm::vec3 dir(0);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+
+
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
     {
         speed_scalar = 1.5f;
     }
@@ -89,7 +94,7 @@ void Player::update(const float deltatime)
         speed = dir; // ich hol hier speed daten
         /* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
 
-        cell_pos = round(glm::vec3{ m_pos.x / 135.0f,m_pos.y / 135.0f,m_pos.z });
+        cell_pos = (glm::vec3{ m_pos.x / 135.0f,m_pos.y / 135.0f,m_pos.z });
         if (prev_pos != cell_pos)
         {
             prev_pos = cell_pos;
@@ -122,6 +127,31 @@ void Player::update(const float deltatime)
         m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][0]);
     }
     m_sprite.setPosition(m_pos.x, m_pos.y);
+
+
+
+
+}
+float condt = 0.0f;
+float cooldown = 0.25f;
+void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos)
+{
+    ImGui::Begin("DEBUG WINDOW");
+    ImGui::SliderFloat("shoot cooldown", &cooldown,0.0f,1.0f);
+	ImGui::End();
+
+
+    condt += deltatime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && condt >= cooldown)
+    {
+        i_sounds.add_sound("player", 2);
+        //LOG_INFO("{} {}", sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
+        glm::vec3 bullet_dir = normalize(mouse_pos - m_pos);
+        //LOG_INFO("Bullet dir: {} {} {}", bullet_dir.x, bullet_dir.y, bullet_dir.z);
+
+        new Projectile(m_pos, bullet_dir, 180, 0.1, 5);
+        condt = 0;
+    }
 }
 
 void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const

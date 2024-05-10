@@ -1,11 +1,14 @@
 #pragma once
 #include "entities/entity/Entity.h"
 
+class Sounds;
+
 class Player : public Entity
 {
 public:
     Player();
     void update(float deltatime);
+    void shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos);
     glm::ivec3 get_movement_speed() const; 
 
 protected:

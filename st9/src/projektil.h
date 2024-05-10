@@ -10,7 +10,7 @@ private:
     int m_lifetime;
     double m_damage;
     int m_penetration; // das projectil soll verschwinden wenn das 0 erreicht
-    inline static std::vector<Projectile*> s_projectiles;
+    /*thread_local*/ inline static std::vector<Projectile*> s_projectiles;
 
 public:
     Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime , double damage, int penetration);
@@ -18,9 +18,9 @@ public:
     int get_penetration() const;
     double get_damage() const;
     void decrease_penetration(int);
-    void update();
+    void update(float deltatime);
     static void remove_projectile(Projectile* projectile);
-    static void update_all();
+    static void update_all(float deltatime);
     static void draw_all_projectiles(sf::RenderTarget& target,const sf::RenderStates& states = sf::RenderStates::Default);
     static std::vector<Projectile*>& get_projectiles();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

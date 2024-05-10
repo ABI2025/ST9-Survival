@@ -14,6 +14,7 @@
 #include "BuildSystem.h"
 #include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
 #include "Sounds.h"
+#include "Tower.h"
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
@@ -65,6 +66,8 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 
+	texture.create(window.getSize().x,window.getSize().y);
+	
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
@@ -88,10 +91,10 @@ void Game::render_map(glm::vec3 player_pos)
 		}
 	}
 }
-
-void Game::render_tower() const
+void Game::render_tower() 
 {
-	sf::Sprite sprite;
+	sf::Sprite drawable;
+	
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -101,24 +104,31 @@ void Game::render_tower() const
 			case Utils::Cell::WALL:
 			{
 
-				sprite.setTexture(m_building_textures[0]);
-				sprite.setPosition(i * 135.0f
+				drawable.setTexture(m_building_textures[0]);
+				drawable.setPosition(i * 135.0f
 					, j * 135.0f);
-				m_window.draw(sprite);
+				m_window.draw(drawable);
 			}
 			break;
 			case Utils::Cell::TURRET: //fallthrough
 			case Utils::Cell::DEFENSE:
 			{
-				sprite.setTexture(m_building_textures[2]);
-				sprite.setPosition(i * 135.0f
+				drawable.setTexture(m_building_textures[2]);
+				drawable.setPosition(i * 135.0f
 					, j * 135.0f);
-				m_window.draw(sprite);
+				m_window.draw(drawable);
 
-				sprite.setTexture(m_building_textures[1]);
-				sprite.setPosition(i * 135.0f
+				drawable.setTexture(m_building_textures[1]);
+				drawable.setPosition(i * 135.0f
 					, j * 135.0f);
-				m_window.draw(sprite);
+
+				//drawable.setOrigin( 135.0f / 2.0f, 135.0f / 2.0f);
+					m_window.draw(drawable);
+
+		/*		drawable.setRotation(0.0f);
+				drawable.setOrigin(0,0);*/
+
+
 			}
 			break;
 			case Utils::Cell::NOTHING:
@@ -168,10 +178,11 @@ void Game::run_game(int)
 
 	Utils::Cell selected = Utils::Cell::NOTHING;
 
-	std::vector<glm::ivec3> towers;
+	std::vector<Tower> towers;
 
 	bool first_run = true;
 	float lautstarke[3] = { 50.0f,50.0f,50.0f };
+	bool paused = false;
 	while (m_window.isOpen() && m_open)
 	{
 	
@@ -184,172 +195,127 @@ void Game::run_game(int)
 		while (m_window.pollEvent(event)) //Hier werden alle moeglichen Events wie tasten und so weiter gehandled
 		{
 			ImGui::SFML::ProcessEvent(m_window, event);//Imgui Funktion die die Events handled fuer imgui
-			//if (m_window.hasFocus())//falls das spiel nicht 
-			//{
 			
-				switch (event.type)
+			switch (event.type)
+			{
+			case sf::Event::Resized:
+				texture.create(event.size.width, event.size.height);
+				break;
+			case sf::Event::MouseButtonReleased://fallthrough
+			case sf::Event::MouseButtonPressed:
+			{
+				bool down = event.type == sf::Event::MouseButtonPressed;
+				if (event.mouseButton.button == sf::Mouse::Button::Left)
+					left_click = down;
+				if (event.mouseButton.button == sf::Mouse::Button::Right)
+					right_click = down;
+			}
+				break;
+
+
+			case sf::Event::KeyPressed: //TODO: nicht alles hier machen bitte und logik weiter unten machen
+				if (event.key.code == sf::Keyboard::Key::Escape) 
 				{
-
-				case sf::Event::MouseButtonReleased: //Warum kein fallthrough und einfach left_click != left_click wegen eines Bug
-					if (event.mouseButton.button == sf::Mouse::Button::Left)
-						left_click = false;
-					if (event.mouseButton.button == sf::Mouse::Button::Right)
-						right_click = false;
-					break;
-				case sf::Event::MouseButtonPressed:
-					if (event.mouseButton.button == sf::Mouse::Button::Left)
-						left_click = true;
-					if (event.mouseButton.button == sf::Mouse::Button::Right)
-						right_click = true;
-					break;
-
-
-				case sf::Event::KeyPressed: //TODO: nicht alles hier machen bitte und logik weiter unten machen
-					if (event.key.code == sf::Keyboard::Key::Escape) 
-					{
-						/*m_sounds.pause_all(false);
-						m_open = showpausemenu();
-						m_sounds.play_all();*/
-						m_open = false;
-					}
-					if (event.key.code == sf::Keyboard::Key::E)
-						ma.add_enemy();
-					if (event.key.code == sf::Keyboard::Key::F)  // nur zum debuggen
-					{
-						m_sounds.add_sound("player", 2);
-						new Projectile(p->get_pos(), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
-					}
-					if (event.key.code == sf::Keyboard::Key::L) //Depression.exe 
-					{
-						m_sounds.add_sound("player",1);
-						hb.damage_input(1);
-					}
-					if (event.key.code == sf::Keyboard::Key::R)
-					{
-						m_sounds.add_sound("player", 0);
-						hb.regeneration(1);
-					}
-					break;
-				case sf::Event::LostFocus://bitte pausenbildschirm 
-
-					break;
-				case sf::Event::Closed:
-					m_window.close();
-					break;
-				default:
-					break;
+					/*m_sounds.pause_all(false);
+					m_open = showpausemenu();
+					m_sounds.play_all();*/
+					m_open = false;
 				}
-			//}
 
+				break;
+			case sf::Event::GainedFocus: //fallthrough
+			case sf::Event::LostFocus:
+				paused = event.type == sf::Event::LostFocus;
+				break;
+			case sf::Event::Closed:
+				m_window.close();
+				break;
+			default:
+				break;
+			}
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());//Imgui funktion damit alles geupdatet wird
 
-		{//Buildsystem
-			selected = buildsystem.display();
 
-			if (left_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+		if (!paused)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
+				ma.add_enemy();
+			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
+			//{
+			//	m_sounds.add_sound("player", 2);
+			//	new Projectile(p->get_pos(), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
+			//}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L)) //Depression.exe 
 			{
-				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
-
-				glm::ivec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-
-				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][mouse_pos.y][mouse_pos.x] != selected)
-				{
-					//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-					if(selected == Utils::Cell::TURRET || selected == Utils::Cell::DEFENSE)
-						towers.emplace_back(mouse_pos);
-					if((m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET)
-						&& (selected != Utils::Cell::TURRET && selected != Utils::Cell::DEFENSE))
-					{
-						for (auto it = towers.begin(); it != towers.end();)
-						{
-							if ((*it).x == mouse_pos.x && (*it).y == mouse_pos.y)
-							{
-								LOG_INFO("success 2");
-								it = towers.erase(it);
-							}
-							else 
-							{
-								++it;
-							}
-						}
-					}
-
-					m_map[0][mouse_pos.y][mouse_pos.x] = selected;
-					EnemyManager::set_updated_tower(true);
-				}
+				m_sounds.add_sound("player", 1);
+				hb.damage_input(1);
 			}
-			if (right_click && m_window.hasFocus() && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
 			{
-				sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
-				glm::ivec3 mouse_pos = { temp.x / 135.0f, temp.y / 135.0f, 0 };
-				if (pa->is_valid(mouse_pos) && selected != Utils::Cell::NOTHING && m_map[0][mouse_pos.y][mouse_pos.x] != Utils::Cell::NOTHING)
-				{
-					//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-					if(m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || m_map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET)
-					{
-						for(auto it = towers.begin(); it != towers.end();)
-						{
-							if ((*it).x == mouse_pos.x && (*it).y == mouse_pos.y)
-							{
-								it = towers.erase(it);
-							}
-							else
-							{
-								++it;
-							}
-						}
-					}
-
-					m_map[0][mouse_pos.y][mouse_pos.x] = Utils::Cell::NOTHING;
-					EnemyManager::set_updated_tower(true);
-				}
+				m_sounds.add_sound("player", 0);
+				hb.regeneration(1);
 			}
 		}
-
-
+		
+		buildsystem.display();
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
 			Utils::Timer logic_timer;
-			
+			Projectile::update_all(deltatime);
 			p->update(deltatime);
+			c.move_cam_to_player();
+
+			sf::Vector2f temp(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window)));
+			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f};
+			buildsystem(left_click, right_click, m_window, m_map, towers,mouse_pos/135.0f);
+			p->shoot(deltatime, m_sounds, mouse_pos);
+	
+			std::for_each(std::execution::par, towers.begin(), towers.end(),
+			[&ma, &deltatime](Tower& tower)
+			{
+					tower.fire(ma, deltatime);
+			});
+			
 			if (first_run == true || EnemyManager::should_update() == true)
 			{
 				pa->calculate_paths(towers);
 			}
 			ma.update(deltatime);
+		
+			m_sounds.cleanup(false);
+
+
+			if (!hb.alive())
+			{
+				m_open = false;
+			}
+			ma.naive_enemy_killer();
+
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
 			ImGui::End();
-			m_sounds.cleanup(false);
 		}
 
 		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
-
 			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
 			ImGui::TextWrapped("amount of enemies: %llu", ma.get_enemies().size());
-			if (ImGui::Button("fix lc/right click"))
-			{
-				left_click = false;
-				right_click = false;
-			}
+
+			if (paused)
+				ImGui::TextWrapped("paused");
+			else
+				ImGui::TextWrapped("not paused");
+
 			ImGui::SliderFloat("Allgemein", lautstarke, 0, 100);
 			ImGui::SliderFloat("Player", &lautstarke[1], 0, 100);
 			ImGui::SliderFloat("Musik", &lautstarke[2], 0, 100);
 			m_sounds.set_volume(lautstarke[0], -1);
 			m_sounds.set_volume(lautstarke[1], 0);
 			m_sounds.set_volume(lautstarke[2], 1);
+
 			ImGui::End();
 		}
-
-		if (!hb.alive()) 
-		{
-			m_open = false;
-		}
-		ma.naive_enemy_killer();
-
-		c.move_cam_to_player();
 
 		{//Rendern (Bitte keine als zu große logik ab hier)
 
@@ -357,25 +323,46 @@ void Game::run_game(int)
 			m_window.clear();//das momentane fenster wird gecleared
 
 			render_map(p->get_pos()); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
-			mb.main_sprite(m_window); 
+			mb.main_sprite(m_window);
+			//for(auto& tower : towers)
+			//{
+			//	tower.drawtower(m_window);
+			//}
 			render_tower();
 			ma.draw(m_window);
 			m_window.draw(*p);
 			Projectile::draw_all_projectiles(m_window);
 			hb.draw_healthbar(m_window, *p);
-			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)
+			//ImGui::Begin("Viewport");
+			//ImGui::Image(texture);
+			//ImGui::End();
 
+			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)
+			
 			m_window.display();
 		}
 		first_run = false;
 	}
-
+	
 	m_sounds.clear_all();
 	m_tiles.clear();
 	m_open = true;
 	c.move_to_default();
 	Utils::Pathfinding::Delete();
 	pa = nullptr;
+
+	for(int i = 0; i < m_map.size(); i++)
+	{
+		for(int j = 0; j < m_map[i].size(); j++)
+		{
+			for(int k = 0; k < m_map[i][j].size();k++)
+			{
+				m_map[i][j][k] = Utils::Cell::NOTHING;
+			}
+		}
+	}
+
+
 
 }
 

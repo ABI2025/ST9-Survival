@@ -30,18 +30,27 @@ EnemyManager::EnemyManager()
 
 	m_textures.resize(1);
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
+
+
+	auto map = Utils::Pathfinding::get_instance()->get_map();
+	enemys_per_cell = std::vector( map[0].size(),
+		std::vector(map[0][0].size(), 0));
 }
 
-int curr_frame = 0;
-constexpr float time_per_frame = 1 / 60.0f;
-float con_dt = 0.0f;
-thread_local size_t  prev_size = 0;
 void EnemyManager::update(float deltatime)
 {
-	con_dt += deltatime;
-	curr_frame++;
-	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime](std::shared_ptr<Enemy>& e)
+	for(int i = 0; i < enemys_per_cell.size();i++)
+	{
+		for(int j = 0; j < enemys_per_cell[i].size();j++)
 		{
+			enemys_per_cell[i][j] = 0;
+		}
+	}
+
+
+
+	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime](std::shared_ptr<Enemy>& e)
+	{
 			{
 				if (e == nullptr)
 					return;
@@ -76,10 +85,15 @@ void EnemyManager::update(float deltatime)
 					e->m_movements.pop_back();
 				}
 			}
+			const glm::ivec3 temp_pos = round(e->m_pos / 135.0f);
+			if(Utils::Pathfinding::get_instance()->is_valid(temp_pos))
+			{
+				enemys_per_cell[temp_pos.y][temp_pos.x]++;
+			}
+			e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 
-			e->m_hitbox = e->m_pos + glm::vec3{ 55,110,0 };
+	}
 
-		}
 	);
 
 	for (auto it = m_enemys.begin(); it != m_enemys.end();)
@@ -96,34 +110,40 @@ void EnemyManager::update(float deltatime)
 	constexpr float epsilon = 1e-6f;
 
 	auto comp = [](const std::shared_ptr<Enemy>& e1, const std::shared_ptr<Enemy>& e2)
-		{
-			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
-		};
+	{
+		return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
+	};
 
 	std::ranges::sort(m_enemys, comp);
-	if (con_dt > 1)
-		con_dt = 0;
-	if (curr_frame == 1200)
-	{
-		curr_frame = 0;
-	}
+
 }
 
 glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 pos) const
 {
 	glm::vec2 nearst (-1);
-	double dist = DBL_MAX;
-	for (const auto& enemy : m_enemys)
+
+	glm::vec2 tower_pos = round(pos / 135.0f) ;
+
+	const int rendersizex = static_cast<int>(radius);
+	const int rendersizey = static_cast<int>(radius);
+
+	for (int i = static_cast<int>(tower_pos.x) - rendersizex; i < static_cast<int>(tower_pos.x) + rendersizex; i++)
 	{
-		const double temp = sqrt(pow(pos.x - enemy->m_pos.x, 2) + pow(pos.y - enemy->m_pos.y, 2));
-		if(temp < dist)
+		for (int j = static_cast<int>(tower_pos.y) - rendersizey; j < static_cast<int>(tower_pos.y) + rendersizey; j++)
 		{
-			dist = temp;
-			nearst = { enemy->m_pos.x,enemy->m_pos.y };
+			if (Utils::is_valid({ i,j,0.0f }) && enemys_per_cell[j][i] > 0)
+			{
+				const glm::vec2 dist = abs(glm::vec2{ i,j } - pos);
+				const glm::vec2 dist2 = abs(nearst - pos);
+
+				if(dist.x+dist.y < dist2.x+ dist2.y || nearst == glm::vec2{-1.0f,-1.0f})
+				{
+					nearst = { i*135.0f,j*135.0f };
+				}
+			}
 		}
 	}
-	if (dist > radius) 
-		return { -1.0f,-1.0f };
+
 
 	return nearst;
 }
@@ -132,10 +152,10 @@ void EnemyManager::add_enemy()
 {
 	m_enemys.push_back(std::make_shared<Enemy>());
 	m_enemys.back()->m_priority = static_cast<Utils::Priority>(Utils::Random::UInt(0, 2));
-	LOG_INFO("priority: {}", static_cast<int>(m_enemys.back()->m_priority));
+	LOG_TRACE("priority: {}", static_cast<int>(m_enemys.back()->m_priority));
 	m_enemys.back()->m_id = 0;
 }
-void EnemyManager::draw(sf::RenderWindow& i_window) const
+void EnemyManager::draw(sf::RenderTarget& i_window) const
 {
 	glm::vec3 prev_pos(-1);
 	for (const auto& m : m_enemys)
@@ -203,10 +223,6 @@ int EnemyManager::naive_enemy_killer() {
 				enemy->take_damage(projectile->get_damage());
 				hit_count++;
 
-				if (enemy->get_hp() <= 0) {
-					enemy->die();
-				}
-
 				projectile->decrease_penetration(1);
 				if (projectile->get_penetration() <= 0) {
 					to_remove_projectiles.push_back(projectile);
@@ -217,15 +233,10 @@ int EnemyManager::naive_enemy_killer() {
 	}
 
 	// Clean up projectiles
-	for (Projectile* projectile : to_remove_projectiles) {
+	for (Projectile* projectile : to_remove_projectiles) 
+	{
 		Projectile::remove_projectile(projectile);
 	}
-
-	// Clean up dead enemies
-	std::erase_if(m_enemys,[](const std::shared_ptr<Enemy>& enemy)->bool
-		{
-	              	return !enemy->is_alive();
-		});
 
 	return hit_count;
 }
