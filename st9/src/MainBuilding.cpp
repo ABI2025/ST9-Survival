@@ -8,8 +8,8 @@ MainBuilding::MainBuilding(): m_hp(0), m_pos_x(135*20), m_pos_y(135*10)
 	m_sprite.setPosition(m_pos_x, m_pos_y);
 }
 
-void MainBuilding::main_sprite(sf::RenderWindow& window) const
+void MainBuilding::main_sprite(sf::RenderTarget& target) const
 {
-	window.draw(m_sprite);
+	target.draw(m_sprite);
 }
 

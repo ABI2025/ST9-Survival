@@ -15,7 +15,7 @@ public:
 
 	bool damage_input(int);
 	[[nodiscard]] bool alive() const;
-	void draw_healthbar(sf::RenderWindow&, Player&) const;
+	void draw_healthbar(sf::RenderTarget&, Player&) const;
 
 };
 

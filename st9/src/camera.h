@@ -8,12 +8,12 @@ class Camera
 {
 private:
 	Player* m_player;
-	sf::RenderWindow* m_window;
+	sf::RenderTarget* m_render_target;
 	sf::View m_view;
 public:
-	explicit Camera(sf::RenderWindow* window);
+	explicit Camera(sf::RenderTarget* window);
 
-	explicit Camera(sf::RenderWindow* window, Player* player);
+	explicit Camera(sf::RenderTarget* window, Player* player);
 
 	~Camera();
 

@@ -11,7 +11,7 @@ class Sounds
 
 
 	std::map<int,float> m_volumes;
-	std::vector<std::string> m_;
+	std::vector<std::string> m_mapping;
 public:
 	Sounds();
 	~Sounds();
