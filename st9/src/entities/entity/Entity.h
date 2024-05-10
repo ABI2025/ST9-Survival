@@ -25,6 +25,6 @@ public:
 	glm::vec3 get_hit_box() const;
 
 protected:
-	void draw(sf::RenderTarget& target, sf::RenderStates states)const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };

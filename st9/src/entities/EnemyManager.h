@@ -21,7 +21,7 @@ public:
 	EnemyManager();
 	void update(float deltatime);
 
-	[[nodiscard]] glm::vec2 enemypos(double radius, glm::vec2 pos) const;
+	[[nodiscard]] glm::vec2 enemypos(double radius, glm::vec2 tower_position) const;
 	void add_enemy();
 	[[nodiscard]] std::vector<std::shared_ptr<Enemy>>& get_enemies() { return m_enemys; }
 	int naive_enemy_killer();

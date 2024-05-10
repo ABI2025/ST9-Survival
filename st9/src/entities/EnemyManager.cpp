@@ -2,6 +2,10 @@
 #include <execution>
 #include "Utils/Utils.h"
 
+constexpr float CellHeight = 135.0f;
+constexpr float CellWidth = 135.0f;
+constexpr float CellSize = 135.0f;
+
 EnemyManager::EnemyManager()
 {
 	//m_enemys.push_back(std::make_shared<Enemy>());
@@ -32,18 +36,18 @@ EnemyManager::EnemyManager()
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
 
 
-	auto map = Utils::Pathfinding::get_instance()->get_map();
+	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector( map[0].size(),
 		std::vector(map[0][0].size(), 0));
 }
 
 void EnemyManager::update(float deltatime)
 {
-	for(int i = 0; i < enemys_per_cell.size();i++)
+	for (std::vector<int>& vector : enemys_per_cell)
 	{
-		for(int j = 0; j < enemys_per_cell[i].size();j++)
+		for (int& i : vector)
 		{
-			enemys_per_cell[i][j] = 0;
+			i = 0;
 		}
 	}
 
@@ -85,7 +89,7 @@ void EnemyManager::update(float deltatime)
 					e->m_movements.pop_back();
 				}
 			}
-			const glm::ivec3 temp_pos = round(e->m_pos / 135.0f);
+			const glm::ivec3 temp_pos = round(e->m_pos / CellSize);
 			if(Utils::Pathfinding::get_instance()->is_valid(temp_pos))
 			{
 				enemys_per_cell[temp_pos.y][temp_pos.x]++;
@@ -118,34 +122,34 @@ void EnemyManager::update(float deltatime)
 
 }
 
-glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 pos) const
+glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_position) const
 {
-	glm::vec2 nearst (-1);
+	glm::vec2 nearest (-1);
 
-	glm::vec2 tower_pos = round(pos / 135.0f) ;
+	const glm::vec2 tower_cell_position = round(tower_position / 135.0f) ;
 
-	const int rendersizex = static_cast<int>(radius);
-	const int rendersizey = static_cast<int>(radius);
+	const int check_size_x = static_cast<int>(radius);
+	const int check_size_y = static_cast<int>(radius);
 
-	for (int i = static_cast<int>(tower_pos.x) - rendersizex; i < static_cast<int>(tower_pos.x) + rendersizex; i++)
+	for (int x = static_cast<int>(tower_cell_position.x) - check_size_x; x < static_cast<int>(tower_cell_position.x) + check_size_x; x++)
 	{
-		for (int j = static_cast<int>(tower_pos.y) - rendersizey; j < static_cast<int>(tower_pos.y) + rendersizey; j++)
+		for (int y = static_cast<int>(tower_cell_position.y) - check_size_y; y < static_cast<int>(tower_cell_position.y) + check_size_y; y++)
 		{
-			if (Utils::is_valid({ i,j,0.0f }) && enemys_per_cell[j][i] > 0)
+			if (Utils::is_valid({ x,y,0.0f }) && enemys_per_cell[y][x] > 0)
 			{
-				const glm::vec2 dist = abs(glm::vec2{ i,j } - pos);
-				const glm::vec2 dist2 = abs(nearst - pos);
+				const glm::vec2 distance_new_point_to_tower = abs(glm::vec2{ x,y } - tower_position);
+				const glm::vec2 distance_nearest_to_tower = abs(nearest - tower_position);
 
-				if(dist.x+dist.y < dist2.x+ dist2.y || nearst == glm::vec2{-1.0f,-1.0f})
+				if((distance_new_point_to_tower.x+distance_new_point_to_tower.y < distance_nearest_to_tower.x+ distance_nearest_to_tower.y || nearest == glm::vec2{-1.0f,-1.0f}) && distance_new_point_to_tower.x + distance_new_point_to_tower.y < radius)
 				{
-					nearst = { i*135.0f,j*135.0f };
+					nearest = { x * CellWidth,y * CellHeight };
 				}
 			}
 		}
 	}
 
 
-	return nearst;
+	return nearest;
 }
 
 void EnemyManager::add_enemy()
