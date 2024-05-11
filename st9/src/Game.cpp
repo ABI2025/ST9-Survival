@@ -442,6 +442,11 @@ Game* Game::get_game()
 	return s_game;
 }
 
+std::vector<std::vector<std::vector<Entity>>> * Game::getEntityMap()
+{
+	return &(s_game->m_EntityMap);
+}
+
 void Game::set_map(const Utils::Cell& cell, int x, int y, int z) {
 	if (
 		z < m_map.size() && z >= 0 &&
