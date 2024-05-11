@@ -8,7 +8,7 @@
 #include "Sounds.h"
 
 Player::Player()
-	: Entity(), prev_pos(), m_geld(0), m_health(0), speed()
+	: Entity(), prev_pos(), m_geld(0), speed()
 
 {
 	m_pos = {720, 720, 0};

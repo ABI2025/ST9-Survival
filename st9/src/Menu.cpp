@@ -32,7 +32,7 @@ void Menu::show_menu()
 {
 	Game::erstelle_game(m_window);
 	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.wav")) LOG_ERROR("fuck");
+	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.wav")) {LOG_ERROR("fuck");}
 	sf::Sound sound;
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);

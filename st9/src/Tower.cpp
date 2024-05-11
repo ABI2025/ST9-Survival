@@ -6,7 +6,7 @@
 #define M_PI 3.14159265358979323846f
 #endif
 
-constexpr glm::vec2 tower_sprite_center{69,55};
+constexpr glm::vec2 tower_sprite_center{69,55}; //danke simon für unsymmetrische texturen
 
 
 Tower::Tower(const glm::vec3 i_pos) : m_pos(i_pos)
@@ -52,7 +52,7 @@ void Tower::fire(const EnemyManager& em, const float deltatime)
 	//LOG_INFO("Closest_enemy: {} {} ", closest_enemy.x, closest_enemy.y);
 	if (condt >= cooldown)
 	{
-		const glm::vec2 closest_enemy = { em.enemypos(10.0, m_pos) };
+		const glm::vec2 closest_enemy = { em.enemypos(6.0, m_pos) };
 		if (closest_enemy != glm::vec2{ -1.0f,-1.0f })
 		{
 			const glm::vec3 dir = glm::vec3{ closest_enemy ,0.0f } - static_cast<glm::vec3>(m_pos);

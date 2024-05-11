@@ -59,7 +59,7 @@ void EnemyManager::update(float deltatime)
 			{
 				if (e == nullptr)
 					return;
-				if (e->m_hp <= 0)
+				if (e->m_health <= 0)
 				{
 					e->die();
 					e.reset();
@@ -132,7 +132,7 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 
 	const int check_size_x = static_cast<int>(radius);
 	const int check_size_y = static_cast<int>(radius);
-	LOG_INFO("tower_cell_position x: {}  tower_cell_position y: {}", tower_cell_position.x, tower_cell_position.y);
+	//LOG_INFO("tower_cell_position x: {}  tower_cell_position y: {}", tower_cell_position.x, tower_cell_position.y);
 
 	for (int x = static_cast<int>(tower_cell_position.x) - check_size_x; x < static_cast<int>(tower_cell_position.x) + check_size_x; x++)
 	{
@@ -145,9 +145,9 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 
 				const int manhatten_distance_new_point_to_tower = abs(distance_new_point_to_tower.x + distance_new_point_to_tower.y);
 				const int manhatten_distance_nearest_to_tower = abs(distance_nearest_to_tower.x + distance_nearest_to_tower.y);
-				LOG_INFO("manhatten_distance_new_point_to_tower {}", manhatten_distance_new_point_to_tower);
-				LOG_INFO("manhatten_distance_nearest_to_tower {}", manhatten_distance_nearest_to_tower);
-				LOG_INFO("x: {} y: {}", x,y);
+				//LOG_INFO("manhatten_distance_new_point_to_tower {}", manhatten_distance_new_point_to_tower);
+				//LOG_INFO("manhatten_distance_nearest_to_tower {}", manhatten_distance_nearest_to_tower);
+				//LOG_INFO("x: {} y: {}", x,y);
 
 				if((manhatten_distance_new_point_to_tower < manhatten_distance_nearest_to_tower
 					|| nearest == glm::vec2{-1.0f,-1.0f})

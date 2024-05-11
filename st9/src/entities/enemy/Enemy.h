@@ -10,11 +10,10 @@ class Enemy :
        std::vector<glm::vec3> m_movements;
        Utils::Priority m_priority;
        size_t prev_size;
-       double m_hp = 2;
        double m_id = 0;
        friend class EnemyManager;
    public:
-       Enemy() = default;
+       Enemy() { m_health = 2; }
        void die();
        void update();
        bool is_alive() const ;

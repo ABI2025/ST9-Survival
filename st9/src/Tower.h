@@ -32,8 +32,8 @@ class Tower
 	double m_damage;
 	float angle{};
 	glm::ivec3 m_pos;
-	float cooldown = 0.5f;
-	float condt{0.5f};
+	float cooldown = 0.8f;
+	float condt{0.8f};
 	sf::Sprite sprites[2];
 	sf::Transform t;
 public:

@@ -16,6 +16,7 @@
 #include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
 #include "Sounds.h"
 #include "Tower.h"
+
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
@@ -283,7 +284,6 @@ void Game::run_game(int)
 			{
 				ImGui::Begin("Viewport");
 				
-				ImVec2 window_size = ImGui::GetWindowSize();
 				ImVec2 content_size = ImGui::GetContentRegionAvail();
 
 				texture.create(content_size.x, content_size.y);
@@ -314,7 +314,7 @@ void Game::run_game(int)
 				ImGui::End();
 			p->shoot(deltatime, m_sounds, mouse_pos);
 	
-			std::for_each(std::execution::par, towers.begin(), towers.end(),
+			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
 			[&ma, &deltatime](Tower& tower)
 			{
 					tower.fire(ma, deltatime);
