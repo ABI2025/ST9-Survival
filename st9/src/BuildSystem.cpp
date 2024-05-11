@@ -66,7 +66,7 @@ Utils::Cell BuildSystem::display()
 	return m_selected;
 }
 
-void BuildSystem::operator()(bool left_click, bool right_click, sf::RenderWindow& m_window,
+void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_docking,
 	std::vector<std::vector<std::vector<Utils::Cell>>>& map,
 	std::vector<Tower>& towers,
 	glm::ivec3 mouse_pos
@@ -74,7 +74,12 @@ void BuildSystem::operator()(bool left_click, bool right_click, sf::RenderWindow
 {
 
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
-	if (left_click && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+	
+
+
+
+	if (left_click && (!ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) || (should_do_docking && ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow) && 
+	ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow) )))
 	{
 		if (pa->is_valid(mouse_pos) && m_selected != Utils::Cell::NOTHING && map[0][mouse_pos.y][mouse_pos.x] != m_selected)
 		{
@@ -87,7 +92,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, sf::RenderWindow
 
 				for (auto it = towers.begin(); it != towers.end();)
 				{
-					if ((it)->get_pos().x / 135.0f == mouse_pos.x && (it)->get_pos().y / 135.0f == mouse_pos.y)
+					if ((it)->get_pos().x / 135.0f == mouse_pos.x && 
+						(it)->get_pos().y / 135.0f == mouse_pos.y)
 					{
 						it = towers.erase(it);
 					}
@@ -101,9 +107,9 @@ void BuildSystem::operator()(bool left_click, bool right_click, sf::RenderWindow
 			EnemyManager::set_updated_tower(true);
 		}
 	}
-	if (right_click && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+	if (right_click && (!ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) || (should_do_docking && ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow) &&
+		ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))))
 	{
-	
 		if (pa->is_valid(mouse_pos) && m_selected != Utils::Cell::NOTHING && map[0][mouse_pos.y][mouse_pos.x] != Utils::Cell::NOTHING)
 		{
 			//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
@@ -111,7 +117,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, sf::RenderWindow
 			{
 				for (auto it = towers.begin(); it != towers.end();)
 				{
-					if ((it)->get_pos().x / 135.0f == mouse_pos.x && (it)->get_pos().y / 135.0f == mouse_pos.y)
+					if ((it)->get_pos().x / 135.0f == mouse_pos.x &&
+						(it)->get_pos().y / 135.0f == mouse_pos.y)
 					{
 						it = towers.erase(it);
 					}

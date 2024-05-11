@@ -21,6 +21,8 @@ public:
 
 	void set_player(Player* player);
 
+	void set_RenderTarget(sf::RenderTarget* i_render_target);
+
 	Player* get_player();
 
 	void move_cam_to_player();

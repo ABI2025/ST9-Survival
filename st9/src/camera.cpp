@@ -24,6 +24,11 @@ void Camera::set_player(Player* player)
 	m_player = player;
 }
 
+void Camera::set_RenderTarget(sf::RenderTarget* i_render_target)
+{
+	m_render_target = i_render_target;
+}
+
 Player* Camera::get_player()
 {
 	return m_player;

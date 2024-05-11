@@ -4,14 +4,37 @@
 #include <vector>
 #include "entities/entity/Entity.h"
 
+
+
+class ProjectileTexture
+{
+    inline static ProjectileTexture* s_instance;
+public:
+    sf::Texture texture;
+    ProjectileTexture()
+    {
+        texture.loadFromFile("resources/images/Projektil.png");
+       
+    }
+    static ProjectileTexture* get_instance()
+    {
+        if (!s_instance)
+        {
+            s_instance = new ProjectileTexture;
+        }
+        return s_instance;
+    }
+
+};
+
 class Projectile : public Entity { 
 private:
     glm::vec3 m_speed; 
     int m_lifetime;
     double m_damage;
     int m_penetration; // das projectil soll verschwinden wenn das 0 erreicht
-    /*thread_local*/ inline static std::vector<Projectile*> s_projectiles;
-
+    thread_local inline static std::vector<Projectile*> s_projectiles;
+    sf::Sprite sprite;
 public:
     Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime , double damage, int penetration);
     ~Projectile();

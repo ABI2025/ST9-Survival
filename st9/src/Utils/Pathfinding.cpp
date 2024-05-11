@@ -51,14 +51,14 @@ namespace Utils {
 			break;
 
 		case Priority::player:
-			const glm::vec3 dest = m_player->get_pos();
-			//LOG_DEBUG("player: x:{} y:{} z:{}", dest.x, dest.y, dest.z);
-			if (vec3_almost_equal(dest / 135.0f, start / 135.0f, 1.0f))
-			{
-				//LOG_INFO("used brensenham");
-				return bresenham(dest, start);
-			}
-			//LOG_INFO("used backtracking");
+			//const glm::vec3 dest = m_player->get_pos();
+			////LOG_DEBUG("player: x:{} y:{} z:{}", dest.x, dest.y, dest.z);
+			//if (vec3_almost_equal(dest / 135.0f, start / 135.0f, 1.0f))
+			//{
+			//	//LOG_INFO("used brensenham");
+			//	return bresenham(dest, start);
+			//}
+			////LOG_INFO("used backtracking");
 
 			return make_path(start, m_player_cellmap);
 			break;
@@ -396,10 +396,10 @@ namespace Utils {
 			return 1;
 
 		case Cell::DEFENSE:
-			return 2;
+			return 5;
 
 		case Cell::WALL:
-			return 10;
+			return 500;
 		case Cell::TURRET:
 
 			break;

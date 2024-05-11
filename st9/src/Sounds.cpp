@@ -148,7 +148,7 @@ void Sounds::play_all()
 		{
 			for (auto& sound : sounds)
 			{
-				if (sound.getStatus() != sf::SoundSource::Playing)
+				if (sound.getStatus() != sf::SoundSource::Playing && sound.getStatus() != sf::SoundSource::Stopped)
 				{
 					sound.play();
 				}

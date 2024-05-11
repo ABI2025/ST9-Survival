@@ -1,3 +1,4 @@
+// ReSharper disable CppTooWideScopeInitStatement
 #include "EnemyManager.h"
 #include <execution>
 #include "Utils/Utils.h"
@@ -125,11 +126,13 @@ void EnemyManager::update(float deltatime)
 glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_position) const
 {
 	glm::vec2 nearest (-1);
+	glm::ivec2 nearest_cell_position (-1);
 
-	const glm::vec2 tower_cell_position = round(tower_position / 135.0f) ;
+	const glm::ivec2 tower_cell_position = round(tower_position / 135.0f) ;
 
 	const int check_size_x = static_cast<int>(radius);
 	const int check_size_y = static_cast<int>(radius);
+	LOG_INFO("tower_cell_position x: {}  tower_cell_position y: {}", tower_cell_position.x, tower_cell_position.y);
 
 	for (int x = static_cast<int>(tower_cell_position.x) - check_size_x; x < static_cast<int>(tower_cell_position.x) + check_size_x; x++)
 	{
@@ -137,12 +140,21 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 		{
 			if (Utils::is_valid({ x,y,0.0f }) && enemys_per_cell[y][x] > 0)
 			{
-				const glm::vec2 distance_new_point_to_tower = abs(glm::vec2{ x,y } - tower_position);
-				const glm::vec2 distance_nearest_to_tower = abs(nearest - tower_position);
+				const glm::ivec2 distance_new_point_to_tower = (glm::ivec2{ x,y } - tower_cell_position);
+				const glm::ivec2 distance_nearest_to_tower = (nearest_cell_position - tower_cell_position);
 
-				if((distance_new_point_to_tower.x+distance_new_point_to_tower.y < distance_nearest_to_tower.x+ distance_nearest_to_tower.y || nearest == glm::vec2{-1.0f,-1.0f}) && distance_new_point_to_tower.x + distance_new_point_to_tower.y < radius)
+				const int manhatten_distance_new_point_to_tower = abs(distance_new_point_to_tower.x + distance_new_point_to_tower.y);
+				const int manhatten_distance_nearest_to_tower = abs(distance_nearest_to_tower.x + distance_nearest_to_tower.y);
+				LOG_INFO("manhatten_distance_new_point_to_tower {}", manhatten_distance_new_point_to_tower);
+				LOG_INFO("manhatten_distance_nearest_to_tower {}", manhatten_distance_nearest_to_tower);
+				LOG_INFO("x: {} y: {}", x,y);
+
+				if((manhatten_distance_new_point_to_tower < manhatten_distance_nearest_to_tower
+					|| nearest == glm::vec2{-1.0f,-1.0f})
+					&& manhatten_distance_new_point_to_tower < radius)
 				{
 					nearest = { x * CellWidth,y * CellHeight };
+					nearest_cell_position = { x,y };
 				}
 			}
 		}
