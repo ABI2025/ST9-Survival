@@ -1,5 +1,5 @@
 ﻿#include "BuildSystem.h"
-
+#include "Game.h"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "Tower.h"
@@ -85,14 +85,14 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 		{
 			//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
 			if (m_selected == Utils::Cell::TURRET || m_selected == Utils::Cell::DEFENSE)
-				towers.emplace_back(mouse_pos*135);
+				towers.emplace_back(mouse_pos * 135);
 			if ((map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET)
 				&& (m_selected != Utils::Cell::TURRET && m_selected != Utils::Cell::DEFENSE))
 			{
 
 				for (auto it = towers.begin(); it != towers.end();)
 				{
-					if ((it)->get_pos().x / 135.0f == mouse_pos.x && 
+					if ((it)->get_pos().x / 135.0f == mouse_pos.x &&
 						(it)->get_pos().y / 135.0f == mouse_pos.y)
 					{
 						it = towers.erase(it);
@@ -104,6 +104,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				}
 			}
 			map[0][mouse_pos.y][mouse_pos.x] = m_selected;
+			*(Game::get_game()->getEntityMap())[0][mouse_pos.y][mouse_pos.x]= ;
 			EnemyManager::set_updated_tower(true);
 		}
 	}
