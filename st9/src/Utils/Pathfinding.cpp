@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Tower.h"
 #include "entities/Player/Player.h"
 
 #include "Utils.h"
@@ -45,14 +46,14 @@ namespace Utils {
 			break;
 
 		case Priority::player:
-			const glm::vec3 dest = m_player->get_pos();
-			//LOG_DEBUG("player: x:{} y:{} z:{}", dest.x, dest.y, dest.z);
-			if (vec3_almost_equal(dest / 135.0f, start / 135.0f, 1.0f))
-			{
-				//LOG_INFO("used brensenham");
-				return bresenham(dest, start);
-			}
-			//LOG_INFO("used backtracking");
+			//const glm::vec3 dest = m_player->get_pos();
+			////LOG_DEBUG("player: x:{} y:{} z:{}", dest.x, dest.y, dest.z);
+			//if (vec3_almost_equal(dest / 135.0f, start / 135.0f, 1.0f))
+			//{
+			//	//LOG_INFO("used brensenham");
+			//	return bresenham(dest, start);
+			//}
+			////LOG_INFO("used backtracking");
 
 			return make_path(start, m_player_cellmap);
 			break;
@@ -318,7 +319,7 @@ namespace Utils {
 
 	}
 
-	void Pathfinding::calculate_paths(std::vector<glm::ivec3>& towers)
+	void Pathfinding::calculate_paths(std::vector<Tower>& towers)
 	{
 		//priority player
 		{
@@ -336,7 +337,7 @@ namespace Utils {
 			std::vector<glm::ivec3> start_points;
 			for(auto tower : towers)
 			{
-				start_points.push_back(tower);
+				start_points.push_back(tower.get_pos()/135.0f);
 			}
 			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
@@ -347,7 +348,7 @@ namespace Utils {
 			std::vector<glm::ivec3> start_points;
 			for (auto tower : towers)
 			{
-				start_points.push_back(tower);
+				start_points.push_back(tower.get_pos() / 135.0f);
 			}
 			if (start_points.empty() == true)
 			{
@@ -357,9 +358,13 @@ namespace Utils {
 		}
 	}
 
-	static std::vector<glm::ivec3> dirs({ {0,0,-1},{0,0,1}, {0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
-
-	std::vector<Pathfinding::cell*> Pathfinding::get_neighbors(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
+	static std::vector<glm::ivec3> dirs({
+		{0,0,1},
+		{0,0,-1},
+		{0,1,0},
+		{0,-1,0},
+		{1,0,0},
+		{-1,0,0} });	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
 	{
 		std::vector<cell*> neighbours;
 		//LOG_TRACE("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
@@ -373,6 +378,7 @@ namespace Utils {
 				neighbours.push_back(&m_cellmap[pos.z][pos.y][pos.x]);
 
 		}
+
 		return neighbours;
 	}
 
@@ -385,10 +391,10 @@ namespace Utils {
 			return 1;
 
 		case Cell::DEFENSE:
-			return 2;
+			return 5;
 
 		case Cell::WALL:
-			return 10;
+			return 500;
 		case Cell::TURRET:
 
 			break;

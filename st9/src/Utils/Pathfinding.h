@@ -7,6 +7,8 @@
 #include "entities/Player/Player.h"
 
 
+class Tower;
+
 namespace Utils
 {
 	enum class Priority;
@@ -80,7 +82,7 @@ namespace Utils
 
 		[[nodiscard]] bool is_valid(const glm::vec3&) const;
 
-		void calculate_paths(std::vector<glm::ivec3>& towers);
+		void calculate_paths(std::vector<Tower>& towers);
 
 
 		//private methods

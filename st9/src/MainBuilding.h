@@ -13,7 +13,7 @@ class MainBuilding
 
 	public:
 		MainBuilding();
-		void main_sprite(sf::RenderWindow&) const;
+		void main_sprite(sf::RenderTarget&) const;
 		
 
 };

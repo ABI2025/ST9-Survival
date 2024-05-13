@@ -11,9 +11,10 @@ class Entity : public sf::Drawable
 protected:
 	glm::vec3 m_pos{};
 	sf::Sprite m_sprite;
-	std::vector<std::vector<std::vector<sf::Texture>>> m_textures;
+	//std::vector<std::vector<std::vector<sf::Texture>>> m_textures;
 	//Utils::Priority m_priority; //für die gegner klasse
 	glm::vec3 m_hitbox; // buttom right
+	double m_health;
 	friend class Utils::Pathfinding;
 	friend class EnemyManager;
 public:
@@ -25,6 +26,6 @@ public:
 	glm::vec3 get_hit_box() const;
 
 protected:
-	void draw(sf::RenderTarget& target, sf::RenderStates states)const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };

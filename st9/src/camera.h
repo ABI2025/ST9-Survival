@@ -8,18 +8,20 @@ class Camera
 {
 private:
 	Player* m_player;
-	sf::RenderWindow* m_window;
+	sf::RenderTarget* m_render_target;
 	sf::View m_view;
 public:
-	explicit Camera(sf::RenderWindow* window);
+	explicit Camera(sf::RenderTarget* window);
 
-	explicit Camera(sf::RenderWindow* window, Player* player);
+	explicit Camera(sf::RenderTarget* window, Player* player);
 
 	~Camera();
 
 	const sf::FloatRect& get_player_view() const{ return m_view.getViewport(); } 
 
 	void set_player(Player* player);
+
+	void set_RenderTarget(sf::RenderTarget* i_render_target);
 
 	Player* get_player();
 
