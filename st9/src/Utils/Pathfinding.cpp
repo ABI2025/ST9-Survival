@@ -391,12 +391,12 @@ namespace Utils {
 		case Cell::STAIR:
 			return 1;
 
+		case Cell::TURRET: // fallthrough
 		case Cell::DEFENSE:
 			return 5;
 
 		case Cell::WALL:
 			return 500;
-		case Cell::TURRET:
 
 			break;
 		}

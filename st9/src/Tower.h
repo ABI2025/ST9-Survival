@@ -1,8 +1,22 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "entities/entity/Entity.h"
 #include "glm/glm.hpp"
 
 class EnemyManager;
+
+
+//enum towerKind
+//{
+//	tower_1,
+//	tower_2,
+//	tower_3,
+//	tower_4,
+//	tower_5,
+//	tower_6,
+//	tower_7
+//};
+
 
 
 class TowerTexture
@@ -26,6 +40,7 @@ public:
 };
 
 class Tower
+	: public Entity
 {
 	int m_ressourcen;
 	double m_hp;

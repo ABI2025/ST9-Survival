@@ -50,10 +50,12 @@ namespace Utils
 		return { vec.x,vec.y };
 	}
 
-	template<typename T, glm::qualifier P> sf::Vector3<T> convert_to_sf_vec3(glm::vec<3, T, P> vec)
+	template<typename T, glm::qualifier P>
+	sf::Vector3<T> convert_to_sf_vec3(glm::vec<3, T, P> vec)
 	{
 		return { vec.x,vec.y,vec.z };
 	}
+
 	inline bool hitboxCollision(const glm::vec3& posA, const glm::vec3& hitboxA, // wird nicht genutzt, fix ich nochm wird noch schöner
 		const glm::vec3& posB, const glm::vec3& hitboxB) {
 		const glm::vec3 minA = posA;

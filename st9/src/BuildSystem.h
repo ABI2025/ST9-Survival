@@ -9,10 +9,11 @@ class BuildSystem
 {
     std::vector<sf::Texture> m_texture_textures;
     std::vector<sf::Sprite> m_texture_sprites;
-    sf::RenderTexture texture;
+    sf::RenderTexture m_texture;
     std::vector<sf::Texture> m_textures;
     std::vector<sf::Sprite> m_sprites;
     Utils::Cell m_selected;
+    int m_id{-1};
 public:
 
     BuildSystem();

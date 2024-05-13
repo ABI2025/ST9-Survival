@@ -64,7 +64,7 @@ void Menu::show_menu()
 		int button_index = -1;
 		for (int i = 0; i < NUM_BUTTONS; ++i) 
 		{
-			if (m_buttons[i].first.contains(mouse.left, mouse.top)) 
+			if (m_buttons[i].first.intersects(mouse)) 
 			{
 				button_index = i;
 				if (!m_buttons[i].second)

@@ -52,8 +52,6 @@ void EnemyManager::update(float deltatime)
 		}
 	}
 
-
-
 	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime](std::shared_ptr<Enemy>& e)
 	{
 			{
@@ -68,12 +66,9 @@ void EnemyManager::update(float deltatime)
 			}
 			if (e->m_movements.empty() == true || should_update())
 			{
-
-				const glm::vec3 e_pos = e->m_pos;
-
 				e->m_movements = Utils::Pathfinding::get_instance()->find_path
 				(
-					e_pos, e->get_priority()
+					e->m_pos, e->m_priority
 				);
 				e->prev_size = e->m_movements.size();
 			}
@@ -98,7 +93,6 @@ void EnemyManager::update(float deltatime)
 			e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 
 	}
-
 	);
 
 	for (auto it = m_enemys.begin(); it != m_enemys.end();)
@@ -112,6 +106,7 @@ void EnemyManager::update(float deltatime)
 			++it;
 		}
 	}
+
 	constexpr float epsilon = 1e-6f;
 
 	auto comp = [](const std::shared_ptr<Enemy>& e1, const std::shared_ptr<Enemy>& e2)
@@ -171,6 +166,7 @@ void EnemyManager::add_enemy()
 	LOG_TRACE("priority: {}", static_cast<int>(m_enemys.back()->m_priority));
 	m_enemys.back()->m_id = 0;
 }
+
 void EnemyManager::draw(sf::RenderTarget& i_window) const
 {
 	glm::vec3 prev_pos(-1);
@@ -230,7 +226,7 @@ int EnemyManager::naive_enemy_killer() {
 			glm::vec3 enemy_max = enemy_hitbox; // btw chat gpt ist richtig inkompetent
 
 			// Check if hitboxes intersect
-			bool collision = projectile_max.x > enemy_min.x &&
+			const bool collision = projectile_max.x > enemy_min.x &&
 				projectile_min.x < enemy_max.x &&
 				projectile_max.y > enemy_min.y &&
 				projectile_min.y < enemy_max.y;

@@ -67,6 +67,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
+	m_EntityMap = std::vector(1, std::vector(height, std::vector<Entity*>(width,nullptr)));
 
 	texture.create(window.getSize().x,window.getSize().y);
 	
@@ -442,9 +443,9 @@ Game* Game::get_game()
 	return s_game;
 }
 
-std::vector<std::vector<std::vector<Entity>>> * Game::getEntityMap()
+std::vector<std::vector<std::vector<Entity*>>>& Game::getEntityMap()
 {
-	return &(s_game->m_EntityMap);
+	return (s_game->m_EntityMap);
 }
 
 void Game::set_map(const Utils::Cell& cell, int x, int y, int z) {
