@@ -34,12 +34,7 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& start, Priority p) const
 	{
-		/*
-		if(!m_player->is_alive() && p == Priority::player)
-		{
-			p = Priority::nothing;
-		}
-		*/
+
 		switch (p)
 		{
 		case Priority::nothing:
@@ -89,28 +84,28 @@ namespace Utils {
 			LOG_CRITICAL("Ungueltiger Startpunkt"); // Logge kritische Meldung, falls Startpunkt ungueltig ist
 			return {};
 		}
-		const cell* u = &cellmap[rounded_start.z][rounded_start.y][rounded_start.x]; // Zeiger auf die aktuelle Zelle
+		const cell* current_cell = &cellmap[rounded_start.z][rounded_start.y][rounded_start.x]; // Zeiger auf die aktuelle Zelle
 
-		if (u == nullptr)
+		if (current_cell == nullptr)
 		{
 			LOG_CRITICAL("Ungueltige Zelle an Startposition"); // Logge kritische Meldung, falls die Zelle an der Startposition ungueltig ist
 			return {};
 		}
 
 		// Erzeuge Bewegungsablauf durch Backtracking
-		if (u->parent != nullptr)
+		if (current_cell->parent != nullptr)
 		{
 			// Falls die aktuelle Zelle einen Elternknoten hat
-			for (auto pos : bresenham(start, u->parent->pos * 135))
+			for (auto pos : bresenham(start, current_cell->parent->pos * 135))
 			{
 				bewegungsablauf.push_back(pos); // Fuege Punkte entlang der Bresenham-Linie zum Bewegungsablauf hinzu
 			}
-			u = u->parent; // Aktualisiere die aktuelle Zelle auf den Elternknoten
+			current_cell = current_cell->parent; // Aktualisiere die aktuelle Zelle auf den Elternknoten
 		}
 		else
 		{
 			// Falls die aktuelle Zelle keinen Elternknoten hat, erzeuge Bewegungsablauf direkt zum aktuellen Punkt
-			for (auto pos : bresenham(start, u->pos * 135))
+			for (auto pos : bresenham(start, current_cell->pos * 135))
 			{
 				bewegungsablauf.push_back(pos); // Fuege Punkte entlang der Bresenham-Linie zum Bewegungsablauf hinzu
 			}
@@ -119,18 +114,18 @@ namespace Utils {
 		}
 
 		// Fortsetzung des Backtrackings, bis der Startknoten erreicht ist
-		while (u->parent != nullptr)
+		while (current_cell->parent != nullptr)
 		{
-			if (u == nullptr)
+			if (current_cell == nullptr)
 			{
 				LOG_CRITICAL("Speicherfehler aufgetreten"); // Logge kritische Meldung bei Speicherfehlern
 				__debugbreak(); // Unterbreche das Programm fuer Debugzwecke
 			}
-			for (auto pos : bresenham(u->pos * 135, u->parent->pos * 135))
+			for (auto pos : bresenham(current_cell->pos * 135, current_cell->parent->pos * 135))
 			{
 				bewegungsablauf.push_back(pos); // Fuege Punkte entlang der Bresenham-Linie zum Bewegungsablauf hinzu
 			}
-			u = u->parent; // Aktualisiere die aktuelle Zelle auf den Elternknoten
+			current_cell = current_cell->parent; // Aktualisiere die aktuelle Zelle auf den Elternknoten
 		}
 
 		std::ranges::reverse(bewegungsablauf); // Kehre den Bewegungsablauf um, da er in umgekehrter Reihenfolge erstellt wurde
@@ -144,7 +139,7 @@ namespace Utils {
 		// Initialisierung eines Vektors, der alle Zellen enthaelt
 		// Eine PriorityQueue waere eigentlich besser, aber es gibt Probleme damit.
 		// Ein Vektor wird verwendet, und Sortierung fuehrt zum gleichen Ergebnis wie mit einer PriorityQueue.
-		std::vector<cell*> q_vector;
+		std::vector<cell*> cells;
 
 		// Ueberpruefen, ob die Zellkarte die richtige Groesse hat, und gegebenenfalls neu initialisieren
 		if (cellmap.size() != m_map.size() || cellmap[0].size() != m_map[0].size() || cellmap[0][0].size() != m_map[0][0].size())
@@ -163,7 +158,7 @@ namespace Utils {
 					for (uint32_t k = 0; k < m_map[i][j].size(); k++) // x
 					{
 						cellmap[i][j][k].pos = { k, j, i }; // x y z 
-						q_vector.push_back(&cellmap[i][j][k]); // Zelle zu q_vector hinzufuegen
+						cells.push_back(&cellmap[i][j][k]); // Zelle zu q_vector hinzufuegen
 					}
 				}
 			}
@@ -182,7 +177,7 @@ namespace Utils {
 						cellmap[i][j][k].pos = { k, j, i }; // x y z 
 						cellmap[i][j][k].dist = DBL_MAX;
 						cellmap[i][j][k].parent = nullptr;
-						q_vector.push_back(&cellmap[i][j][k]); // hinzufuegen der zelle zu q_vector
+						cells.push_back(&cellmap[i][j][k]); // hinzufuegen der zelle zu q_vector
 					}
 				}
 			}
@@ -218,24 +213,24 @@ namespace Utils {
 		};
 
 		// Haupt-Dijkstra-Algorithmus
-		while (!q_vector.empty())
+		while (!cells.empty())
 		{
-			std::ranges::sort(q_vector, comp); // Sortiere den q_Vector nach Distanz absteigend.
+			std::ranges::sort(cells, comp); // Sortiere den q_Vector nach Distanz absteigend.
 
-			cell* current = q_vector.back(); // Nehme das letzte Element aus dem q_Vector.
-			q_vector.pop_back(); // Loesche das letzte Element aus dem q_Vector.
+			cell* current = cells.back(); // Nehme das letzte Element aus dem q_Vector.
+			cells.pop_back(); // Loesche das letzte Element aus dem q_Vector.
 
-			for (cell* v : get_neighbours(current, cellmap)) // Hole die Nachbarn von current.
+			for (cell* neighbor : get_neighbors(current, cellmap)) // Hole die Nachbarn von current.
 			{
 				// Berechne die Distanz zwischen current und v.
-				const double dist = current->dist + get_dist(current, v);
+				const double dist = current->dist + get_dist(current, neighbor);
 
 				// Vergleiche die berechnete Distanz mit der in v gespeicherten Distanz.
-				if (dist < v->dist)
+				if (dist < neighbor->dist)
 				{
 					// Aktualisiere die Distanz und den Parent von v.
-					v->dist = dist;
-					v->parent = current;
+					neighbor->dist = dist;
+					neighbor->parent = current;
 				}
 			}
 		}
@@ -363,7 +358,8 @@ namespace Utils {
 	}
 
 	static std::vector<glm::ivec3> dirs({ {0,0,-1},{0,0,1}, {0,-1,0},{0,1,0},{-1,0,0},{1,0,0} });
-	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
+
+	std::vector<Pathfinding::cell*> Pathfinding::get_neighbors(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
 	{
 		std::vector<cell*> neighbours;
 		//LOG_TRACE("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
@@ -379,6 +375,7 @@ namespace Utils {
 		}
 		return neighbours;
 	}
+
 	double Pathfinding::get_dist(cell* curr, const cell* dest) const
 	{
 		switch (m_map[dest->pos.z][dest->pos.y][dest->pos.x])

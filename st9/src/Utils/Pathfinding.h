@@ -88,7 +88,7 @@ namespace Utils
 		[[nodiscard]] std::vector<glm::vec3>	make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
 					  void						dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
 		[[nodiscard]] std::vector<glm::vec3>	bresenham(const glm::vec3& dest, const glm::vec3& start) const;
-		[[nodiscard]] std::vector<cell*>		get_neighbours(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
+		[[nodiscard]] std::vector<cell*>		get_neighbors(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
 		[[nodiscard]] double					get_dist(cell*, const cell*) const;
 
 	};
