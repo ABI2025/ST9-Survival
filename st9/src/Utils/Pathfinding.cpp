@@ -364,7 +364,8 @@ namespace Utils {
 		{0,1,0},
 		{0,-1,0},
 		{1,0,0},
-		{-1,0,0} });	std::vector<Pathfinding::cell*> Pathfinding::get_neighbours(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
+		{-1,0,0} });
+	std::vector<Pathfinding::cell*> Pathfinding::get_neighbors(const cell* current, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const
 	{
 		std::vector<cell*> neighbours;
 		//LOG_TRACE("current pos: x: {} y: {} z:{}", current->pos.x, current->pos.y, current->pos.z);
