@@ -20,5 +20,5 @@ public:
 
     Utils::Cell display();
 
-    void operator()(bool left_click, bool right_click, bool should_do_docking, std::vector<std::vector<std::vector<Utils::Cell>>>& map, std::vector<Tower>& towers , glm::ivec3 mouse_pos) const;
+    void operator()(bool left_click, bool right_click, bool should_do_docking, std::vector<std::vector<std::vector<Utils::Cell>>>& map, std::vector<Tower>& towers , glm::vec3 mouse_pos) const;
 };

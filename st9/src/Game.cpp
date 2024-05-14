@@ -188,8 +188,8 @@ void Game::run_game(int)
 	bool first_run = true;
 	float lautstarke[3] = { 50.0f,50.0f,50.0f };
 	bool paused = false;
-	bool should_do_dockspace = false;
-
+	bool should_do_dockspace = true;
+	bool lautstaerke_UwU{false};
 	while (m_window.isOpen() && m_open)
 	{
 	
@@ -275,21 +275,75 @@ void Game::run_game(int)
 			m_sounds.play_all();
 
 		buildsystem.display();
+		sf::Vector2f temp;
+
+		if (should_do_dockspace)
+		{
+	
+			//if (ImGui::BeginMainMenuBar())
+			//{
+			//	if (ImGui::BeginMenu("File"))
+			//	{
+			//		if (ImGui::BeginMenu("Sounds bitte UwU"))
+			//		{
+	
+			//			ImGui::EndMenu();
+			//		}
+			//		ImGui::EndMenu();
+			//	}
+			//	if (ImGui::BeginMenu("Edit"))
+			//	{
+			//		if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+			//		if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+			//		ImGui::Separator();
+			//		if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+			//		if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+			//		if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+			//		ImGui::EndMenu();
+			//	}
+			//	ImGui::EndMainMenuBar();
+			//}
+			ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
+
+			ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("Menu"))
+				{
+					if (ImGui::MenuItem("MenuItem")) {}
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Examples"))
+				{
+					if (ImGui::MenuItem("MenuItem")) {}
+					ImGui::EndMenu();
+				}
+				//if (ImGui::MenuItem("MenuItem")) {} // You can also use MenuItem() inside a menu bar!
+				if (ImGui::BeginMenu("Tools"))
+				{
+					if (ImGui::MenuItem("MenuItem")) 
+					{
+
+					}
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
+			}
+
+
+
+			ImVec2 content_size = ImGui::GetContentRegionAvail();
+
+			texture.create(content_size.x, content_size.y);
+			texture_camera.set_RenderTarget(&texture);
+		}
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
-			sf::Vector2f temp;
 
-			if (should_do_dockspace)
-			{
-				ImGui::Begin("Viewport");
-				
-				ImVec2 content_size = ImGui::GetContentRegionAvail();
-
-				texture.create(content_size.x, content_size.y);
-				texture_camera.set_RenderTarget(&texture);
-			}
 			
 
 			p->update(deltatime);
@@ -301,6 +355,7 @@ void Game::run_game(int)
 				temp = texture.mapPixelToCoords(sf::Mouse::getPosition(m_window));
 				ImVec2 imvec2 = ImGui::GetCursorScreenPos();
 				temp = { temp.x - imvec2.x ,temp.y - imvec2.y };
+				
 			}
 			else
 			{
@@ -309,10 +364,12 @@ void Game::run_game(int)
 
 
 			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f};
-			buildsystem(left_click, right_click, should_do_dockspace, m_map, towers,mouse_pos/135.0f);
+			buildsystem(left_click, right_click, should_do_dockspace, m_map, towers,mouse_pos);
 
-			if (should_do_dockspace)
+			if (should_do_dockspace) {
+				ImGui::PopItemWidth();
 				ImGui::End();
+			}
 			p->shoot(deltatime, m_sounds, mouse_pos);
 	
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
@@ -338,6 +395,15 @@ void Game::run_game(int)
 
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
+			ImGui::TextWrapped("temp x:%f y:%f", temp.x, temp.y);
+			ImGui::TextWrapped("mouse_pos x:%f y:%f z:%f", mouse_pos.x, mouse_pos.y, mouse_pos.z);
+			glm::vec3 tt = mouse_pos / 135.0f;
+			ImGui::TextWrapped("cell_mouse_pos x:%f y:%f z:%f", tt.x, tt.y, tt.z);
+			ImGui::End();
+		}
+		else if(should_do_dockspace)
+		{
+			ImGui::PopItemWidth();
 			ImGui::End();
 		}
 

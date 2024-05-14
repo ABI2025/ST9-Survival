@@ -5,7 +5,8 @@
 
 Sounds::Sounds()
 {
-	m_volumes[-1] = 1.0f;
+	m_mapping[-1] = "allgemein";
+	m_volumes[m_mapping[- 1]] = 1.0f;
 }
 
 Sounds::~Sounds()
@@ -14,23 +15,24 @@ Sounds::~Sounds()
 
 void Sounds::add_sound(int group_id,int id)
 {
-	if (!(group_id < 0 || group_id >= m_mapping.size()))
+	if (m_mapping.contains(id))
 	{
+		std::string group_id_string = m_mapping[group_id];
 		if (!(id < 0 || id >= m_buffers[m_mapping[group_id]].size())) 
 		{
 			if (!m_sounds[m_mapping[group_id]][id].second)
 			{
-				m_sounds[m_mapping[group_id]][id].first.emplace_back(m_buffers[m_mapping[group_id]][id]);
+				m_sounds[m_mapping[group_id]][id].first.emplace_back(m_buffers[group_id_string][id]);
 				m_sounds[m_mapping[group_id]][id].first.back().play();
-				m_sounds[m_mapping[group_id]][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+				m_sounds[m_mapping[group_id]][id].first.back().setVolume(m_volumes[group_id_string] * m_volumes[group_id_string] * 100);
 			}
 			else
 			{
 				if (m_sounds[m_mapping[group_id]][id].first.empty())
 				{
-					m_sounds[m_mapping[group_id]][id].first.emplace_back(m_buffers[m_mapping[group_id]][id]);
+					m_sounds[m_mapping[group_id]][id].first.emplace_back(m_buffers[group_id_string][id]);
 					m_sounds[m_mapping[group_id]][id].first.back().play();
-					m_sounds[m_mapping[group_id]][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+					m_sounds[m_mapping[group_id]][id].first.back().setVolume(m_volumes[group_id_string] * m_volumes[group_id_string] * 100);
 				}
 
 			}
@@ -49,7 +51,7 @@ void Sounds::add_sound(const std::string& group_id, const int id)
 			{
 				m_sounds[group_id][id].first.emplace_back(m_buffers[group_id][id]);
 				m_sounds[group_id][id].first.back().play();
-				m_sounds[group_id][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+				m_sounds[group_id][id].first.back().setVolume(m_volumes[group_id] * m_volumes[group_id] * 100);
 			}
 			else
 			{
@@ -57,7 +59,7 @@ void Sounds::add_sound(const std::string& group_id, const int id)
 				{
 					m_sounds[group_id][id].first.emplace_back(m_buffers[group_id][id]);
 					m_sounds[group_id][id].first.back().play();
-					m_sounds[group_id][id].first.back().setVolume(m_volumes[-1] * m_volumes[id] * 100);
+					m_sounds[group_id][id].first.back().setVolume(m_volumes[group_id] *m_volumes[group_id] * 100);
 				}
 
 			}
@@ -115,8 +117,8 @@ void Sounds::add_group(const std::string& group)
 {
 	m_buffers.insert({ group, {} });
 	m_sounds.insert({ group, {} });
-	m_mapping.push_back(group);
-	m_volumes.insert({ static_cast<int>(m_sounds.size()-1) ,1.0f });
+	m_mapping[m_sounds.size() - 1] = group;
+	m_volumes.insert({group ,1.0f });
 	
 }
 
@@ -165,33 +167,36 @@ void Sounds::clear_all()
 
 void Sounds::set_volume(float volume, int id)
 {
-	if (volume >= 0 && volume <= 100) 
+	if (volume >= 0.0f && volume <= 100.0f) 
 	{
+		if (!m_mapping.contains(id))
+			return;
+		std::string group_id_string = m_mapping[id];
 		if (id == -1)
 		{
-			m_volumes[-1] = volume/100;
+			m_volumes[group_id_string] = volume/100;
 			for (uint32_t i = 0; i < m_sounds.size(); ++i)
 			{
-				for (auto& sounds : m_sounds[m_mapping[i]] | std::views::keys)
+				for (std::deque<sf::Sound>& sounds : m_sounds[m_mapping[i]] | std::views::keys)
 				{
-					for (auto& sound : sounds)
+					for (sf::Sound& sound : sounds)
 					{
-						sound.setVolume(m_volumes[-1] * m_volumes[i]);
+						sound.setVolume(m_volumes[group_id_string] * m_volumes[m_mapping[i]] * 100);
 					}
 				}
 			}
 		}
 		else
 		{
-			if (m_volumes.contains(id))
+			if (m_volumes.contains(group_id_string))
 			{
-				m_volumes[id] = volume / 100;
+				m_volumes[group_id_string] = volume / 100;
 				
-				for (auto& sounds : m_sounds[m_mapping[id]] | std::views::keys)
+				for (std::deque<sf::Sound>& sounds : m_sounds[group_id_string] | std::views::keys)
 				{
-					for (auto& sound : sounds)
+					for (sf::Sound& sound : sounds)
 					{
-						sound.setVolume(m_volumes[-1] * m_volumes[id]);
+						sound.setVolume(m_volumes[m_mapping[-1]] * m_volumes[group_id_string] * 100);
 					}
 				}
 				

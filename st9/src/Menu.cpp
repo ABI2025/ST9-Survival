@@ -2,6 +2,8 @@
 #include "Utils/Utils.h"
 #include "Game.h"
 #include "Gui.h"
+#include "imgui-SFML.h"
+#include "imgui.h"
 #include "../Resources/Images/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
 #include "SFML/Opengl.hpp"
@@ -37,12 +39,14 @@ void Menu::show_menu()
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);
 	m_window.setFramerateLimit(60);
+	sf::Clock deltaClock;
 	while (m_window.isOpen())
 	{
 
 		sf::Event event{};
 		while (m_window.pollEvent(event)) 
 		{
+			ImGui::SFML::ProcessEvent(m_window, event);
 			switch (event.type)
 			{
 			case sf::Event::KeyPressed:
@@ -58,7 +62,9 @@ void Menu::show_menu()
 			}
 
 		}
-
+		ImGui::SFML::Update(m_window, deltaClock.restart());
+		ImGui::ShowDemoWindow();
+		
 		sf::FloatRect mouse = { sf::Vector2f(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))), {1, 1} };
 
 		int button_index = -1;
@@ -83,6 +89,11 @@ void Menu::show_menu()
 			switch (button_index)
 			{
 			case 0: // Start-Button
+
+				m_window.clear();//damit falls hier eine imgui sachen passiert wäre nichts crasht
+				ImGui::SFML::Render(m_window);
+				m_window.display();
+
 				Game::get_game()->run_game(0);
 				break;
 			case 1: // Optionen
@@ -108,7 +119,7 @@ void Menu::show_menu()
 			m_window.draw(button_shape);
 		}
 		draw_button_labels(NUM_BUTTONS);
-
+		ImGui::SFML::Render(m_window);
 		m_window.display();
 	}
 }

@@ -10,8 +10,8 @@ class Sounds
 	std::map<std::string,std::vector<std::pair<std::deque<sf::Sound>,bool>>> m_sounds;
 
 
-	std::map<int,float> m_volumes;
-	std::vector<std::string> m_mapping;
+	std::map<std::string,float> m_volumes;
+	std::map<int,std::string> m_mapping;
 public:
 	Sounds();
 	~Sounds();

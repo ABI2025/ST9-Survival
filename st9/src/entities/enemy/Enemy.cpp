@@ -3,8 +3,9 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-constexpr sf::Vector2i enemy_size(135,135);
-constexpr sf::Vector2i end(enemy_size.x*4, enemy_size.y);
+constexpr glm::vec2 enemy_size{ 135,135 };
+constexpr glm::vec2 enemy_sprite_sheet_length{ 4, 1 };
+constexpr glm::vec2 end{ enemy_size.x * enemy_sprite_sheet_length.x, enemy_size.y * enemy_sprite_sheet_length.y };
 
 void Enemy::update()
 {

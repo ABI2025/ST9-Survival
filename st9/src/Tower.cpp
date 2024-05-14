@@ -1,6 +1,8 @@
 // ReSharper disable CppTooWideScopeInitStatement
 #include "Tower.h"
 #include <cmath>
+
+#include "imgui.h"
 #include "entities/EnemyManager.h"
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
@@ -49,6 +51,15 @@ void Tower::drawtower(sf::RenderTarget& window) const
 void Tower::fire(const EnemyManager& em, const float deltatime)
 {
 	condt += deltatime;
+	ImGui::Begin("DEBUG WINDOW");
+	ImGui::PushID(this);
+
+	ImGui::SliderFloat("cooldown", &cooldown, 0, 1);
+
+	ImGui::PopID();
+	ImGui::End();
+
+
 	//LOG_INFO("Closest_enemy: {} {} ", closest_enemy.x, closest_enemy.y);
 	if (condt >= cooldown)
 	{
