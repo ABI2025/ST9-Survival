@@ -95,6 +95,9 @@ Utils::Cell BuildSystem::display()
 	return m_selected;
 }
 
+
+#define IS_VALID(x) Utils::Pathfinding::get_instance()->is_valid(x)
+
 void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_docking,
 	std::vector<std::vector<std::vector<Utils::Cell>>>& map,
 	std::vector<Tower>& towers,
@@ -111,7 +114,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 		   !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)
 		 )
 		||
-		( //wenn das Haupt Fenster ein Dockspace sind wir gerade in dem ImGui Fenster deshalb gucken wir ob das momentane Gefocused ist und gehovered
+		( //wenn das Haupt Fenster ein Dockspace ist, sind wir gerade in dem ImGui Fenster deshalb gucken wir ob das momentane Gefocused ist und gehovered
 			should_do_docking &&
 			ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow) &&
 			ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow)
@@ -119,7 +122,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 
 	if (left_click && is_windows_focused)
 	{
-		if (pa->is_valid(mouse_pos) && m_selected != Utils::Cell::NOTHING && map[0][mouse_pos.y][mouse_pos.x] != m_selected)
+		if (IS_VALID(mouse_pos) && m_selected != Utils::Cell::NOTHING && map[0][mouse_pos.y][mouse_pos.x] != m_selected)
 		{
 			//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
 			if ((m_selected == Utils::Cell::TURRET || m_selected == Utils::Cell::DEFENSE )
@@ -129,7 +132,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				towers.emplace_back(mouse_pos * 135);
 				Game::get_game()->getEntityMap()[0][mouse_pos.y][mouse_pos.x] = &towers.back();
 			}
-			else if ((m_selected != Utils::Cell::TURRET && m_selected != Utils::Cell::DEFENSE) 
+			else 
+			if ((m_selected != Utils::Cell::TURRET && m_selected != Utils::Cell::DEFENSE) 
 				&&
 				(map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET))
 			{
@@ -153,7 +157,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 	}
 	if (right_click && is_windows_focused)
 	{
-		if (pa->is_valid(mouse_pos) && m_selected != Utils::Cell::NOTHING && map[0][mouse_pos.y][mouse_pos.x] != Utils::Cell::NOTHING)
+		if (IS_VALID(mouse_pos) && m_selected != Utils::Cell::NOTHING && map[0][mouse_pos.y][mouse_pos.x] != Utils::Cell::NOTHING)
 		{
 			//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
 			if (map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::DEFENSE || map[0][mouse_pos.y][mouse_pos.x] == Utils::Cell::TURRET)

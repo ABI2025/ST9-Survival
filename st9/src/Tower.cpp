@@ -79,13 +79,9 @@ void Tower::fire(const EnemyManager& em, const float deltatime)
 			condt = 0.0f;
 		}
 	}
-	//sprites[0].rotate(1.0f);
-	//if(sprites[0].getRotation() != angle)
-	//	t.rotate(angle, { sprites[0].getPosition().x + 69,sprites[0].getPosition().y + 54});
 
 }
 
 
 
-			//auto hurensohn = glm::degrees(glm::atan(bullet_dir));
-			//LOG_INFO("hurensohn: {} {} {}", hurensohn.x, hurensohn.y, hurensohn.z);
+

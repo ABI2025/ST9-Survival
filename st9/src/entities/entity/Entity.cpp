@@ -60,3 +60,8 @@ void Entity::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
 }
+
+void Entity::take_damage(const double damage)
+{
+	m_health -= damage;
+}

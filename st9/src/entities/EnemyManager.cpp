@@ -57,10 +57,13 @@ void EnemyManager::update(float deltatime)
 			{
 				if (e == nullptr)
 					return;
-				if (e->m_health <= 0)
+				if (e->m_health <= 0 || e->currently_dying)
 				{
 					e->die();
-					e.reset();
+					if (e->can_be_removed)
+					{
+						e.reset();
+					}
 					return;
 				}
 			}
@@ -172,7 +175,7 @@ void EnemyManager::draw(sf::RenderTarget& i_window) const
 	glm::vec3 prev_pos(-1);
 	for (const auto& m : m_enemys)
 	{
-		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f))
+		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f) || m->currently_dying)
 		{
 			i_window.draw(*m);
 		}
