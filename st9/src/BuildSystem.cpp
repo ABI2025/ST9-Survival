@@ -10,6 +10,8 @@
 #include <glm/detail/type_vec3.hpp>
 #include <glm/detail/type_vec4.hpp>
 
+#include "Wall.h"
+
 BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 {
 	m_texture_textures.resize(2);
@@ -54,15 +56,9 @@ Utils::Cell BuildSystem::display()
 	//m_textures[1] = texture.getTexture();
 	//m_sprites[1].setTexture(m_textures[1]);
 	//m_sprites[2].setTexture(m_textures[1]);
-	ImGui::Begin("test");
+	ImGui::Begin("Build System");
 	const float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 	const ImGuiStyle& style = ImGui::GetStyle();
-
-	sf::Vector2f t;
-	glm::vec2 f = ImVec2(t);
-	t = ImVec2(f);
-
-
 
 	m_id = -1;
 	for (uint32_t current_button_id = 0; current_button_id < m_sprites.size(); current_button_id++)
@@ -85,7 +81,7 @@ Utils::Cell BuildSystem::display()
 			}
 			else 
 			{
-				temp = current_button_id - 4;
+				temp = current_button_id - 5;
 			}
 			m_selected = static_cast<Utils::Cell>(temp);
 		}
@@ -103,7 +99,8 @@ Utils::Cell BuildSystem::display()
 
 void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_docking,
 	std::vector<std::vector<std::vector<Utils::Cell>>>& map,
-	std::vector<Tower>& towers,
+	std::vector<std::shared_ptr<Entity>>& entities,
+	std::vector<std::shared_ptr<Tower>>& towers,
 	glm::vec3 mouse_pos
 	) const
 {
@@ -131,31 +128,56 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 		if (m_selected != Utils::Cell::NOTHING && map[0][cell_mouse_pos.y][cell_mouse_pos.x] != m_selected)
 		{
 			//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-			if ((m_selected == Utils::Cell::TURRET || m_selected == Utils::Cell::DEFENSE )
-				&&
-				!(map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::DEFENSE || map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET))
+
+			if ((m_selected != map[0][cell_mouse_pos.y][cell_mouse_pos.x]))
 			{
-				towers.emplace_back(cell_mouse_pos * 135);
-				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = &towers.back();
-			}
-			else 
-			if ((m_selected != Utils::Cell::TURRET && m_selected != Utils::Cell::DEFENSE) 
-				&&
-				(map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::DEFENSE || map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET))
-			{
-				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = nullptr;
-				for (auto it = towers.begin(); it != towers.end();)
+				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x].reset();
+				if (m_selected != Utils::Cell::TURRET)
 				{
-					if ((it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
-						(it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+					for (auto it = towers.begin(); it != towers.end();)
 					{
-						it = towers.erase(it);
+						if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
+							(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+						{
+
+							it->reset();
+							it = towers.erase(it);
+						}
+						else
+						{
+							++it;
+						}
+					}
+				}
+				for (auto it = entities.begin(); it != entities.end();)
+				{
+					if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
+						(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+					{
+					
+						it->reset();
+						it = entities.erase(it);
 					}
 					else
 					{
 						++it;
 					}
 				}
+			}
+
+			if ((m_selected == Utils::Cell::TURRET)
+				&&
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::TURRET)
+			{
+				towers.emplace_back(std::make_shared<Tower>(cell_mouse_pos * 135));
+				entities.push_back(towers.back());
+				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = towers.back();
+			}
+			else if (m_selected == Utils::Cell::WALL &&
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::WALL)
+			{
+				entities.emplace_back(std::make_shared<Wall>(cell_mouse_pos * 135));
+				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = entities.back();
 			}
 			map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
 			EnemyManager::set_updated_tower(true);
@@ -166,16 +188,35 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 		if (m_selected != Utils::Cell::NOTHING && map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::NOTHING)
 		{
 			//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-			if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::DEFENSE || map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET)
+			if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET || map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::WALL)
 			{
-				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = nullptr;
-				for (auto it = towers.begin(); it != towers.end();)
+				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x].reset();
+
+				if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET)
 				{
-					if ((it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
-						(it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+					for (auto it = towers.begin(); it != towers.end();)
 					{
-						it = towers.erase(it);
-						
+						if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
+							(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+						{
+
+							it->reset();
+							it = towers.erase(it);
+						}
+						else
+						{
+							++it;
+						}
+					}
+				}
+
+				for (auto it = entities.begin(); it != entities.end();)
+				{
+					if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
+						(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+					{
+						it->reset();
+						it = entities.erase(it);
 					}
 					else
 					{

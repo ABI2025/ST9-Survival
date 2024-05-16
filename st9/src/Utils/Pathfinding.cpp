@@ -319,7 +319,7 @@ namespace Utils {
 
 	}
 
-	void Pathfinding::calculate_paths(std::vector<Tower>& towers)
+	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers)
 	{
 		//priority player
 		{
@@ -335,9 +335,9 @@ namespace Utils {
 		//priority nothing
 		{
 			std::vector<glm::ivec3> start_points;
-			for(auto tower : towers)
+			for(const auto tower : towers)
 			{
-				start_points.push_back(tower.get_pos()/135.0f);
+				start_points.emplace_back(tower->get_pos()/135.0f);
 			}
 			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
@@ -346,9 +346,9 @@ namespace Utils {
 		//priority tower
 		{
 			std::vector<glm::ivec3> start_points;
-			for (auto tower : towers)
+			for (const auto tower : towers)
 			{
-				start_points.push_back(tower.get_pos() / 135.0f);
+				start_points.emplace_back(tower->get_pos() / 135.0f);
 			}
 			if (start_points.empty() == true)
 			{
@@ -391,8 +391,7 @@ namespace Utils {
 		case Cell::STAIR:
 			return 1;
 
-		case Cell::TURRET: // fallthrough
-		case Cell::DEFENSE:
+		case Cell::TURRET:
 			return 5;
 
 		case Cell::WALL:

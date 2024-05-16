@@ -13,7 +13,6 @@ namespace Utils
 	{
 		NOTHING = 0,
 		TURRET,
-		DEFENSE,
 		WALL,
 		STAIR,
 

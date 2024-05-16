@@ -17,9 +17,9 @@ class Enemy :
    public:
        Enemy();
        void die();
+       void attack();
        void update();
        bool is_alive() const ;
-       double get_hp() const;
        Utils::Priority get_priority() const { return m_priority; }
 };
 

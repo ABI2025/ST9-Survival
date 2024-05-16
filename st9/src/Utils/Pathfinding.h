@@ -82,7 +82,7 @@ namespace Utils
 
 		[[nodiscard]] bool is_valid(const glm::vec3&) const;
 
-		void calculate_paths(std::vector<Tower>& towers);
+		void calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers);
 
 
 		//private methods

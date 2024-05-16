@@ -11,11 +11,11 @@
 constexpr glm::vec2 tower_sprite_center{69,55}; //danke simon für unsymmetrische texturen
 
 
-Tower::Tower(const glm::vec3 i_pos) : m_pos(i_pos)
+Tower::Tower(const glm::vec3 i_pos)
 {
+	m_pos = i_pos;
 	sprites[0].setTexture(TowerTexture::get_instance()->textures[0]);
 	sprites[1].setTexture(TowerTexture::get_instance()->textures[1]);
-
 	sprites[1].setPosition(static_cast<float>(m_pos.x), static_cast<float>(m_pos.y));
 
 	sprites[0].setOrigin
@@ -28,7 +28,7 @@ Tower::Tower(const glm::vec3 i_pos) : m_pos(i_pos)
 
 	//sprites[0].setOrigin(135.0f / 2.0f, 135.0f / 2.0f);
 	m_ressourcen = 0;
-	m_hp = 1;
+	m_health = 2000;
 	m_damage = 0.1;
 	//m_pos = {0.0f,0.0f};
 }
@@ -70,21 +70,20 @@ void Tower::fire(const EnemyManager& em, const float deltatime)
 			if (dir != glm::vec3{0.0f,0.0f,0.0f})
 			{
 				const glm::vec3 bullet_dir = glm::normalize(dir);
-
+				prev_bullet_dir = bullet_dir;
 				// Calculate the angle for rotation
 				angle = std::atan2(bullet_dir.y, bullet_dir.x) * 180.0f / M_PI;
 				angle -= 90;
 
-				new Projectile({ static_cast<float>(m_pos.x) + 135.0f / 2.0f - 10.0f
-					,static_cast<float>(m_pos.y) + 135.0f / 2.0f - 10.0f,0.0f },
-					bullet_dir * 2.5f, 180, m_damage, 5);
+				new Projectile({ m_pos.x + 135.0f / 2.0f - 10.0f
+					,m_pos.y + 135.0f / 2.0f - 10.0f,0.0f },
+					bullet_dir * 5.0f, 180, m_damage, 5);
 			}
 			else
 			{
-				angle = 0;
 				new Projectile({ static_cast<float>(m_pos.x) + 135.0f / 2.0f - 10.0f
 					,static_cast<float>(m_pos.y) + 135.0f / 2.0f - 10.0f,0.0f },
-					glm::vec3{ 0.0f,1.0,0.0 } *2.5f, 180, m_damage, 5);
+					prev_bullet_dir * 5.0f, 180, m_damage, 5);
 			}
 			sprites[0].setRotation(angle); 
 			condt = 0.0f;

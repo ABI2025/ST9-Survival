@@ -67,7 +67,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
-	m_EntityMap = std::vector(1, std::vector(height, std::vector<Entity*>(width,nullptr)));
+	m_EntityMap = std::vector(1, std::vector(height, std::vector<std::shared_ptr<Entity>>(width)));
 
 	texture.create(window.getSize().x,window.getSize().y);
 	
@@ -114,7 +114,6 @@ void Game::render_tower(sf::RenderTarget& render_target)
 			}
 			break;
 			case Utils::Cell::TURRET: //fallthrough
-			case Utils::Cell::DEFENSE:
 			{
 		//		drawable.setTexture(m_building_textures[2]);
 		//		drawable.setPosition(i * 135.0f
@@ -183,7 +182,8 @@ void Game::run_game(int)
 
 	Utils::Cell selected = Utils::Cell::NOTHING;
 
-	std::vector<Tower> towers;
+	std::vector<std::shared_ptr<Entity>> entities;
+	std::vector<std::shared_ptr<Tower>> towers;
 
 	bool first_run = true;
 	float lautstarke[3] = { 50.0f,50.0f,50.0f };
@@ -364,7 +364,10 @@ void Game::run_game(int)
 
 
 			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f};
-			buildsystem(left_click, right_click, should_do_dockspace, m_map, towers,mouse_pos);
+
+
+
+			buildsystem(left_click, right_click, should_do_dockspace, m_map, entities, towers,mouse_pos);
 
 			if (should_do_dockspace) {
 				ImGui::PopItemWidth();
@@ -372,12 +375,16 @@ void Game::run_game(int)
 			}
 			p->shoot(deltatime, m_sounds, mouse_pos);
 	
+			// ReSharper disable once CppUseRangeAlgorithm
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
-			[&ma, &deltatime](Tower& tower)
+			[&ma, &deltatime](std::shared_ptr<Tower>& tower)
 			{
-					tower.fire(ma, deltatime);
+			    tower->fire(ma, deltatime);
 			});
-			
+
+
+	
+
 			if (first_run == true || EnemyManager::should_update() == true)
 			{
 				pa->calculate_paths(towers);
@@ -386,6 +393,19 @@ void Game::run_game(int)
 		
 			m_sounds.cleanup(false);
 
+			for (auto it = entities.begin(); it != entities.end();)
+			{
+				if ((*it)->get_hp() <= 0)
+				{
+					const glm::ivec3 cell_pos = (*it)->get_pos() / 135.0f;
+					m_map[0][cell_pos.y][cell_pos.x] = Utils::Cell::NOTHING;
+					m_EntityMap[0][cell_pos.y][cell_pos.x] = nullptr;
+					it = entities.erase(it);
+					EnemyManager::set_updated_tower(true);
+				}
+				else
+					++it;
+			}
 
 			if (!hb.alive())
 			{
@@ -416,7 +436,6 @@ void Game::run_game(int)
 				should_do_dockspace = !should_do_dockspace;
 			}
 
-
 			if (paused)
 				ImGui::TextWrapped("paused");
 			else
@@ -439,9 +458,10 @@ void Game::run_game(int)
 
 			render_map(p->get_pos(),m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 			mb.main_sprite(m_window);
-			for(auto& tower : towers)
+			for (auto& tower : towers)
 			{
-				tower.drawtower(m_window);
+				//texture.draw(*tower);
+				tower->drawtower(m_window);
 			}
 			render_tower(m_window);
 			ma.draw(m_window);
@@ -454,7 +474,8 @@ void Game::run_game(int)
 				mb.main_sprite(texture);
 				for (auto& tower : towers)
 				{
-					tower.drawtower(texture);
+					//texture.draw(*tower);
+					tower->drawtower(texture);
 				}
 				render_tower(texture);
 				ma.draw(texture);
@@ -509,7 +530,7 @@ Game* Game::get_game()
 	return s_game;
 }
 
-std::vector<std::vector<std::vector<Entity*>>>& Game::getEntityMap()
+std::vector<std::vector<std::vector<std::shared_ptr<Entity>>>>& Game::getEntityMap()
 {
 	return (s_game->m_EntityMap);
 }
