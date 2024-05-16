@@ -70,7 +70,7 @@ void EnemyManager::update(float deltatime)
 				}
 			}
 
-			
+		if(!should_update())
 		{
 			const glm::ivec3 temp = e->m_pos;
 		   const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
@@ -198,8 +198,8 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 				const glm::ivec2 distance_new_point_to_tower = (glm::ivec2{ x,y } - tower_cell_position);
 				const glm::ivec2 distance_nearest_to_tower = (nearest_cell_position - tower_cell_position);
 #ifndef euclid
-				const int manhatten_distance_new_point_to_tower = abs(distance_new_point_to_tower.x + distance_new_point_to_tower.y);
-				const int manhatten_distance_nearest_to_tower = abs(distance_nearest_to_tower.x + distance_nearest_to_tower.y);
+				const int manhatten_distance_new_point_to_tower = abs(distance_new_point_to_tower.x) + abs(distance_new_point_to_tower.y);
+				const int manhatten_distance_nearest_to_tower = abs(distance_nearest_to_tower.x) + abs(distance_nearest_to_tower.y);
 				if ((manhatten_distance_new_point_to_tower < manhatten_distance_nearest_to_tower
 					|| nearest == glm::vec2{ -1.0f,-1.0f })
 					&& manhatten_distance_new_point_to_tower <= radius)

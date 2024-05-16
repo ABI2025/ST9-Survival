@@ -393,13 +393,25 @@ void Game::run_game(int)
 		
 			m_sounds.cleanup(false);
 
+			for (auto it = towers.begin(); it != towers.end();)
+			{
+				if ((*it)->get_hp() <= 0)
+				{
+					it->reset();
+					it = towers.erase(it);
+					EnemyManager::set_updated_tower(true);
+				}
+				else
+					++it;
+			}
+
 			for (auto it = entities.begin(); it != entities.end();)
 			{
 				if ((*it)->get_hp() <= 0)
 				{
 					const glm::ivec3 cell_pos = (*it)->get_pos() / 135.0f;
 					m_map[0][cell_pos.y][cell_pos.x] = Utils::Cell::NOTHING;
-					m_EntityMap[0][cell_pos.y][cell_pos.x] = nullptr;
+					m_EntityMap[0][cell_pos.y][cell_pos.x].reset();
 					it = entities.erase(it);
 					EnemyManager::set_updated_tower(true);
 				}
@@ -407,7 +419,7 @@ void Game::run_game(int)
 					++it;
 			}
 
-			if (!hb.alive())
+				if (!hb.alive())
 			{
 				m_open = false;
 			}

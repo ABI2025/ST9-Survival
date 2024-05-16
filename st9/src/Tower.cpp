@@ -28,7 +28,7 @@ Tower::Tower(const glm::vec3 i_pos)
 
 	//sprites[0].setOrigin(135.0f / 2.0f, 135.0f / 2.0f);
 	m_ressourcen = 0;
-	m_health = 2000;
+	m_health = 200;
 	m_damage = 0.1;
 	//m_pos = {0.0f,0.0f};
 }

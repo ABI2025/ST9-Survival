@@ -132,7 +132,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 			if ((m_selected != map[0][cell_mouse_pos.y][cell_mouse_pos.x]))
 			{
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x].reset();
-				if (m_selected != Utils::Cell::TURRET)
+				if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET)
 				{
 					for (auto it = towers.begin(); it != towers.end();)
 					{
