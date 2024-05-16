@@ -9,6 +9,8 @@ healthbar::healthbar()
 void healthbar::regeneration(const int health)
 {// 
 	m_health += health;
+	if (m_health > 20)
+		m_health = 20;
 }
 int healthbar::get_health() const
 {
@@ -16,11 +18,7 @@ int healthbar::get_health() const
 }
 bool healthbar::alive() const
 {
-	if (m_health <= 0)
-	{
-		return false;
-	}
-	return true;
+	return m_health > 0;
 }
 bool healthbar::damage_input(const int damage)
 {

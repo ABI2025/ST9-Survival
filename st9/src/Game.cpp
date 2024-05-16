@@ -147,7 +147,7 @@ void Game::run_game(int)
 	m_sounds.add_group("player");
 	m_sounds.add_group("music");
 	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false,"player");
-	m_sounds.load_buffer("resources/Sounds/Error.mp3", false,"player");
+	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false,"player");
 	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false,"player");
 	m_sounds.load_buffer("resources/Sounds/Lademusik.mp3", true,"music");
 	m_sounds.set_volume(50, -1);
@@ -339,6 +339,8 @@ void Game::run_game(int)
 			texture.create(content_size.x, content_size.y);
 			texture_camera.set_RenderTarget(&texture);
 		}
+			window_camera.move_cam_to_player();
+			texture_camera.move_cam_to_player();
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
 			Utils::Timer logic_timer;
@@ -347,8 +349,6 @@ void Game::run_game(int)
 			
 
 			p->update(deltatime);
-			window_camera.move_cam_to_player();
-			texture_camera.move_cam_to_player();
 
 			if (should_do_dockspace) 
 			{
@@ -419,7 +419,7 @@ void Game::run_game(int)
 
 
 
-				if (!hb.alive())
+			if (!hb.alive())
 			{
 				m_open = false;
 			}
