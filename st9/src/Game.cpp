@@ -383,16 +383,6 @@ void Game::run_game(int)
 			});
 
 
-	
-
-			if (first_run == true || EnemyManager::should_update() == true)
-			{
-				pa->calculate_paths(towers);
-			}
-			ma.update(deltatime);
-		
-			m_sounds.cleanup(false);
-
 			for (auto it = towers.begin(); it != towers.end();)
 			{
 				if ((*it)->get_hp() <= 0)
@@ -418,6 +408,16 @@ void Game::run_game(int)
 				else
 					++it;
 			}
+
+			if (first_run == true || EnemyManager::should_update() == true)
+			{
+				pa->calculate_paths(towers);
+			}
+			ma.update(deltatime);
+		
+			m_sounds.cleanup(false);
+
+
 
 				if (!hb.alive())
 			{

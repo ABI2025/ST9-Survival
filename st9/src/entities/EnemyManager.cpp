@@ -88,12 +88,8 @@ void EnemyManager::update(float deltatime)
 				   e->m_pos = temp;
 				   e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
 				   return;
-				   LOG_ERROR("errors");
 			   }
-			   else
-			   {
-				   
-			   }
+
 		   }
 		}
 			
@@ -117,9 +113,13 @@ void EnemyManager::update(float deltatime)
 					/*temp.x *= 135;
 					temp.y *= 135;*/
 					const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
-					if(tower[0][cell_pos.y][cell_pos.x]!=nullptr )
+					if(Utils::Pathfinding::get_instance()->is_valid(cell_pos) &&tower[0][cell_pos.y][cell_pos.x]!=nullptr )
 					{
-						break;
+				
+						enemys_per_cell[cell_pos.y][cell_pos.x]++;
+						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+						e->attack();
+						return;
 					}
 					
 					
