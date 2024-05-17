@@ -31,7 +31,7 @@ public:
 	}
 	static TowerTexture* get_instance()
 	{
-		if(!s_instance)
+		if (!s_instance)
 		{
 			s_instance = new TowerTexture;
 		}
@@ -46,9 +46,9 @@ class Tower
 	//double m_hp;
 	double m_damage;
 	float angle{};
-	glm::vec3 prev_bullet_dir{1,0,0};
+	glm::vec3 prev_bullet_dir{ 1,0,0 };
 	float cooldown = 0.8f;
-	float condt{0.8f};
+	float condt{ 0.8f };
 	sf::Sprite sprites[2];
 	sf::Transform t;
 public:

@@ -44,12 +44,12 @@ namespace Utils
 
 		static glm::vec3 Vec3()
 		{
-			return {Float(), Float(), Float()};
+			return { Float(), Float(), Float() };
 		}
 
 		static glm::vec3 Vec3(float min, float max)
 		{
-			return {Float(min,max),Float(min,max) ,Float(min,max) };
+			return { Float(min,max),Float(min,max) ,Float(min,max) };
 		}
 
 		static glm::vec3 InUnitSphere()

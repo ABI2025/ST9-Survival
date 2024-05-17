@@ -53,9 +53,9 @@ namespace Utils
 	public:
 		/*
 		 Init nimmt die Karte und den Player an und speichert sie als referenzen
-		
-		
-		
+
+
+
 		 */
 		static void Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Cell>>>& i_map);
 
@@ -70,11 +70,11 @@ namespace Utils
 
 
 		/*
-		
+
 		 start ist der anfang (position vom gegner / entity)
 		 Priority ist auf was der gegner/entity gehen soll
 		 Moegliche Prioritaeten sind
-		 Player 
+		 Player
 		 Nothing
 		 Tower
 		 */
@@ -88,7 +88,7 @@ namespace Utils
 		//private methods
 	private:
 		[[nodiscard]] std::vector<glm::vec3>	make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
-					  void						dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
+		void						dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
 		[[nodiscard]] std::vector<glm::vec3>	bresenham(const glm::vec3& dest, const glm::vec3& start) const;
 		[[nodiscard]] std::vector<cell*>		get_neighbors(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
 		[[nodiscard]] double					get_dist(cell*, const cell*) const;

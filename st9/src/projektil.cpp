@@ -13,7 +13,7 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double dama
 	s_projectiles.push_back(this);
 
 	sprite.setTexture(ProjectileTexture::get_instance()->texture);
-	sprite.setOrigin(4.0f,12.5f);
+	sprite.setOrigin(4.0f, 12.5f);
 	sprite.setPosition(m_pos.x + 4.0f, m_pos.y + 12.5f);
 	// Calculate the angle for rotation
 	float angle = std::atan2(speed.y, speed.x) * 180.0f / M_PI; //Herr John wäre stolz
@@ -22,7 +22,7 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double dama
 	sprite.setRotation(angle);
 }
 
-Projectile::~Projectile(){}
+Projectile::~Projectile() {}
 
 void Projectile::update(float deltatime)
 {
@@ -30,7 +30,7 @@ void Projectile::update(float deltatime)
 	m_pos = new_pos;
 	m_lifetime--;
 	m_hitbox = m_pos + glm::vec3{ 8,25,20 };
-	sprite.setPosition(m_pos.x+4.0f,m_pos.y+12.5f);
+	sprite.setPosition(m_pos.x + 4.0f, m_pos.y + 12.5f);
 }
 
 void Projectile::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -69,8 +69,8 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 	m_EntityMap = std::vector(1, std::vector(height, std::vector<std::shared_ptr<Entity>>(width)));
 
-	texture.create(window.getSize().x,window.getSize().y);
-	
+	texture.create(window.getSize().x, window.getSize().y);
+
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
@@ -94,10 +94,10 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
 		}
 	}
 }
-void Game::render_tower(sf::RenderTarget& render_target) 
+void Game::render_tower(sf::RenderTarget& render_target)
 {
 	sf::Sprite drawable;
-	
+
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -115,21 +115,21 @@ void Game::render_tower(sf::RenderTarget& render_target)
 			break;
 			case Utils::Cell::TURRET: //fallthrough
 			{
-		//		drawable.setTexture(m_building_textures[2]);
-		//		drawable.setPosition(i * 135.0f
-		//			, j * 135.0f);
-		//		m_window.draw(drawable);
+				//		drawable.setTexture(m_building_textures[2]);
+				//		drawable.setPosition(i * 135.0f
+				//			, j * 135.0f);
+				//		m_window.draw(drawable);
 
-		//		drawable.setTexture(m_building_textures[1]);
-		//		drawable.setPosition(i * 135.0f
-		//			, j * 135.0f);
+				//		drawable.setTexture(m_building_textures[1]);
+				//		drawable.setPosition(i * 135.0f
+				//			, j * 135.0f);
 
-		//		//drawable.setOrigin( 135.0f / 2.0f, 135.0f / 2.0f);
-		//		//drawable.setRotation(45.0f);
-		//		m_window.draw(drawable);
-		//		//drawable.setRotation(0.0f);
-		///*		drawable.setRotation(0.0f);
-		//		drawable.setOrigin(0,0);*/
+				//		//drawable.setOrigin( 135.0f / 2.0f, 135.0f / 2.0f);
+				//		//drawable.setRotation(45.0f);
+				//		m_window.draw(drawable);
+				//		//drawable.setRotation(0.0f);
+				///*		drawable.setRotation(0.0f);
+				//		drawable.setOrigin(0,0);*/
 
 
 			}
@@ -146,10 +146,10 @@ void Game::run_game(int)
 {
 	m_sounds.add_group("player");
 	m_sounds.add_group("music");
-	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false,"player");
-	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false,"player");
-	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false,"player");
-	m_sounds.load_buffer("resources/Sounds/Lademusik.mp3", true,"music");
+	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false, "player");
+	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false, "player");
+	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false, "player");
+	m_sounds.load_buffer("resources/Sounds/Lademusik.mp3", true, "music");
 	m_sounds.set_volume(50, -1);
 	m_sounds.set_volume(50, 0);
 	m_sounds.set_volume(50, 1);
@@ -177,7 +177,7 @@ void Game::run_game(int)
 	m_tiles = erstelle_map();
 
 	m_window.clear();
-	render_map(p->get_pos(),m_window);
+	render_map(p->get_pos(), m_window);
 	m_window.display();
 
 	Utils::Cell selected = Utils::Cell::NOTHING;
@@ -189,10 +189,10 @@ void Game::run_game(int)
 	float lautstarke[3] = { 50.0f,50.0f,50.0f };
 	bool paused = false;
 	bool should_do_dockspace = true;
-	bool lautstaerke_UwU{false};
+	bool lautstaerke_UwU{ false };
 	while (m_window.isOpen() && m_open)
 	{
-	
+
 		EnemyManager::set_updated_tower(false);
 		EnemyManager::set_player_moving(false);
 		float deltatime = delta_timer.Elapsed();
@@ -202,7 +202,7 @@ void Game::run_game(int)
 		while (m_window.pollEvent(event)) //Hier werden alle moeglichen Events wie tasten und so weiter gehandled
 		{
 			ImGui::SFML::ProcessEvent(m_window, event);//Imgui Funktion die die Events handled fuer imgui
-			
+
 			switch (event.type)
 			{
 			case sf::Event::Resized:
@@ -217,11 +217,11 @@ void Game::run_game(int)
 				if (event.mouseButton.button == sf::Mouse::Button::Right)
 					right_click = down;
 			}
-				break;
+			break;
 
 
 			case sf::Event::KeyPressed: //TODO: nicht alles hier machen bitte und logik weiter unten machen
-				if (event.key.code == sf::Keyboard::Key::Escape) 
+				if (event.key.code == sf::Keyboard::Key::Escape)
 				{
 					/*m_sounds.pause_all(false);
 					m_open = showpausemenu();
@@ -267,7 +267,7 @@ void Game::run_game(int)
 			}
 		}
 
-		if(paused)
+		if (paused)
 		{
 			m_sounds.pause_all(true);
 		}
@@ -279,14 +279,14 @@ void Game::run_game(int)
 
 		if (should_do_dockspace)
 		{
-	
+
 			//if (ImGui::BeginMainMenuBar())
 			//{
 			//	if (ImGui::BeginMenu("File"))
 			//	{
 			//		if (ImGui::BeginMenu("Sounds bitte UwU"))
 			//		{
-	
+
 			//			ImGui::EndMenu();
 			//		}
 			//		ImGui::EndMenu();
@@ -323,7 +323,7 @@ void Game::run_game(int)
 				//if (ImGui::MenuItem("MenuItem")) {} // You can also use MenuItem() inside a menu bar!
 				if (ImGui::BeginMenu("Tools"))
 				{
-					if (ImGui::MenuItem("MenuItem")) 
+					if (ImGui::MenuItem("MenuItem"))
 					{
 
 					}
@@ -339,23 +339,23 @@ void Game::run_game(int)
 			texture.create(content_size.x, content_size.y);
 			texture_camera.set_RenderTarget(&texture);
 		}
-			window_camera.move_cam_to_player();
-			texture_camera.move_cam_to_player();
+		window_camera.move_cam_to_player();
+		texture_camera.move_cam_to_player();
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
 
-			
+
 
 			p->update(deltatime);
 
-			if (should_do_dockspace) 
+			if (should_do_dockspace)
 			{
 				temp = texture.mapPixelToCoords(sf::Mouse::getPosition(m_window));
 				ImVec2 imvec2 = ImGui::GetCursorScreenPos();
 				temp = { temp.x - imvec2.x ,temp.y - imvec2.y };
-				
+
 			}
 			else
 			{
@@ -363,24 +363,24 @@ void Game::run_game(int)
 			}
 
 
-			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f};
+			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f };
 
 
 
-			buildsystem(left_click, right_click, should_do_dockspace, m_map, entities, towers,mouse_pos);
+			buildsystem(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos);
 
 			if (should_do_dockspace) {
 				ImGui::PopItemWidth();
 				ImGui::End();
 			}
 			p->shoot(deltatime, m_sounds, mouse_pos);
-	
+
 			// ReSharper disable once CppUseRangeAlgorithm
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
-			[&ma, &deltatime](std::shared_ptr<Tower>& tower)
-			{
-			    tower->fire(ma, deltatime);
-			});
+				[&ma, &deltatime](std::shared_ptr<Tower>& tower)
+				{
+					tower->fire(ma, deltatime);
+				});
 
 
 			for (auto it = towers.begin(); it != towers.end();)
@@ -414,7 +414,7 @@ void Game::run_game(int)
 				pa->calculate_paths(towers);
 			}
 			ma.update(deltatime);
-		
+
 			m_sounds.cleanup(false);
 
 
@@ -433,7 +433,7 @@ void Game::run_game(int)
 			ImGui::TextWrapped("cell_mouse_pos x:%f y:%f z:%f", tt.x, tt.y, tt.z);
 			ImGui::End();
 		}
-		else if(should_do_dockspace)
+		else if (should_do_dockspace)
 		{
 			ImGui::PopItemWidth();
 			ImGui::End();
@@ -443,7 +443,7 @@ void Game::run_game(int)
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
 			ImGui::TextWrapped("amount of enemies: %llu", ma.get_enemies().size());
-			if(ImGui::Button("should do docking"))
+			if (ImGui::Button("should do docking"))
 			{
 				should_do_dockspace = !should_do_dockspace;
 			}
@@ -468,7 +468,7 @@ void Game::run_game(int)
 			//hier ist die render order
 			m_window.clear();//das momentane fenster wird gecleared
 
-			render_map(p->get_pos(),m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+			render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 			mb.main_sprite(m_window);
 			for (auto& tower : towers)
 			{
@@ -502,12 +502,12 @@ void Game::run_game(int)
 			}
 
 			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)
-			
+
 			m_window.display();
 		}
 		first_run = false;
 	}
-	
+
 	m_sounds.clear_all();
 	m_tiles.clear();
 	m_open = true;

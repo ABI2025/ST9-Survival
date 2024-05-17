@@ -40,7 +40,7 @@ EnemyManager::EnemyManager()
 
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
-	enemys_per_cell = std::vector( map[0].size(),
+	enemys_per_cell = std::vector(map[0].size(),
 		std::vector(map[0][0].size(), 0));
 }
 
@@ -54,8 +54,8 @@ void EnemyManager::update(float deltatime)
 		}
 	}
 	auto& tower = Game::get_game()->getEntityMap();
-	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime,&tower](std::shared_ptr<Enemy>& e)
-	{
+	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime, &tower](std::shared_ptr<Enemy>& e)
+		{
 			{
 				if (e == nullptr)
 					return;
@@ -70,29 +70,29 @@ void EnemyManager::update(float deltatime)
 				}
 			}
 
-		if(!should_update())
-		{
-			const glm::ivec3 temp = e->m_pos;
-		   const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
-		   if (Utils::Pathfinding::get_instance()->is_valid(cell_pos))
-		   {
-			   if (tower[0][cell_pos.y][cell_pos.x] != nullptr)
-			   {
-				   e->m_sprite.setTexture(this->m_textures[0]);
+			if (!should_update())
+			{
+				const glm::ivec3 temp = e->m_pos;
+				const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
+				if (Utils::Pathfinding::get_instance()->is_valid(cell_pos))
+				{
+					if (tower[0][cell_pos.y][cell_pos.x] != nullptr)
+					{
+						e->m_sprite.setTexture(this->m_textures[0]);
 
-				   e->attack();
+						e->attack();
 
-				   enemys_per_cell[cell_pos.y][cell_pos.x]++;
-					
-				   e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
-				   e->m_pos = temp;
-				   e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
-				   return;
-			   }
+						enemys_per_cell[cell_pos.y][cell_pos.x]++;
 
-		   }
-		}
-			
+						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+						e->m_pos = temp;
+						e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
+						return;
+					}
+
+				}
+			}
+
 
 			if (e->m_movements.empty() == true || should_update())
 			{
@@ -113,31 +113,31 @@ void EnemyManager::update(float deltatime)
 					/*temp.x *= 135;
 					temp.y *= 135;*/
 					const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
-					if(Utils::Pathfinding::get_instance()->is_valid(cell_pos) &&tower[0][cell_pos.y][cell_pos.x]!=nullptr )
+					if (Utils::Pathfinding::get_instance()->is_valid(cell_pos) && tower[0][cell_pos.y][cell_pos.x] != nullptr)
 					{
-				
+
 						enemys_per_cell[cell_pos.y][cell_pos.x]++;
 						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 						e->attack();
 						return;
 					}
-					
-					
+
+
 					e->m_pos = temp;
 					e->m_sprite.setPosition(temp.x, temp.y);
 					e->m_movements.pop_back();
-					
+
 				}
 			}
 			const glm::ivec3 temp_pos = round(e->m_pos / CellSize);
 
-			if(Utils::Pathfinding::get_instance()->is_valid(temp_pos))
+			if (Utils::Pathfinding::get_instance()->is_valid(temp_pos))
 			{
 				enemys_per_cell[temp_pos.y][temp_pos.x]++;
 			}
 
 			e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
-	}
+		}
 	);
 
 	for (auto it = m_enemys.begin(); it != m_enemys.end();)
@@ -152,15 +152,15 @@ void EnemyManager::update(float deltatime)
 		}
 	}
 
-	
 
-	for(int i = 0; i < enemys_per_cell.size(); ++i)
+
+	for (int i = 0; i < enemys_per_cell.size(); ++i)
 	{
-		for(int j = 0; j < enemys_per_cell[i].size(); ++j)
+		for (int j = 0; j < enemys_per_cell[i].size(); ++j)
 		{
-			if(tower[0][i][j] != nullptr && enemys_per_cell[i][j] > 0)
+			if (tower[0][i][j] != nullptr && enemys_per_cell[i][j] > 0)
 			{
-				tower[0][i][j]->take_damage(enemys_per_cell[i][j]*0.1);
+				tower[0][i][j]->take_damage(enemys_per_cell[i][j] * 0.1);
 			}
 		}
 	}
@@ -170,9 +170,9 @@ void EnemyManager::update(float deltatime)
 	constexpr float epsilon = 1e-6f;
 
 	auto comp = [](const std::shared_ptr<Enemy>& e1, const std::shared_ptr<Enemy>& e2)
-	{
-		return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
-	};
+		{
+			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
+		};
 
 	std::ranges::sort(m_enemys, comp);
 
@@ -180,10 +180,10 @@ void EnemyManager::update(float deltatime)
 
 glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_position) const
 {
-	glm::vec2 nearest (-1);
-	glm::ivec2 nearest_cell_position (-1);
+	glm::vec2 nearest(-1);
+	glm::ivec2 nearest_cell_position(-1);
 
-	const glm::ivec2 tower_cell_position = round(tower_position / 135.0f) ;
+	const glm::ivec2 tower_cell_position = round(tower_position / 135.0f);
 
 	const int check_size_x = static_cast<int>(radius);
 	const int check_size_y = static_cast<int>(radius);
@@ -208,8 +208,8 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 					nearest_cell_position = { x,y };
 				}
 #else
-				const int euclidean_distance_new_point_to_tower = sqrt(pow(distance_new_point_to_tower.x,2) + pow(distance_new_point_to_tower.y,2));
-				const int euclidean_distance_nearest_to_tower = sqrt(pow(distance_nearest_to_tower.x,2) + pow(distance_nearest_to_tower.y,2));
+				const int euclidean_distance_new_point_to_tower = sqrt(pow(distance_new_point_to_tower.x, 2) + pow(distance_new_point_to_tower.y, 2));
+				const int euclidean_distance_nearest_to_tower = sqrt(pow(distance_nearest_to_tower.x, 2) + pow(distance_nearest_to_tower.y, 2));
 				if ((euclidean_distance_new_point_to_tower < euclidean_distance_nearest_to_tower
 					|| nearest == glm::vec2{ -1.0f,-1.0f })
 					&& euclidean_distance_new_point_to_tower <= radius)
@@ -318,7 +318,7 @@ int EnemyManager::naive_enemy_killer() {
 	}
 
 	// Clean up projectiles
-	for (Projectile* projectile : to_remove_projectiles) 
+	for (Projectile* projectile : to_remove_projectiles)
 	{
 		Projectile::remove_projectile(projectile);
 	}

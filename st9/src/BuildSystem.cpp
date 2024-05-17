@@ -67,19 +67,19 @@ Utils::Cell BuildSystem::display()
 		ImGui::PushID(current_button_id);
 		if (ImGui::ImageButton(button_id.c_str(), m_sprites[current_button_id], { 135.0f,135.0f }))
 		{
-	
+
 			//LOG_INFO("it works ig");
 			int temp;
-			if (current_button_id == 0) 
+			if (current_button_id == 0)
 			{
 				temp = 0;
 			}
-			else if (current_button_id > 0 && current_button_id < 7) 
+			else if (current_button_id > 0 && current_button_id < 7)
 			{
 				m_id = current_button_id - 1;
 				temp = 1;
 			}
-			else 
+			else
 			{
 				temp = current_button_id - 5;
 			}
@@ -105,24 +105,24 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 	) const
 {
 
-	
+
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
 
-	if (!pa->is_valid(mouse_pos/135.0f))
+	if (!pa->is_valid(mouse_pos / 135.0f))
 		return;
 
 	const bool is_windows_focused =
-	     ( //wenn das haupt fenster kein dockspace ist wird geguckt ob irgendeins der ImGui Fenster gefocused ist oder ob eins gehovered ist
-		   !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) &&
-		   !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)
-		 )
+		( //wenn das haupt fenster kein dockspace ist wird geguckt ob irgendeins der ImGui Fenster gefocused ist oder ob eins gehovered ist
+			!ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) &&
+			!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)
+			)
 		||
 		( //wenn das Haupt Fenster ein Dockspace ist, sind wir gerade in dem ImGui Fenster deshalb gucken wir ob das momentane Gefocused ist und gehovered
 			should_do_docking &&
 			ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow) &&
 			ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow)
-		);
-	glm::ivec3 cell_mouse_pos = mouse_pos/135.0f;
+			);
+	glm::ivec3 cell_mouse_pos = mouse_pos / 135.0f;
 	if (left_click && is_windows_focused)
 	{
 		if (m_selected != Utils::Cell::NOTHING && map[0][cell_mouse_pos.y][cell_mouse_pos.x] != m_selected)
@@ -154,7 +154,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 					if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
 						(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
 					{
-					
+
 						it->reset();
 						it = entities.erase(it);
 					}

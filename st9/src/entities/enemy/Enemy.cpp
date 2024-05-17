@@ -22,7 +22,7 @@ bool Enemy::is_alive() const
 
 
 
-Enemy::Enemy(): m_priority()
+Enemy::Enemy() : m_priority()
 {
 	m_health = 2;
 }

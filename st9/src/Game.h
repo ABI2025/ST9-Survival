@@ -16,7 +16,7 @@ public:
 	static void erstelle_game(sf::RenderWindow&);
 	static Game* get_game();
 	std::vector<std::vector<std::vector<std::shared_ptr<Entity>>>>& getEntityMap();
-	void set_map(const Utils::Cell& , int x , int y, int z); // Cell x,y,z
+	void set_map(const Utils::Cell&, int x, int y, int z); // Cell x,y,z
 
 	std::vector<std::vector<std::vector<Utils::Cell>>>& get_map();
 
@@ -29,7 +29,7 @@ private:
 
 	inline static Game* s_game;
 	explicit Game(sf::RenderWindow&);
-	sf::RenderWindow& m_window; 
+	sf::RenderWindow& m_window;
 	std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	std::vector<std::vector<std::vector<std::shared_ptr<Entity>>>> m_EntityMap;
 	std::vector<sf::Sprite> m_background_sprites;

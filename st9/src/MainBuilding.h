@@ -11,10 +11,10 @@ class MainBuilding
 	sf::Texture m_texture;
 
 
-	public:
-		MainBuilding();
-		void main_sprite(sf::RenderTarget&) const;
-		
+public:
+	MainBuilding();
+	void main_sprite(sf::RenderTarget&) const;
+
 
 };
 

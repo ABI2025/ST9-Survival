@@ -27,7 +27,7 @@ private:
 	std::vector<std::string> m_name_button;
 	//std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	inline static Menu* s_Instance = nullptr;
-	std::pair<sf::FloatRect,bool> m_buttons[3];
+	std::pair<sf::FloatRect, bool> m_buttons[3];
 	sf::Font m_font;
 };
 
