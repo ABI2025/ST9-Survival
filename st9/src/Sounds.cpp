@@ -3,6 +3,32 @@
 #include <ranges>
 #include "Utils/Log.h"
 
+void Sounds::change_music()
+{
+	const int m_sounds_size = static_cast<signed>(m_sounds["music"].size()) - 1;
+	if(m_sounds_size == 0)
+	{
+		m_sounds["music"][m_current_music].first.back().play();
+	}
+	else
+	{
+		int new_current_music;
+#ifdef SOUNDS_DO_RANDOM_MUSIC
+			new_current_music = Utils::Random::UInt(0, m_sounds_size);
+#else
+		new_current_music = m_current_music + 1;
+		if (new_current_music > m_sounds_size)
+		{
+			new_current_music = 0;
+		}
+		LOG_INFO("m_sounds_size {}", m_sounds_size);
+		LOG_INFO("new current_music {}", new_current_music);
+#endif
+		m_sounds["music"][new_current_music].first.back().play();
+		m_current_music = new_current_music;
+	}
+}
+
 Sounds::Sounds()
 {
 	m_mapping[-1] = "allgemein";
@@ -13,6 +39,43 @@ Sounds::Sounds()
 
 Sounds::~Sounds()
 {
+}
+
+void Sounds::load_buffer(const std::string& location, bool priority, const std::string& group)
+{
+	sf::SoundBuffer temp_buffer;
+	temp_buffer.loadFromFile(location);
+	m_buffers[group].emplace_back(temp_buffer);
+	std::deque<sf::Sound> temp_deque;
+
+	if (group == "music") 
+	{
+		auto& current_sounds = m_sounds[group].emplace_back(temp_deque, true).first;
+
+		const float group_volume = m_volumes["music"];
+		const float allgemeiner_volume = m_volumes[m_mapping[-1]];
+		const float volume_sound = group_volume * allgemeiner_volume * 100.f;
+
+		current_sounds.emplace_back();
+		sf::Sound& current_sound = current_sounds.back();
+
+		current_sound.pause();
+		current_sound.setVolume(volume_sound);
+		current_sound.setRelativeToListener(true);
+	}
+	else
+		m_sounds[group].emplace_back(temp_deque, priority);
+
+
+}
+
+void Sounds::add_group(const std::string& group)
+{
+	m_buffers.insert({ group, {} });
+	m_sounds.insert({ group, {} });
+	m_mapping[m_sounds.size() - 1] = group;
+	m_volumes.insert({ group ,1.0f });
+
 }
 
 void Sounds::add_sound(int group_id, int id)
@@ -35,7 +98,7 @@ void Sounds::add_sound(int group_id, int id)
 	const bool has_priority = m_sounds[group_id_string][id].second;
 	const float allgemeiner_volume = m_volumes[m_mapping[-1]];
 	const float group_volume = m_volumes[group_id_string];
-	
+
 	// If no priority or sound list is empty (with priority), add and play the sound
 	if (!has_priority || (current_sounds.empty() && has_priority))
 	{
@@ -44,6 +107,8 @@ void Sounds::add_sound(int group_id, int id)
 		sf::Sound& current_sound = current_sounds.back();
 		current_sound.play();
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
+		current_sound.setRelativeToListener(true);
+
 	}
 }
 
@@ -70,13 +135,15 @@ void Sounds::add_sound(const std::string& group_id, const int id)
 		sf::Sound& current_sound = current_sounds.back();
 		current_sound.play();
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
+		current_sound.setRelativeToListener(true);
+
 	}
 }
 
 void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 {
 	// Check if the group ID is valid and mapped
-	if (!m_mapping.contains(group_id)) 
+	if (!m_mapping.contains(group_id))
 		return;
 
 	const std::string& group_id_string = m_mapping[group_id];
@@ -86,7 +153,7 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 		return;
 
 	// Check if the sound ID is within the valid range
-	if (id < 0 || id >= m_buffers[group_id_string].size()) 
+	if (id < 0 || id >= m_buffers[group_id_string].size())
 		return;
 
 	std::deque<sf::Sound>& current_sounds = m_sounds[group_id_string][id].first;
@@ -108,7 +175,6 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 		current_sound.setAttenuation(1.f);
 	}
 }
-
 
 void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 {
@@ -134,32 +200,48 @@ void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 		sf::Sound& current_sound = current_sounds.back();
 		current_sound.play();
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
-		current_sound.setPosition(pos.x /135.f, pos.y/135.f, 0.0f);
+		current_sound.setPosition(pos.x / 135.f, pos.y / 135.f, 0.0f);
 		current_sound.setRelativeToListener(false);
 		current_sound.setMinDistance(5.f);
 		current_sound.setAttenuation(1.f);
 	}
 }
 
-void Sounds::cleanup(const bool priority_ignorieren)
+void Sounds::music(float deltatime)
+{
+
+	m_condt += deltatime;
+	if(m_condt >= m_grace)
+	{
+		if (m_sounds["music"].empty())
+			return;
+		if(m_current_music == -1)
+		{
+			//add_sound("music", 0);
+
+			for(int i = 0; i < m_buffers.size();++i)
+			{
+				m_sounds["music"][i].first.back().setBuffer(m_buffers["music"][i]);
+			}
+
+			m_current_music = 0;
+			m_sounds["music"][m_current_music].first.back().play();
+
+		}
+		if(m_sounds["music"][m_current_music].first.back().getStatus() == sf::SoundSource::Stopped)
+			change_music();
+		m_condt = 0;
+	}
+}
+
+void Sounds::cleanup()
 {
 	for (auto& all_sounds : m_sounds | std::views::values)
 	{
 		for (auto& [sounds, priority] : all_sounds)
 		{
-			if (priority && !priority_ignorieren)
-			{
-				int i = 0;
-				for (auto& sound : sounds)
-				{
-					if (sound.getStatus() == sf::SoundSource::Stopped)
-						sound.play();
-					i++;
-				}
-				if (i > 1)
-					LOG_CRITICAL("hilfe");
-			}
-			if (!priority || priority_ignorieren)
+
+			if (!priority)
 			{
 				for (auto it = sounds.begin(); it != sounds.end();)
 				{
@@ -177,24 +259,7 @@ void Sounds::cleanup(const bool priority_ignorieren)
 	}
 }
 
-void Sounds::load_buffer(const std::string& location, bool priority, const std::string& group)
-{
-	sf::SoundBuffer temp_buffer;
-	temp_buffer.loadFromFile(location);
-	m_buffers[group].push_back(temp_buffer);
-	std::deque<sf::Sound> temp_deque;
-	m_sounds[group].emplace_back(temp_deque, priority);
 
-}
-
-void Sounds::add_group(const std::string& group)
-{
-	m_buffers.insert({ group, {} });
-	m_sounds.insert({ group, {} });
-	m_mapping[m_sounds.size() - 1] = group;
-	m_volumes.insert({ group ,1.0f });
-
-}
 
 void Sounds::pause_all(bool priority_ignorieren)
 {

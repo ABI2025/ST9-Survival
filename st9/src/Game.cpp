@@ -149,12 +149,14 @@ void Game::run_game(int)
 	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false, "player");
 	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false, "player");
 	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false, "player");
-	m_sounds.load_buffer("resources/Sounds/Lademusik.mp3", true, "music");
+	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
+	m_sounds.load_buffer("resources/Sounds/record.wav", true, "music");
+
 	m_sounds.set_volume(50, -1);
 	m_sounds.set_volume(50, 0);
 	m_sounds.set_volume(50, 1);
 
-	m_sounds.add_sound("music", 0);
+	m_sounds.music(0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 
 	Camera window_camera(&m_window, p.get());
@@ -274,8 +276,7 @@ void Game::run_game(int)
 		else
 			m_sounds.play_all();
 
-		buildsystem.display();
-		sf::Vector2f temp;
+		Utils::Cell tem_cell = buildsystem.display();
 
 		if (should_do_dockspace)
 		{
@@ -343,6 +344,7 @@ void Game::run_game(int)
 		texture_camera.move_cam_to_player();
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
+			sf::Vector2f temp;
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
 
@@ -415,7 +417,8 @@ void Game::run_game(int)
 			}
 			ma->update(deltatime);
 
-			m_sounds.cleanup(false);
+			m_sounds.cleanup();
+			m_sounds.music(deltatime);
 
 
 
@@ -464,18 +467,8 @@ void Game::run_game(int)
 			//hier ist die render order
 			m_window.clear();//das momentane fenster wird gecleared
 
-			render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
-			mb.main_sprite(m_window);
-			for (auto& tower : towers)
-			{
-				//texture.draw(*tower);
-				tower->drawtower(m_window);
-			}
-			render_tower(m_window);
-			ma->draw(m_window);
-			m_window.draw(*p);
-			Projectile::draw_all_projectiles(m_window);
-			hb.draw_healthbar(m_window, *p);
+	
+
 			if (should_do_dockspace) {
 				texture.clear();
 				render_map(p->get_pos(), texture); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
@@ -495,6 +488,21 @@ void Game::run_game(int)
 				ImGui::Begin("Viewport");
 				ImGui::Image(texture);
 				ImGui::End();
+			}
+			else
+			{
+				render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+				mb.main_sprite(m_window);
+				for (auto& tower : towers)
+				{
+					//texture.draw(*tower);
+					tower->drawtower(m_window);
+				}
+				render_tower(m_window);
+				ma->draw(m_window);
+				m_window.draw(*p);
+				Projectile::draw_all_projectiles(m_window);
+				hb.draw_healthbar(m_window, *p);
 			}
 
 			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)
