@@ -118,7 +118,7 @@ void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 					m_prev_bullet_dir * 5.0f, 180, m_damage, 5);
 			}
 			//const glm::vec3 player_pos = Utils::Pathfinding::get_instance()->get_player_pos();
-			//sound.add_sound("player", 2, m_pos);
+			sound.add_sound("player", 2, m_pos);
 			sprites[0].setRotation(m_angle);
 			m_condt = 0.0f;
 		}

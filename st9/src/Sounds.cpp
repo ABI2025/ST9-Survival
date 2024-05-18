@@ -104,8 +104,8 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
 		current_sound.setPosition(pos.x, pos.y, 0.0f);
 		current_sound.setRelativeToListener(false);
-		current_sound.setMinDistance(135.f);
-		current_sound.setAttenuation(1000.f);
+		current_sound.setMinDistance(5.f);
+		current_sound.setAttenuation(1.f);
 	}
 }
 
@@ -136,8 +136,8 @@ void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
 		current_sound.setPosition(pos.x /135.f, pos.y/135.f, 0.0f);
 		current_sound.setRelativeToListener(false);
-		current_sound.setMinDistance(1.f);
-		current_sound.setAttenuation(100.f);
+		current_sound.setMinDistance(5.f);
+		current_sound.setAttenuation(1.f);
 	}
 }
 
