@@ -32,7 +32,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 
 	m_textures.resize(3);
 
-	m_textures[0].loadFromFile("resources/images/charakter_HL.png");
+	m_textures[0].loadFromFile("resources/images/none.png");
 	m_textures[1] = m_texture.getTexture();
 	m_textures[2].loadFromFile("resources/images/1111.png");
 

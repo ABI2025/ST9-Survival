@@ -427,10 +427,6 @@ void Game::run_game(int)
 
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
-			ImGui::TextWrapped("temp x:%f y:%f", temp.x, temp.y);
-			ImGui::TextWrapped("mouse_pos x:%f y:%f z:%f", mouse_pos.x, mouse_pos.y, mouse_pos.z);
-			glm::vec3 tt = mouse_pos / 135.0f;
-			ImGui::TextWrapped("cell_mouse_pos x:%f y:%f z:%f", tt.x, tt.y, tt.z);
 			ImGui::End();
 		}
 		else if (should_do_dockspace)
@@ -441,7 +437,7 @@ void Game::run_game(int)
 
 		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
-			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
+			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
 			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
 			if (ImGui::Button("should do docking"))
 			{
