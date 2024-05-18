@@ -168,7 +168,7 @@ void Game::run_game(int)
 	bool right_click = false;
 	bool left_click = false;
 
-	EnemyManager ma;
+	EnemyManager* ma = EnemyManager::get_instance();
 	MainBuilding mb;
 	healthbar hb{};
 	BuildSystem buildsystem;
@@ -249,7 +249,7 @@ void Game::run_game(int)
 		if (!paused)
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
-				ma.add_enemy();
+				ma->add_enemy();
 			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
 			//{
 			//	m_sounds.add_sound("player", 2);
@@ -379,7 +379,7 @@ void Game::run_game(int)
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
 				[&ma, &deltatime](std::shared_ptr<Tower>& tower)
 				{
-					tower->fire(ma, deltatime);
+					tower->fire(*ma, deltatime);
 				});
 
 
@@ -413,7 +413,7 @@ void Game::run_game(int)
 			{
 				pa->calculate_paths(towers);
 			}
-			ma.update(deltatime);
+			ma->update(deltatime);
 
 			m_sounds.cleanup(false);
 
@@ -423,7 +423,7 @@ void Game::run_game(int)
 			{
 				m_open = false;
 			}
-			ma.naive_enemy_killer();
+			ma->naive_enemy_killer();
 
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
@@ -442,7 +442,7 @@ void Game::run_game(int)
 		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("MS: %f FPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
-			ImGui::TextWrapped("amount of enemies: %llu", ma.get_enemies().size());
+			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
 			if (ImGui::Button("should do docking"))
 			{
 				should_do_dockspace = !should_do_dockspace;
@@ -476,7 +476,7 @@ void Game::run_game(int)
 				tower->drawtower(m_window);
 			}
 			render_tower(m_window);
-			ma.draw(m_window);
+			ma->draw(m_window);
 			m_window.draw(*p);
 			Projectile::draw_all_projectiles(m_window);
 			hb.draw_healthbar(m_window, *p);
@@ -490,7 +490,7 @@ void Game::run_game(int)
 					tower->drawtower(texture);
 				}
 				render_tower(texture);
-				ma.draw(texture);
+				ma->draw(texture);
 				texture.draw(*p);
 				Projectile::draw_all_projectiles(texture);
 				hb.draw_healthbar(texture, *p);

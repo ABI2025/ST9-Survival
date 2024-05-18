@@ -12,6 +12,9 @@
 
 #include "Wall.h"
 
+constexpr float CellSize = 135.0f;
+
+
 BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 {
 	m_texture_textures.resize(2);
@@ -85,8 +88,63 @@ Utils::Cell BuildSystem::display()
 			}
 			m_selected = static_cast<Utils::Cell>(temp);
 		}
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) // With a delay
-			ImGui::SetTooltip("I am a tooltip with a delay.");
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+		{
+			switch (current_button_id)
+			{
+			case 0:
+				ImGui::BeginTooltip();
+				ImGui::Text("Nichts");
+				ImGui::EndTooltip();
+				break;
+			case 1:
+				ImGui::BeginTooltip();
+				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("200 leben");
+				ImGui::EndTooltip();
+				break;
+			case 2:
+				ImGui::BeginTooltip();
+				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("300 leben");
+				ImGui::EndTooltip();
+				break;
+			case 3:
+				ImGui::BeginTooltip();
+				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("400 leben");
+				ImGui::EndTooltip();
+				break;
+			case 4:
+				ImGui::BeginTooltip();
+				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("500 leben");
+				ImGui::EndTooltip();
+				break;
+			case 5:
+				ImGui::BeginTooltip();
+				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("600 leben");
+				ImGui::EndTooltip();
+				break;
+
+			case 6:
+				ImGui::BeginTooltip();
+				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("700 leben");
+				ImGui::EndTooltip();
+				break;
+			case 7:
+				ImGui::BeginTooltip();
+				ImGui::Text("Eine Wand mit:");
+				ImGui::Text("500 leben");
+				ImGui::EndTooltip();
+				break;
+			default:
+				ImGui::SetTooltip("I am a tooltip with a delay.");
+				break;
+			}
+		}
 		const float last_button_x2 = ImGui::GetItemRectMax().x;
 		const float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 135.0f; // Expected position if next button was on same line
 		if (current_button_id + 1 < m_sprites.size() && next_button_x2 < window_visible_x2)
@@ -107,8 +165,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 
 
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
-
-	if (!pa->is_valid(mouse_pos / 135.0f))
+	// Überprüfen, ob die Mausposition eine gültige Zelle ist
+	if (!pa->is_valid(mouse_pos / CellSize))
 		return;
 
 	const bool is_windows_focused =
@@ -122,51 +180,23 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 			ImGui::IsWindowFocused(ImGuiFocusedFlags_RootWindow) &&
 			ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow)
 			);
-	glm::ivec3 cell_mouse_pos = mouse_pos / 135.0f;
+
+
+	// Berechnung der Zellposition der Maus
+	const glm::ivec3 cell_mouse_pos = mouse_pos / CellSize;
+
+	// Behandlung von Linksklicks
 	if (left_click && is_windows_focused)
 	{
-		if (m_selected != Utils::Cell::NOTHING && map[0][cell_mouse_pos.y][cell_mouse_pos.x] != m_selected)
+		// Überprüfen, ob eine Zelle ausgewählt ist und ob die aktuelle Zelle leer ist
+		if (m_selected != Utils::Cell::NOTHING
+			&&
+			map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::NOTHING
+			&&
+			map[0][cell_mouse_pos.y][cell_mouse_pos.x] != m_selected)
 		{
-			//set_map(selected, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-
-			if ((m_selected != map[0][cell_mouse_pos.y][cell_mouse_pos.x]))
-			{
-				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x].reset();
-				if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET)
-				{
-					for (auto it = towers.begin(); it != towers.end();)
-					{
-						if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
-							(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
-						{
-
-							it->reset();
-							it = towers.erase(it);
-						}
-						else
-						{
-							++it;
-						}
-					}
-				}
-				for (auto it = entities.begin(); it != entities.end();)
-				{
-					if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
-						(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
-					{
-
-						it->reset();
-						it = entities.erase(it);
-					}
-					else
-					{
-						++it;
-					}
-				}
-			}
-
-			if ((m_selected == Utils::Cell::TURRET)
-				&&
+			// Platzierung eines Turms
+			if (m_selected == Utils::Cell::TURRET &&
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::TURRET)
 			{
 				towers.emplace_back(std::make_shared<Tower>(cell_mouse_pos * 135));
@@ -179,19 +209,27 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				entities.emplace_back(std::make_shared<Wall>(cell_mouse_pos * 135));
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = entities.back();
 			}
+			// Aktualisieren der Karte
 			map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
 			EnemyManager::set_updated_tower(true);
 		}
 	}
+
+	// Behandlung von Rechtsklicks
 	if (right_click && is_windows_focused)
 	{
-		if (m_selected != Utils::Cell::NOTHING && map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::NOTHING)
+		// Überprüfen, ob eine Zelle ausgewählt ist und ob die aktuelle Zelle nicht leer ist
+		if (m_selected != Utils::Cell::NOTHING &&
+			map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::NOTHING)
 		{
-			//set_map(Utils::Cell::NOTHING, static_cast<int>(mouse_pos.x), static_cast<int>(mouse_pos.y), 0);
-			if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET || map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::WALL)
+
+			// Entfernen eines Turms oder einer Mauer
+			if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET ||
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::WALL)
 			{
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x].reset();
 
+				// Entfernen eines Turms
 				if (map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET)
 				{
 					for (auto it = towers.begin(); it != towers.end();)
@@ -210,6 +248,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 					}
 				}
 
+				// Entfernen der Entität
 				for (auto it = entities.begin(); it != entities.end();)
 				{
 					if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
@@ -224,6 +263,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 					}
 				}
 			}
+			// Aktualisieren der Karte
 			map[0][cell_mouse_pos.y][cell_mouse_pos.x] = Utils::Cell::NOTHING;
 			EnemyManager::set_updated_tower(true);
 		}

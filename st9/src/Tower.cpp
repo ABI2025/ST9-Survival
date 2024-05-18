@@ -4,6 +4,7 @@
 
 #include "imgui.h"
 #include "entities/EnemyManager.h"
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
@@ -16,21 +17,64 @@ Tower::Tower(const glm::vec3 i_pos)
 	m_pos = i_pos;
 	sprites[0].setTexture(TowerTexture::get_instance()->textures[0]);
 	sprites[1].setTexture(TowerTexture::get_instance()->textures[1]);
-	sprites[1].setPosition(static_cast<float>(m_pos.x), static_cast<float>(m_pos.y));
+	sprites[1].setPosition(m_pos.x, m_pos.y);
 
 	sprites[0].setOrigin
 	(sprites[0].getPosition().x + tower_sprite_center.x,
 		sprites[0].getPosition().y + tower_sprite_center.y);
 
 	sprites[0].setPosition
-	(static_cast<float>(m_pos.x) + tower_sprite_center.x,
-		static_cast<float>(m_pos.y) + tower_sprite_center.y);
+	(m_pos.x + tower_sprite_center.x,
+		m_pos.y + tower_sprite_center.y);
 
-	//sprites[0].setOrigin(135.0f / 2.0f, 135.0f / 2.0f);
+
 	m_ressourcen = 0;
 	m_health = 200;
 	m_damage = 0.1;
-	//m_pos = {0.0f,0.0f};
+}
+
+Tower::Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health)
+{
+	m_pos = i_pos;
+	sprites[0].setTexture(TowerTexture::get_instance()->textures[0]);
+	sprites[1].setTexture(TowerTexture::get_instance()->textures[1]);
+	sprites[1].setPosition(m_pos.x, m_pos.y);
+
+	sprites[0].setOrigin
+	(sprites[0].getPosition().x + tower_sprite_center.x,
+	 sprites[0].getPosition().y + tower_sprite_center.y);
+
+	sprites[0].setPosition
+	(m_pos.x + tower_sprite_center.x,
+	 m_pos.y + tower_sprite_center.y);
+
+	m_ressourcen = 0;
+
+	m_cooldown = i_cooldown;
+	m_condt = i_cooldown;
+	m_health = i_health;
+	m_damage = i_damage;
+}
+
+Tower::Tower(glm::vec3 i_pos, towerKind tower_kind)
+{
+	m_pos = i_pos;
+	sprites[0].setTexture(TowerTexture::get_instance()->textures[0]);
+	sprites[1].setTexture(TowerTexture::get_instance()->textures[1]);
+	sprites[1].setPosition(m_pos.x, m_pos.y);
+
+	sprites[0].setOrigin
+	(sprites[0].getPosition().x + tower_sprite_center.x,
+		sprites[0].getPosition().y + tower_sprite_center.y);
+
+	sprites[0].setPosition
+	(m_pos.x + tower_sprite_center.x,
+		m_pos.y + tower_sprite_center.y);
+
+
+	m_ressourcen = 0;
+	m_health = 200;
+	m_damage = 0.1;
 }
 
 Tower::~Tower()
@@ -38,55 +82,42 @@ Tower::~Tower()
 
 void Tower::drawtower(sf::RenderTarget& window) const
 {
-
-	//rectangle.setPosition(m_pos);+
-
-	//sprites[0].setPosition(static_cast<float>(m_pos.x), static_cast<float>(m_pos.y));
-	//sprites[1].setPosition(static_cast<float>(m_pos.x), static_cast<float>(m_pos.y));
 	window.draw(sprites[1]);
 	window.draw(sprites[0]);
-
 }
 
 void Tower::fire(const EnemyManager& em, const float deltatime)
 {
-	condt += deltatime;
-	ImGui::Begin("DEBUG WINDOW");
-	ImGui::PushID(this);
-
-	ImGui::SliderFloat("cooldown", &cooldown, 0, 1);
-
-	ImGui::PopID();
-	ImGui::End();
-
-
-	//LOG_INFO("Closest_enemy: {} {} ", closest_enemy.x, closest_enemy.y);
-	if (condt >= cooldown)
+	m_condt += deltatime;
+	if (m_condt >= m_cooldown)
 	{
 		const glm::vec2 closest_enemy = { em.enemypos(6.0, m_pos) };
 		if (closest_enemy != glm::vec2{ -1.0f,-1.0f })
 		{
-			const glm::vec3 dir = glm::vec3{ closest_enemy ,0.0f } - static_cast<glm::vec3>(m_pos);
+			const glm::vec3 dir = glm::vec3{ closest_enemy ,0.0f } - m_pos;
+			//Prüfen ob der näheste gegner auf dem Turm ist
+
+			const glm::vec2 position_center = glm::vec3{ tower_sprite_center,0 } + m_pos;
+			const glm::vec2 position_for_bullet_to_spawn = position_center - glm::vec2{2.0f,12.5f};
 			if (dir != glm::vec3{ 0.0f,0.0f,0.0f })
 			{
 				const glm::vec3 bullet_dir = glm::normalize(dir);
-				prev_bullet_dir = bullet_dir;
-				// Calculate the angle for rotation
-				angle = std::atan2(bullet_dir.y, bullet_dir.x) * 180.0f / M_PI;
-				angle -= 90;
+				m_prev_bullet_dir = bullet_dir;
+				//winkel von dem Schuss berechnen damit der Turm richtig Rotiert ist
+				m_angle = std::atan2(bullet_dir.y, bullet_dir.x) * 180.0f / M_PI;
+				m_angle -= 90;
 
-				new Projectile({ m_pos.x + 135.0f / 2.0f - 10.0f
-					,m_pos.y + 135.0f / 2.0f - 10.0f,0.0f },
+				new Projectile({ position_for_bullet_to_spawn,0.0f },
 					bullet_dir * 5.0f, 180, m_damage, 5);
 			}
 			else
 			{
-				new Projectile({ static_cast<float>(m_pos.x) + 135.0f / 2.0f - 10.0f
-					,static_cast<float>(m_pos.y) + 135.0f / 2.0f - 10.0f,0.0f },
-					prev_bullet_dir * 5.0f, 180, m_damage, 5);
+				//wenn der näheste gegner auf dem Turm ist nehmen wir die vorher gespeicherte rotierung und projektil Richtung
+				new Projectile({ position_for_bullet_to_spawn ,0.0f },
+					m_prev_bullet_dir * 5.0f, 180, m_damage, 5);
 			}
-			sprites[0].setRotation(angle);
-			condt = 0.0f;
+			sprites[0].setRotation(m_angle);
+			m_condt = 0.0f;
 		}
 	}
 

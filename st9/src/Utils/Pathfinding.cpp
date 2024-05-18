@@ -6,6 +6,7 @@
 #include "entities/Player/Player.h"
 
 #include "Utils.h"
+#include "entities/EnemyManager.h"
 
 namespace Utils {
 	Pathfinding* Pathfinding::s_instance = nullptr;
@@ -322,14 +323,25 @@ namespace Utils {
 	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers)
 	{
 		//priority player
+		if(EnemyManager::is_player_moving())
 		{
 			const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
-			if (!is_valid(start))
-			{
-				LOG_ERROR("das haette nicht passieren sollen start: x:{} y:{} z:{}",
-					start.x, start.y, start.z);
-			}
 			dijkstra({ start }, m_player_cellmap);
+		}
+
+		//priority tower
+		if(EnemyManager::is_tower_updated() || towers.empty())
+		{
+			std::vector<glm::ivec3> start_points;
+			for (const auto tower : towers)
+			{
+				start_points.emplace_back(tower->get_pos() / 135.0f);
+			}
+			if (start_points.empty() == true)
+			{
+				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
+			}
+			dijkstra(start_points, m_tower_cellmap);
 		}
 
 		//priority nothing
@@ -343,19 +355,6 @@ namespace Utils {
 			dijkstra(start_points, m_nothing_cellmap);
 		}
 
-		//priority tower
-		{
-			std::vector<glm::ivec3> start_points;
-			for (const auto tower : towers)
-			{
-				start_points.emplace_back(tower->get_pos() / 135.0f);
-			}
-			if (start_points.empty() == true)
-			{
-				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
-			}
-			dijkstra(start_points, m_tower_cellmap);
-		}
 	}
 
 	static std::vector<glm::ivec3> dirs({

@@ -57,6 +57,7 @@
     <ClInclude Include="src\projektil.h" />
     <ClInclude Include="src\Sounds.h" />
     <ClInclude Include="src\Wall.h" />
+    <ClInclude Include="src\Wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem.cpp" />
@@ -93,5 +94,6 @@
     <ClCompile Include="src\projektil.cpp" />
     <ClCompile Include="src\Sounds.cpp" />
     <ClCompile Include="src\Wall.cpp" />
+    <ClCompile Include="src\Wave.cpp" />
   </ItemGroup>
 </Project>

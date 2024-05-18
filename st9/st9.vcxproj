@@ -165,6 +165,7 @@
     <ClInclude Include="src\healthbar.h" />
     <ClInclude Include="src\projektil.h" />
     <ClInclude Include="src\Wall.h" />
+    <ClInclude Include="src\Wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Sounds.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\projektil.cpp" />
     <ClCompile Include="src\Wall.cpp" />
+    <ClCompile Include="src\Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\imgui\ImGui.vcxproj">

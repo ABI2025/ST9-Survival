@@ -240,6 +240,14 @@ void EnemyManager::add_enemy()
 	m_enemys.back()->m_id = 0;
 }
 
+void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority)
+{
+	m_enemys.push_back(std::make_shared<Enemy>());
+	m_enemys.back()->m_priority = priority;
+	m_enemys.back()->m_pos = pos;
+	m_enemys.back()->m_id = 0;
+}
+
 void EnemyManager::draw(sf::RenderTarget& i_window) const
 {
 	glm::vec3 prev_pos(-1);

@@ -6,16 +6,16 @@
 class EnemyManager;
 
 
-//enum towerKind
-//{
-//	tower_1,
-//	tower_2,
-//	tower_3,
-//	tower_4,
-//	tower_5,
-//	tower_6,
-//	tower_7
-//};
+enum towerKind
+{
+	tower_1,
+	tower_2,
+	tower_3,
+	tower_4,
+	tower_5,
+	tower_6,
+	tower_7
+};
 
 
 
@@ -45,14 +45,16 @@ class Tower
 	int m_ressourcen;
 	//double m_hp;
 	double m_damage;
-	float angle{};
-	glm::vec3 prev_bullet_dir{ 1,0,0 };
-	float cooldown = 0.8f;
-	float condt{ 0.8f };
+	float m_angle{};
+	glm::vec3 m_prev_bullet_dir{ 1,0,0 };
+	float m_cooldown = 0.8f;
+	float m_condt{ 0.8f };
 	sf::Sprite sprites[2];
 	sf::Transform t;
 public:
 	Tower(glm::vec3);
+	Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health);
+	Tower(glm::vec3 i_pos,towerKind tower_kind);
 	~Tower() override;
 	void drawtower(sf::RenderTarget&) const;
 	void fire(const EnemyManager& em, float deltatime);
