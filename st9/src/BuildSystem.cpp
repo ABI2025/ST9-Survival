@@ -39,13 +39,21 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_sprites.resize(8);
 
 	m_sprites[0].setTexture(m_textures[0]);
-
+	m_sprites[0].setColor(sf::Color::Transparent);
+	
 	m_sprites[1].setTexture(m_textures[1]);
 	m_sprites[2].setTexture(m_textures[1]);
 	m_sprites[3].setTexture(m_textures[1]);
 	m_sprites[4].setTexture(m_textures[1]);
 	m_sprites[5].setTexture(m_textures[1]);
 	m_sprites[6].setTexture(m_textures[1]);
+
+	m_sprites[1].setColor(sf::Color::Magenta);
+	m_sprites[2].setColor(sf::Color::Yellow);
+	m_sprites[3].setColor(sf::Color::White);
+	m_sprites[4].setColor(sf::Color::Red);
+	m_sprites[5].setColor(sf::Color::Blue);
+	m_sprites[6].setColor(sf::Color::Black);
 
 	m_sprites[7].setTexture(m_textures[2]);
 }
@@ -68,7 +76,7 @@ Utils::Cell BuildSystem::display()
 	{
 		std::string button_id = "test" + std::to_string(current_button_id);
 		ImGui::PushID(current_button_id);
-		if (ImGui::ImageButton(button_id.c_str(), m_sprites[current_button_id], { 135.0f,135.0f }))
+		if (ImGui::ImageButton(button_id.c_str(), m_sprites[current_button_id], { 135.0f,135.0f },m_sprites[current_button_id].getColor()))
 		{
 
 			//LOG_INFO("it works ig");
@@ -203,6 +211,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				entities.push_back(towers.back());
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = towers.back();
 			}
+			//platzierung einer Mauer
 			else if (m_selected == Utils::Cell::WALL &&
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::WALL)
 			{

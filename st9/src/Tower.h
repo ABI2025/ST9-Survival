@@ -3,6 +3,7 @@
 #include "entities/entity/Entity.h"
 #include "glm/glm.hpp"
 
+class Sounds;
 class EnemyManager;
 
 
@@ -57,7 +58,7 @@ public:
 	Tower(glm::vec3 i_pos,towerKind tower_kind);
 	~Tower() override;
 	void drawtower(sf::RenderTarget&) const;
-	void fire(const EnemyManager& em, float deltatime);
+	void fire(const EnemyManager& em,Sounds& sounds ,float deltatime);
 	//glm::vec3 get_pos()const { return m_pos; }
 	//warten auf hinzufügen von projectile klasse
 

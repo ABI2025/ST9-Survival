@@ -127,7 +127,7 @@ void Player::update(const float deltatime)
 		m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][0]);
 	}
 	m_sprite.setPosition(m_pos.x, m_pos.y);
-
+	sf::Listener::setPosition(m_pos.x /135.0f, m_pos.y / 135.0f, 0.f);
 
 
 
@@ -144,7 +144,7 @@ void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos)
 	condt += deltatime;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && condt >= cooldown)
 	{
-		i_sounds.add_sound("player", 2);
+		i_sounds.add_sound("player", 2,m_pos);
 		//LOG_INFO("{} {}", sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
 		glm::vec3 bullet_dir = normalize(mouse_pos - m_pos);
 		//LOG_INFO("Bullet dir: {} {} {}", bullet_dir.x, bullet_dir.y, bullet_dir.z);

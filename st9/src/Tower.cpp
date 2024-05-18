@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "imgui.h"
+#include "Sounds.h"
 #include "entities/EnemyManager.h"
 
 #ifndef M_PI
@@ -86,7 +87,7 @@ void Tower::drawtower(sf::RenderTarget& window) const
 	window.draw(sprites[0]);
 }
 
-void Tower::fire(const EnemyManager& em, const float deltatime)
+void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 {
 	m_condt += deltatime;
 	if (m_condt >= m_cooldown)
@@ -116,6 +117,8 @@ void Tower::fire(const EnemyManager& em, const float deltatime)
 				new Projectile({ position_for_bullet_to_spawn ,0.0f },
 					m_prev_bullet_dir * 5.0f, 180, m_damage, 5);
 			}
+			//const glm::vec3 player_pos = Utils::Pathfinding::get_instance()->get_player_pos();
+			//sound.add_sound("player", 2, m_pos);
 			sprites[0].setRotation(m_angle);
 			m_condt = 0.0f;
 		}

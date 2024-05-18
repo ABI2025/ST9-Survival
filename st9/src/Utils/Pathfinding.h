@@ -69,6 +69,11 @@ namespace Utils
 		[[nodiscard]] const std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
 
 
+		[[nodiscard]] glm::vec3 get_player_pos() const
+		{
+			return m_player->m_pos;
+		}
+
 		/*
 
 		 start ist der anfang (position vom gegner / entity)
@@ -88,7 +93,7 @@ namespace Utils
 		//private methods
 	private:
 		[[nodiscard]] std::vector<glm::vec3>	make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
-		void						dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
+		void									dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
 		[[nodiscard]] std::vector<glm::vec3>	bresenham(const glm::vec3& dest, const glm::vec3& start) const;
 		[[nodiscard]] std::vector<cell*>		get_neighbors(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
 		[[nodiscard]] double					get_dist(cell*, const cell*) const;

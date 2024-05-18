@@ -377,9 +377,9 @@ void Game::run_game(int)
 
 			// ReSharper disable once CppUseRangeAlgorithm
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
-				[&ma, &deltatime](std::shared_ptr<Tower>& tower)
+				[this,&ma, &deltatime](const std::shared_ptr<Tower>& tower)
 				{
-					tower->fire(*ma, deltatime);
+					tower->fire(*ma,m_sounds ,deltatime);
 				});
 
 
