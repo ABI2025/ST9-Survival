@@ -10,7 +10,7 @@ bool init_sfml_imgui(sf::RenderWindow& window);
 
 class GuiElement
 {
-	
+
 };
 
 

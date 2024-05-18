@@ -1,6 +1,8 @@
 // ReSharper disable CppTooWideScopeInitStatement
 #include "EnemyManager.h"
 #include <execution>
+
+#include "Game.h"
 #include "Utils/Utils.h"
 
 constexpr float CellHeight = 135.0f;
@@ -38,7 +40,7 @@ EnemyManager::EnemyManager()
 
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
-	enemys_per_cell = std::vector( map[0].size(),
+	enemys_per_cell = std::vector(map[0].size(),
 		std::vector(map[0][0].size(), 0));
 }
 
@@ -51,19 +53,47 @@ void EnemyManager::update(float deltatime)
 			i = 0;
 		}
 	}
-
-	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime](std::shared_ptr<Enemy>& e)
-	{
+	auto& tower = Game::get_game()->getEntityMap();
+	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime, &tower](std::shared_ptr<Enemy>& e)
+		{
 			{
 				if (e == nullptr)
 					return;
-				if (e->m_health <= 0)
+				if (e->m_health <= 0 || e->currently_dying)
 				{
 					e->die();
-					e.reset();
+					if (e->can_be_removed)
+					{
+						e.reset();
+					}
 					return;
 				}
 			}
+
+			if (!should_update())
+			{
+				const glm::ivec3 temp = e->m_pos;
+				const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
+				if (Utils::Pathfinding::get_instance()->is_valid(cell_pos))
+				{
+					if (tower[0][cell_pos.y][cell_pos.x] != nullptr)
+					{
+						e->m_sprite.setTexture(this->m_textures[0]);
+
+						e->attack();
+
+						enemys_per_cell[cell_pos.y][cell_pos.x]++;
+
+						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+						e->m_pos = temp;
+						e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
+						return;
+					}
+
+				}
+			}
+
+
 			if (e->m_movements.empty() == true || should_update())
 			{
 				e->m_movements = Utils::Pathfinding::get_instance()->find_path
@@ -72,27 +102,42 @@ void EnemyManager::update(float deltatime)
 				);
 				e->prev_size = e->m_movements.size();
 			}
+
 			e->m_sprite.setTexture(this->m_textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
+
 			for (int i = 0; i < 300 * deltatime; i++)
 			{
 				if (e->m_movements.empty() == false)
 				{
-					const glm::vec3 temp = e->m_movements.back();
+					const glm::ivec3 temp = e->m_movements.back();
 					/*temp.x *= 135;
 					temp.y *= 135;*/
+					const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
+					if (Utils::Pathfinding::get_instance()->is_valid(cell_pos) && tower[0][cell_pos.y][cell_pos.x] != nullptr)
+					{
+
+						enemys_per_cell[cell_pos.y][cell_pos.x]++;
+						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+						e->attack();
+						return;
+					}
+
+
 					e->m_pos = temp;
 					e->m_sprite.setPosition(temp.x, temp.y);
 					e->m_movements.pop_back();
+
 				}
 			}
 			const glm::ivec3 temp_pos = round(e->m_pos / CellSize);
-			if(Utils::Pathfinding::get_instance()->is_valid(temp_pos))
+
+			if (Utils::Pathfinding::get_instance()->is_valid(temp_pos))
 			{
 				enemys_per_cell[temp_pos.y][temp_pos.x]++;
 			}
-			e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 
-	}
+			e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+		}
 	);
 
 	for (auto it = m_enemys.begin(); it != m_enemys.end();)
@@ -107,12 +152,27 @@ void EnemyManager::update(float deltatime)
 		}
 	}
 
+
+
+	for (int i = 0; i < enemys_per_cell.size(); ++i)
+	{
+		for (int j = 0; j < enemys_per_cell[i].size(); ++j)
+		{
+			if (tower[0][i][j] != nullptr && enemys_per_cell[i][j] > 0)
+			{
+				tower[0][i][j]->take_damage(enemys_per_cell[i][j] * 0.1);
+			}
+		}
+	}
+
+
+
 	constexpr float epsilon = 1e-6f;
 
 	auto comp = [](const std::shared_ptr<Enemy>& e1, const std::shared_ptr<Enemy>& e2)
-	{
-		return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
-	};
+		{
+			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
+		};
 
 	std::ranges::sort(m_enemys, comp);
 
@@ -120,10 +180,10 @@ void EnemyManager::update(float deltatime)
 
 glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_position) const
 {
-	glm::vec2 nearest (-1);
-	glm::ivec2 nearest_cell_position (-1);
+	glm::vec2 nearest(-1);
+	glm::ivec2 nearest_cell_position(-1);
 
-	const glm::ivec2 tower_cell_position = round(tower_position / 135.0f) ;
+	const glm::ivec2 tower_cell_position = round(tower_position / 135.0f);
 
 	const int check_size_x = static_cast<int>(radius);
 	const int check_size_y = static_cast<int>(radius);
@@ -137,20 +197,33 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 			{
 				const glm::ivec2 distance_new_point_to_tower = (glm::ivec2{ x,y } - tower_cell_position);
 				const glm::ivec2 distance_nearest_to_tower = (nearest_cell_position - tower_cell_position);
-
-				const int manhatten_distance_new_point_to_tower = abs(distance_new_point_to_tower.x + distance_new_point_to_tower.y);
-				const int manhatten_distance_nearest_to_tower = abs(distance_nearest_to_tower.x + distance_nearest_to_tower.y);
-				//LOG_INFO("manhatten_distance_new_point_to_tower {}", manhatten_distance_new_point_to_tower);
-				//LOG_INFO("manhatten_distance_nearest_to_tower {}", manhatten_distance_nearest_to_tower);
-				//LOG_INFO("x: {} y: {}", x,y);
-
-				if((manhatten_distance_new_point_to_tower < manhatten_distance_nearest_to_tower
-					|| nearest == glm::vec2{-1.0f,-1.0f})
-					&& manhatten_distance_new_point_to_tower < radius)
+#ifndef euclid
+				const int manhatten_distance_new_point_to_tower = abs(distance_new_point_to_tower.x) + abs(distance_new_point_to_tower.y);
+				const int manhatten_distance_nearest_to_tower = abs(distance_nearest_to_tower.x) + abs(distance_nearest_to_tower.y);
+				if ((manhatten_distance_new_point_to_tower < manhatten_distance_nearest_to_tower
+					|| nearest == glm::vec2{ -1.0f,-1.0f })
+					&& manhatten_distance_new_point_to_tower <= radius)
 				{
 					nearest = { x * CellWidth,y * CellHeight };
 					nearest_cell_position = { x,y };
 				}
+#else
+				const int euclidean_distance_new_point_to_tower = sqrt(pow(distance_new_point_to_tower.x, 2) + pow(distance_new_point_to_tower.y, 2));
+				const int euclidean_distance_nearest_to_tower = sqrt(pow(distance_nearest_to_tower.x, 2) + pow(distance_nearest_to_tower.y, 2));
+				if ((euclidean_distance_new_point_to_tower < euclidean_distance_nearest_to_tower
+					|| nearest == glm::vec2{ -1.0f,-1.0f })
+					&& euclidean_distance_new_point_to_tower <= radius)
+				{
+					nearest = { x * CellWidth,y * CellHeight };
+					nearest_cell_position = { x,y };
+				}
+#endif
+
+				//LOG_INFO("manhatten_distance_new_point_to_tower {}", manhatten_distance_new_point_to_tower);
+				//LOG_INFO("manhatten_distance_nearest_to_tower {}", manhatten_distance_nearest_to_tower);
+				//LOG_INFO("x: {} y: {}", x,y);
+
+
 			}
 		}
 	}
@@ -172,7 +245,7 @@ void EnemyManager::draw(sf::RenderTarget& i_window) const
 	glm::vec3 prev_pos(-1);
 	for (const auto& m : m_enemys)
 	{
-		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f))
+		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f) || m->currently_dying)
 		{
 			i_window.draw(*m);
 		}
@@ -245,7 +318,7 @@ int EnemyManager::naive_enemy_killer() {
 	}
 
 	// Clean up projectiles
-	for (Projectile* projectile : to_remove_projectiles) 
+	for (Projectile* projectile : to_remove_projectiles)
 	{
 		Projectile::remove_projectile(projectile);
 	}

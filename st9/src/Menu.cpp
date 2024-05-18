@@ -2,6 +2,8 @@
 #include "Utils/Utils.h"
 #include "Game.h"
 #include "Gui.h"
+#include "imgui-SFML.h"
+#include "imgui.h"
 #include "../Resources/Images/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
 #include "SFML/Opengl.hpp"
@@ -32,17 +34,19 @@ void Menu::show_menu()
 {
 	Game::erstelle_game(m_window);
 	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.wav")) {LOG_ERROR("fuck");}
+	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.wav")) { LOG_ERROR("fuck"); }
 	sf::Sound sound;
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);
 	m_window.setFramerateLimit(60);
+	sf::Clock deltaClock;
 	while (m_window.isOpen())
 	{
 
 		sf::Event event{};
-		while (m_window.pollEvent(event)) 
+		while (m_window.pollEvent(event))
 		{
+			ImGui::SFML::ProcessEvent(m_window, event);
 			switch (event.type)
 			{
 			case sf::Event::KeyPressed:
@@ -51,20 +55,22 @@ void Menu::show_menu()
 				break;
 
 			case sf::Event::Closed:
-					m_window.close();
+				m_window.close();
 				break;
 			default:
-					break;
+				break;
 			}
 
 		}
+		ImGui::SFML::Update(m_window, deltaClock.restart());
+		ImGui::ShowDemoWindow();
 
 		sf::FloatRect mouse = { sf::Vector2f(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))), {1, 1} };
 
 		int button_index = -1;
-		for (int i = 0; i < NUM_BUTTONS; ++i) 
+		for (int i = 0; i < NUM_BUTTONS; ++i)
 		{
-			if (m_buttons[i].first.intersects(mouse)) 
+			if (m_buttons[i].first.intersects(mouse))
 			{
 				button_index = i;
 				if (!m_buttons[i].second)
@@ -78,15 +84,20 @@ void Menu::show_menu()
 				m_buttons[i].second = false;
 		}
 
-		if (button_index != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+		if (button_index != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			switch (button_index)
 			{
 			case 0: // Start-Button
+
+				m_window.clear();//damit falls hier eine imgui sachen passiert w‰re nichts crasht
+				ImGui::SFML::Render(m_window);
+				m_window.display();
+
 				Game::get_game()->run_game(0);
 				break;
 			case 1: // Optionen
-				
+
 				break;
 			case 2: // Schlieﬂen
 				m_window.close();
@@ -100,7 +111,7 @@ void Menu::show_menu()
 		m_window.clear();
 
 		// Zeichne sichtbare Buttons und Labels
-		for (const auto& [rect, pressed] : m_buttons) 
+		for (const auto& [rect, pressed] : m_buttons)
 		{
 			sf::RectangleShape button_shape(sf::Vector2f(rect.width, rect.height));
 			button_shape.setPosition(rect.left, rect.top);
@@ -108,14 +119,14 @@ void Menu::show_menu()
 			m_window.draw(button_shape);
 		}
 		draw_button_labels(NUM_BUTTONS);
-
+		ImGui::SFML::Render(m_window);
 		m_window.display();
 	}
 }
 
 void Menu::draw_button_labels(const int numButtons)
 {
-	for (int i = 0; i < numButtons; i++) 
+	for (int i = 0; i < numButtons; i++)
 	{
 		sf::Text button_text;
 		button_text.setFont(m_font); // Stelle sicher, dass die Schriftart geladen ist

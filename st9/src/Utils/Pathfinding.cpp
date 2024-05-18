@@ -209,9 +209,9 @@ namespace Utils {
 
 		// Vergleichsfunktion fuer Zellen, um sie absteigend nach Distanz zu sortieren
 		auto comp = [](const cell* c1, const cell* c2)->bool
-		{
-			return (c1->dist) > (c2->dist);
-		};
+			{
+				return (c1->dist) > (c2->dist);
+			};
 
 		// Haupt-Dijkstra-Algorithmus
 		while (!cells.empty())
@@ -256,7 +256,7 @@ namespace Utils {
 			int y2 = temp_dest.y;
 
 			// Ueberpruefen und ggf. vertauschen der Start- und Zielkoordinaten
-			if (x1 > x2) 
+			if (x1 > x2)
 			{
 				swapped = true;
 				std::swap(x1, x2);
@@ -271,12 +271,12 @@ namespace Utils {
 			int err = dx - dy;// Fehlerterm fuer die Bresenham-Berechnung
 
 			// Bresenham-Algorithmus zur Generierung der Linie
-			while (true) 
+			while (true)
 			{
 
 				route.emplace_back(x1, y1, 0.0f); // Aktuellen Punkt zur Route hinzufuegen
 
-				if (x1 == x2 && y1 == y2) 
+				if (x1 == x2 && y1 == y2)
 				{
 					break;// Ziel erreicht, Schleife beenden
 				}
@@ -290,7 +290,7 @@ namespace Utils {
 					x1 += sx;
 				}
 
-				if (err2 < dx) 
+				if (err2 < dx)
 				{
 					err += dx;
 					y1 += sy;
@@ -319,7 +319,7 @@ namespace Utils {
 
 	}
 
-	void Pathfinding::calculate_paths(std::vector<Tower>& towers)
+	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers)
 	{
 		//priority player
 		{
@@ -335,9 +335,9 @@ namespace Utils {
 		//priority nothing
 		{
 			std::vector<glm::ivec3> start_points;
-			for(auto tower : towers)
+			for (const auto tower : towers)
 			{
-				start_points.push_back(tower.get_pos()/135.0f);
+				start_points.emplace_back(tower->get_pos() / 135.0f);
 			}
 			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
@@ -346,9 +346,9 @@ namespace Utils {
 		//priority tower
 		{
 			std::vector<glm::ivec3> start_points;
-			for (auto tower : towers)
+			for (const auto tower : towers)
 			{
-				start_points.push_back(tower.get_pos() / 135.0f);
+				start_points.emplace_back(tower->get_pos() / 135.0f);
 			}
 			if (start_points.empty() == true)
 			{
@@ -391,8 +391,7 @@ namespace Utils {
 		case Cell::STAIR:
 			return 1;
 
-		case Cell::TURRET: // fallthrough
-		case Cell::DEFENSE:
+		case Cell::TURRET:
 			return 5;
 
 		case Cell::WALL:

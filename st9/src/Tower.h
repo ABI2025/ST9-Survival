@@ -31,7 +31,7 @@ public:
 	}
 	static TowerTexture* get_instance()
 	{
-		if(!s_instance)
+		if (!s_instance)
 		{
 			s_instance = new TowerTexture;
 		}
@@ -43,20 +43,20 @@ class Tower
 	: public Entity
 {
 	int m_ressourcen;
-	double m_hp;
+	//double m_hp;
 	double m_damage;
 	float angle{};
-	glm::ivec3 m_pos;
+	glm::vec3 prev_bullet_dir{ 1,0,0 };
 	float cooldown = 0.8f;
-	float condt{0.8f};
+	float condt{ 0.8f };
 	sf::Sprite sprites[2];
 	sf::Transform t;
 public:
 	Tower(glm::vec3);
-	~Tower();
+	~Tower() override;
 	void drawtower(sf::RenderTarget&) const;
 	void fire(const EnemyManager& em, float deltatime);
-	glm::vec3 get_pos()const { return m_pos; }
+	//glm::vec3 get_pos()const { return m_pos; }
 	//warten auf hinzufügen von projectile klasse
 
 

@@ -13,7 +13,6 @@ namespace Utils
 	{
 		NOTHING = 0,
 		TURRET,
-		DEFENSE,
 		WALL,
 		STAIR,
 
@@ -39,13 +38,13 @@ namespace Utils
 
 	}
 
-	inline bool vec3_almost_equal(const glm::vec3& vec1, const glm::vec3& vec2, float maxDifference = 1.0f) { 
+	inline bool vec3_almost_equal(const glm::vec3& vec1, const glm::vec3& vec2, float maxDifference = 1.0f) {
 		const float xDiff = std::fabs(vec1.x - vec2.x);
 		const float yDiff = std::fabs(vec1.y - vec2.y);
 		return (xDiff <= maxDifference) && (yDiff <= maxDifference);
 	}
 
-	template<typename T,glm::qualifier P> sf::Vector2<T> convert_to_sf_vec2(glm::vec<2,T,P> vec)
+	template<typename T, glm::qualifier P> sf::Vector2<T> convert_to_sf_vec2(glm::vec<2, T, P> vec)
 	{
 		return { vec.x,vec.y };
 	}

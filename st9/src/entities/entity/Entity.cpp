@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "Utils/Log.h"
+
 Entity::Entity() {
 	//std::ifstream file("Stats.txt");
 	//std::string line;
@@ -59,4 +61,14 @@ glm::vec3 Entity::get_hit_box() const
 void Entity::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
+}
+
+void Entity::take_damage(const double damage)
+{
+	m_health -= damage;
+}
+
+double Entity::get_hp() const
+{
+	return m_health;
 }

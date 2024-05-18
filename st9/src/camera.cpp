@@ -37,13 +37,13 @@ Player* Camera::get_player()
 void Camera::move_cam_to_player()
 {
 	m_view.setCenter(m_player->get_pos().x + 50, m_player->get_pos().y + 50);
-	m_view.setSize({static_cast<float>(m_render_target->getSize().x),static_cast<float>(m_render_target->getSize().y)});
+	m_view.setSize({ static_cast<float>(m_render_target->getSize().x),static_cast<float>(m_render_target->getSize().y) });
 	m_render_target->setView(m_view);
 }
 
 void Camera::move_to_default()
 {
-	m_view.setCenter(static_cast<float>(m_render_target->getSize().x)/2, static_cast<float>(m_render_target->getSize().y)/2);
+	m_view.setCenter(static_cast<float>(m_render_target->getSize().x) / 2, static_cast<float>(m_render_target->getSize().y) / 2);
 	m_view.setSize({ static_cast<float>(m_render_target->getSize().x),static_cast<float>(m_render_target->getSize().y) });
 	m_render_target->setView(m_view);
 }
@@ -56,7 +56,7 @@ void Camera::set_window_size(const int x, const int y)
 
 void Camera::move_to_pos(const int x, const int y)
 {
-	m_view.setCenter(static_cast<float>(x),static_cast<float>(y));
+	m_view.setCenter(static_cast<float>(x), static_cast<float>(y));
 	m_view.setSize({ static_cast<float>(m_render_target->getSize().x),static_cast<float>(m_render_target->getSize().y) });
 	m_render_target->setView(m_view);
 }
