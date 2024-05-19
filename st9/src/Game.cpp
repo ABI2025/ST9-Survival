@@ -13,7 +13,7 @@
 #include "MainBuilding.h"
 #include "BuildSystem.h"
 #include "imgui_internal.h"
-#include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
+#include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier // doch jetzt ist es eine kern funktion
 #include "Sounds.h"
 #include "Tower.h"
 
@@ -45,11 +45,11 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 {
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
-	m_geld = 5000000;
+	m_geld = 1000;
 	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); } // lade background tiles texturen
 
 	m_background_sprites.resize(4);
 
@@ -64,7 +64,12 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 	if (!m_building_textures[0].loadFromFile("Resources/images/1111.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_building_textures[1].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_building_textures[2].loadFromFile("Resources/images/buttom.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } // Lade building texturen
+
+
+	m_ui_textures.resize(1);
+
+	if (!m_ui_textures[0].loadFromFile("Resources/images/Alternative_für_Währung.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } //lade V-Buck Texture
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 	m_EntityMap = std::vector(1, std::vector(height, std::vector<std::shared_ptr<Entity>>(width)));
@@ -91,7 +96,7 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
 				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH, static_cast<float>(j) * BACKGROUND_HEIGHT);
 				render_target.draw(m_background_sprites[m_tiles[i][j][0]]);
 				
-				if(glm::vec2(i,j) != glm::vec2{20,10} && glm::vec2(i,j) != glm::vec2(20,10) && m_EntityMap[0][j][i])
+				if(glm::vec2(i,j) != glm::vec2{20,10} && glm::vec2(i,j) != glm::vec2(20,11) && m_EntityMap[0][j][i])
 					render_target.draw(*m_EntityMap[0][j][i]);
 			}
 		}
@@ -474,6 +479,10 @@ void Game::run_game(int)
 			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
 			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("geld %f", m_geld);
+			ImGui::SameLine();
+			sf::Sprite temp_drawable(m_ui_textures[0]);
+			temp_drawable.setScale(0.1, 0.1);
+			ImGui::Image(temp_drawable);
 			if (ImGui::Button("should do docking"))
 			{
 				should_do_dockspace = !should_do_dockspace;
@@ -522,7 +531,6 @@ void Game::run_game(int)
 				Projectile::draw_all_projectiles(texture);
 				hb.draw_healthbar(texture, *p);
 				texture.display();
-
 				ImGui::Begin("Viewport");
 				ImGui::Image(texture);
 				ImGui::End();
@@ -577,9 +585,9 @@ void Game::run_game(int)
 
 }
 
-void Game::add_geld(double m_geld)
+void Game::add_geld(double i_geld)
 {
-	(*this).m_geld += m_geld; // schönster code des 21 jahunderts
+	this->m_geld += i_geld;
 }
 
 void Game::erstelle_game(sf::RenderWindow& i_window)
