@@ -45,7 +45,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 {
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
-	m_geld = 500;
+	m_geld = 5000000;
 	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
@@ -199,6 +199,12 @@ void Game::run_game(int)
 	bool paused = false;
 	bool should_do_dockspace = true;
 	bool player_alive = true;
+	p->set_pos(mb->get_pos());
+	EnemyManager::set_updated_tower(true);
+	EnemyManager::set_player_moving(true);
+	pa->calculate_paths(towers, mb);
+
+
 	while (m_window.isOpen() && m_open)
 	{
 

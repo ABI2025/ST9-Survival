@@ -10,7 +10,7 @@
 #define M_PI 3.14159265358979323846f
 #endif
 
-constexpr glm::vec2 tower_sprite_center{ 69,55 }; //danke simon für unsymmetrische texturen
+constexpr glm::vec2 tower_sprite_center{ 135.f/2,135.f / 2 }; //danke simon für unsymmetrische texturen
 
 
 Tower::Tower(const glm::vec3 i_pos)
@@ -134,7 +134,7 @@ void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 				m_prev_bullet_dir = bullet_dir;
 				//winkel von dem Schuss berechnen damit der Turm richtig Rotiert ist
 				m_angle = std::atan2(bullet_dir.y, bullet_dir.x) * 180.0f / M_PI;
-				m_angle -= 90;
+				m_angle += 90;
 
 				new Projectile({ position_for_bullet_to_spawn,0.0f },
 					bullet_dir * 5.0f, 180, m_damage, 5);
