@@ -180,7 +180,7 @@ void Game::run_game(int)
 		m_map[0][static_cast<int>(cell_pos.y) + 1][static_cast<int>(cell_pos.x)] = Utils::Cell::TURRET;
 	}
 	healthbar hb{};
-	BuildSystem buildsystem;
+	BuildSystem* buildsystem = BuildSystem::get_instance();
 
 
 	m_tiles = erstelle_map();
@@ -293,7 +293,7 @@ void Game::run_game(int)
 		else
 			m_sounds.play_all();
 
-		Utils::Cell temp_cell = buildsystem.display();
+		Utils::Cell temp_cell = buildsystem->display();
 
 		if (should_do_dockspace)
 		{
@@ -361,7 +361,7 @@ void Game::run_game(int)
 
 
 
-			buildsystem(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos);
+			(*buildsystem)(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos);
 
 			if (should_do_dockspace) {
 				ImGui::PopItemWidth();
@@ -435,8 +435,8 @@ void Game::run_game(int)
 
 		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
-			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
-			//ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
+			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
+			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("geld %f", m_geld);
 			if (ImGui::Button("should do docking"))
 			{
@@ -519,6 +519,8 @@ void Game::run_game(int)
 	texture_camera.move_to_default();
 	Utils::Pathfinding::Delete();
 	pa = nullptr;
+	BuildSystem::delete_instance();
+	buildsystem = nullptr;
 
 	for (int i = 0; i < m_map.size(); i++)
 	{

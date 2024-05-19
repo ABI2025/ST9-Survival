@@ -57,7 +57,8 @@ Tower::Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health
 	m_damage = i_damage;
 }
 
-Tower::Tower(glm::vec3 i_pos, towerKind tower_kind)
+
+Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 {
 	m_pos = i_pos;
 	sprites[0].setTexture(TowerTexture::get_instance()->textures[0]);
@@ -71,11 +72,38 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind)
 	sprites[0].setPosition
 	(m_pos.x + tower_sprite_center.x,
 		m_pos.y + tower_sprite_center.y);
+	m_ressourcen = ressourcen;
 
+	switch (tower_kind)
+	{
+	case tower_1:
+		m_health = 200;
+		m_damage = 0.1;
+		break;
+	case tower_2:
+		m_health = 300;
+		m_damage = 0.1;
+		break;
+	case tower_3:
+		m_health = 400;
+		m_damage = 0.1;
+		break;
+	case tower_4:
+		m_health = 500;
+		m_damage = 0.1;
+		break;
+	case tower_5:
+		m_health = 600;
+		m_damage = 0.1;
+		break;
+	case tower_6:
+		m_health = 700;
+		m_damage = 0.1;
+		break;
+	default:
+		break;
+	}
 
-	m_ressourcen = 0;
-	m_health = 200;
-	m_damage = 0.1;
 }
 
 Tower::~Tower()

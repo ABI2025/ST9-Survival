@@ -15,9 +15,23 @@ class BuildSystem
 	Utils::Cell m_selected;
 	std::map<int, double> m_costs;
 	int m_id{ -1 };
-public:
+
+	inline static BuildSystem* s_instance;
 
 	BuildSystem();
+public:
+
+	static BuildSystem* get_instance()
+	{
+		if (!s_instance)
+			s_instance = new BuildSystem;
+		return s_instance;
+	}
+	static void delete_instance()
+	{
+		delete s_instance;
+		s_instance = nullptr;
+	}
 
 	Utils::Cell display();
 

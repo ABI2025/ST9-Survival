@@ -14,8 +14,7 @@ enum towerKind
 	tower_3,
 	tower_4,
 	tower_5,
-	tower_6,
-	tower_7
+	tower_6
 };
 
 
@@ -55,7 +54,7 @@ class Tower
 public:
 	Tower(glm::vec3);
 	Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health);
-	Tower(glm::vec3 i_pos,towerKind tower_kind);
+	Tower(glm::vec3 i_pos,towerKind tower_kind, int ressourcen);
 	~Tower() override;
 	void drawtower(sf::RenderTarget&) const;
 	void fire(const EnemyManager& em,Sounds& sounds ,float deltatime);
