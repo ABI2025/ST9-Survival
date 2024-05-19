@@ -40,8 +40,7 @@ Sounds::Sounds()
 }
 
 Sounds::~Sounds()
-{
-}
+= default;
 
 void Sounds::load_buffer(const std::string& location, bool priority, const std::string& group)
 {
@@ -250,7 +249,6 @@ void Sounds::cleanup()
 	{
 		for (auto& [sounds, priority] : all_sounds)
 		{
-
 			if (!priority)
 			{
 				for (auto it = sounds.begin(); it != sounds.end();)
@@ -275,11 +273,11 @@ void Sounds::pause_all(bool priority_ignorieren)
 {
 	for (auto& all_sounds : m_sounds | std::views::values)
 	{
-		for (auto& [sounds, priority] : all_sounds)
+		for (auto& [sounds/* std::deque<sf::Sound>& */, priority/* bool& */] : all_sounds)
 		{
 			if (!priority || priority_ignorieren)
 			{
-				for (auto& sound : sounds)
+				for (sf::Sound& sound : sounds)
 				{
 					if (sound.getStatus() != sf::SoundSource::Stopped)
 					{
@@ -295,9 +293,9 @@ void Sounds::play_all()
 {
 	for (auto& all_sounds : m_sounds | std::views::values)
 	{
-		for (auto& sounds : all_sounds | std::views::keys)
+		for (std::deque<sf::Sound>& sounds : all_sounds | std::views::keys)
 		{
-			for (auto& sound : sounds)
+			for (sf::Sound& sound : sounds)
 			{
 				if (sound.getStatus() != sf::SoundSource::Playing && sound.getStatus() != sf::SoundSource::Stopped)
 				{
@@ -318,10 +316,12 @@ void Sounds::clear_all()
 void Sounds::set_volume(float volume, int id)
 {
 	// Sicherstellen, dass die Lautstärke im gültigen Bereich [0.0, 100.0] liegt
-	if (volume < 0.0f || volume > 100.0f) return;
+	if (volume < 0.0f || volume > 100.0f) 
+		return;
 
 	// Überprüfen, ob die ID in der Zuordnung existiert
-	if (!m_mapping.contains(id)) return;
+	if (!m_mapping.contains(id)) 
+		return;
 
 	// Hole die Gruppen-ID-Zeichenkette aus der Zuordnung
 	const std::string& group_id_string = m_mapping[id];
@@ -332,7 +332,7 @@ void Sounds::set_volume(float volume, int id)
 	if (id == -1)
 	{
 		// Lautstärke für alle Soundgruppen aktualisieren
-		for (const auto& group_name : m_mapping | std::views::values)
+		for (const std::string& group_name : m_mapping | std::views::values)
 		{
 			// Überspringen, wenn die Gruppe keine Sounds hat
 			if (!m_sounds.contains(group_name)) continue;
@@ -342,7 +342,7 @@ void Sounds::set_volume(float volume, int id)
 			const float end_lautstärke = normalisierte_lautstärke * gruppen_lautstärke * 100.0f;
 
 			// Aktualisiere die Lautstärke für jeden Sound in der Gruppe
-			for (auto& sounds : m_sounds[group_name] | std::views::keys)
+			for (std::deque<sf::Sound>& sounds : m_sounds[group_name] | std::views::keys)
 			{
 				for (sf::Sound& sound : sounds)
 				{
@@ -361,7 +361,7 @@ void Sounds::set_volume(float volume, int id)
 			const float end_lautstärke = globale_lautstärke * normalisierte_lautstärke * 100.0f;
 
 			// Aktualisiere die Lautstärke für jeden Sound in der spezifischen Gruppe
-			for (auto& sounds : m_sounds[group_id_string] | std::views::keys)
+			for (std::deque<sf::Sound>& sounds : m_sounds[group_id_string] | std::views::keys)
 			{
 				for (sf::Sound& sound : sounds)
 				{

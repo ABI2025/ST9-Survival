@@ -4,7 +4,7 @@
 class Wall : public Entity
 {
 public:
-	Wall(glm::vec3 i_pos)
+	explicit Wall(glm::vec3 i_pos)
 	{
 		m_pos = i_pos;
 		m_health = 500;

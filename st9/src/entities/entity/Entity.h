@@ -15,7 +15,7 @@ protected:
 	sf::Sprite m_sprite;
 	//std::vector<std::vector<std::vector<sf::Texture>>> m_textures;
 	//Utils::Priority m_priority; //für die gegner klasse
-	glm::vec3 m_hitbox; // buttom right
+	glm::vec3 m_hitbox{0}; // buttom right
 	double m_health;
 	friend class Utils::Pathfinding;
 	friend class EnemyManager;

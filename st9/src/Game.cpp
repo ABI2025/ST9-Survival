@@ -282,6 +282,7 @@ void Game::run_game(int)
 				p->take_damage(-1);
 
 				hb.regeneration(1);
+
 			}
 		}
 
@@ -519,13 +520,14 @@ void Game::run_game(int)
 	Utils::Pathfinding::Delete();
 	pa = nullptr;
 
-	for (auto& i : m_map)
+	for (int i = 0; i < m_map.size(); i++)
 	{
-		for (auto& j : i)
+		for (int j = 0; j < m_map[i].size();j++)
 		{
-			for (auto& k : j)
+			for (int k = 0; k < m_map[i][j].size();k++)
 			{
-				k = Utils::Cell::NOTHING;
+				m_map[i][j][k] = Utils::Cell::NOTHING;
+				m_EntityMap[i][j][k].reset();
 			}
 		}
 	}
