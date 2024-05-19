@@ -17,19 +17,19 @@ void Wave::spawn_wave(EnemyManager* ma,float dt)
 			{
 			case 0://oben
 				ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), 0, 0),
-					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)), m_enemy_type);
 				break;
 			case 1://links
 				ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
-					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)), m_enemy_type);
 				break;
 			case 2://unten
 				ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), (height - 1) * BACKGROUND_HEIGHT, 0),
-					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)), m_enemy_type);
 				break;
 			case 3://rechts
 				ma->add_enemy(glm::vec3((width - 1) * BACKGROUND_WIDTH, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
-					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)), m_enemy_type);
 				break;
 			default:
 				break;
