@@ -22,7 +22,7 @@ class Sounds
 	float m_condt = 0.0f;
 
 	void change_music();
-
+	int current_playing_sounds = 0;
 public:
 	Sounds();
 	~Sounds();

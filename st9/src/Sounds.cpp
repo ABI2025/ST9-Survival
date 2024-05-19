@@ -76,6 +76,8 @@ void Sounds::add_group(const std::string& group)
 
 void Sounds::add_sound(int group_id, int id)
 {
+	if (current_playing_sounds >= 256)
+		return;
 	// Check if the group ID is valid and mapped
 	if (!m_mapping.contains(group_id))
 		return;
@@ -108,12 +110,15 @@ void Sounds::add_sound(int group_id, int id)
 		current_sound.play();
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
 		current_sound.setRelativeToListener(true);
+		current_playing_sounds++;
 
 	}
 }
 
 void Sounds::add_sound(const std::string& group_id, const int id)
 {
+	if (current_playing_sounds >= 256)
+		return;
 	// Check if the group is "music" because music is handeld specially
 	if (group_id == "music")
 		return;
@@ -139,12 +144,14 @@ void Sounds::add_sound(const std::string& group_id, const int id)
 		current_sound.play();
 		current_sound.setVolume(allgemeiner_volume * group_volume * 100);
 		current_sound.setRelativeToListener(true);
-
+		current_playing_sounds++;
 	}
 }
 
 void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 {
+	if (current_playing_sounds >= 256)
+		return;
 	// Check if the group ID is valid and mapped
 	if (!m_mapping.contains(group_id))
 		return;
@@ -180,11 +187,14 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 		current_sound.setRelativeToListener(false);
 		current_sound.setMinDistance(5.f);
 		current_sound.setAttenuation(1.f);
+		current_playing_sounds++;
 	}
 }
 
 void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 {
+	if (current_playing_sounds >= 256)
+		return;
 	// Check if the group is "music" because music is handeld specially
 	if (group_id == "music")
 		return;
@@ -214,6 +224,7 @@ void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 		current_sound.setRelativeToListener(false);
 		current_sound.setMinDistance(5.f);
 		current_sound.setAttenuation(1.f);
+		current_playing_sounds++;
 	}
 }
 
@@ -232,9 +243,10 @@ void Sounds::music(float deltatime)
 
 			m_sounds["music"][0].first.back().setBuffer(m_buffers["music"][0]);
 			m_sounds["music"][0].first.back().play();
-		
 
 			m_current_music = 0;
+
+			current_playing_sounds++;
 
 		}
 		if(m_sounds["music"][0].first.back().getStatus() == sf::SoundSource::Stopped)
@@ -256,6 +268,7 @@ void Sounds::cleanup()
 					if (it->getStatus() == sf::SoundSource::Stopped)
 					{
 						it = sounds.erase(it);
+						current_playing_sounds--;
 					}
 					else
 					{
@@ -310,6 +323,7 @@ void Sounds::clear_all()
 {
 	m_sounds.clear();
 	m_buffers.clear();
+	current_playing_sounds = 0;
 }
 
 

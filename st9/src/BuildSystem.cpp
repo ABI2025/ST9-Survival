@@ -25,24 +25,33 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_costs.insert({5,600});
 	//prophesionallen coding
 
-	m_texture_textures.resize(2);
-	m_texture_sprites.resize(2);
+	m_texture_textures.resize(3);
+	m_texture_sprites.resize(3);
 
 	m_texture_textures[0].loadFromFile("resources/images/top.png");
 	m_texture_textures[1].loadFromFile("resources/images/buttom.png");
 	m_texture_sprites[0].setTexture(m_texture_textures[0]);
 	m_texture_sprites[1].setTexture(m_texture_textures[1]);
-	m_texture.create(135, 135);
-	m_texture.clear(sf::Color::Transparent);
-	m_texture.draw(m_texture_sprites[1]);
-	m_texture.draw(m_texture_sprites[0]);
-	m_texture.display();
+	m_texture[0].create(135, 135);
+	m_texture[0].clear(sf::Color::Transparent);
+	m_texture[0].draw(m_texture_sprites[1]);
+	m_texture[0].draw(m_texture_sprites[0]);
+	m_texture[0].display();
 
-	m_textures.resize(3);
+	m_texture_textures[2].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
+	m_texture_sprites[2].setTexture(m_texture_textures[2]);
+	m_texture[1].create(135, 135);
+	m_texture[1].clear(sf::Color::Transparent);
+	m_texture[1].draw(m_texture_sprites[1]);
+	m_texture[1].draw(m_texture_sprites[2]);
+	m_texture[1].display();
+
+	m_textures.resize(4);
 
 	m_textures[0].loadFromFile("resources/images/none.png");
-	m_textures[1] = m_texture.getTexture();
-	m_textures[2].loadFromFile("resources/images/1111.png");
+	m_textures[1] =m_texture[0].getTexture();
+	m_textures[2] =m_texture[1].getTexture();
+	m_textures[3].loadFromFile("resources/images/1111.png");
 
 	m_sprites.resize(8);
 
@@ -50,7 +59,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_sprites[0].setColor(sf::Color::Transparent);
 	
 	m_sprites[1].setTexture(m_textures[1]);
-	m_sprites[2].setTexture(m_textures[1]);
+	m_sprites[2].setTexture(m_textures[2]);
 	m_sprites[3].setTexture(m_textures[1]);
 	m_sprites[4].setTexture(m_textures[1]);
 	m_sprites[5].setTexture(m_textures[1]);
@@ -63,7 +72,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_sprites[5].setColor(sf::Color::Blue);
 	m_sprites[6].setColor(sf::Color::Black);
 
-	m_sprites[7].setTexture(m_textures[2]);
+	m_sprites[7].setTexture(m_textures[3]);
 }
 
 Utils::Cell BuildSystem::display()
