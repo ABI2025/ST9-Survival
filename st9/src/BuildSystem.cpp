@@ -219,16 +219,17 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 			map[0][cell_mouse_pos.y][cell_mouse_pos.x] != m_selected)
 		{
 			// Platzierung eines Turms
-			LOG_INFO("m_ID: {}", m_id);
 			if (m_selected == Utils::Cell::TURRET &&
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::TURRET &&
 				(Game::get_game()->m_geld >= m_costs.at(m_id)))
 			{
-				(*Game::get_game()).add_geld(-m_costs.at(m_id));
+				Game::get_game()->add_geld(-m_costs.at(m_id));
 				std::shared_ptr<Tower> tower = std::make_shared<Tower>(cell_mouse_pos * 135,static_cast<towerKind>(m_id),static_cast<int>(m_costs.at(m_id)));
 				towers.emplace_back(tower);
 				entities.push_back(tower);
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = tower;
+
+				// Aktualisieren der Karte
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
 				EnemyManager::set_updated_tower(true);
 			}
@@ -240,10 +241,12 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				Game::get_game()->add_geld(-25);
 				entities.emplace_back(std::make_shared<Wall>(cell_mouse_pos * 135));
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = entities.back();
+
+				// Aktualisieren der Karte
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
 				EnemyManager::set_updated_tower(true);
 			}
-			// Aktualisieren der Karte
+			
 			
 		}
 	}

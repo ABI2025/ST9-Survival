@@ -23,11 +23,13 @@ class TowerTexture
 {
 	inline static TowerTexture* s_instance;
 public:
-	sf::Texture textures[2];
+	sf::Texture base;
+	sf::Texture tops[2];
 	TowerTexture()
 	{
-		textures[0].loadFromFile("resources/images/top.png");
-		textures[1].loadFromFile("resources/images/buttom.png");
+		base.loadFromFile("resources/images/buttom.png");
+		tops[0].loadFromFile("resources/images/top.png");
+		tops[1].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
 	}
 	static TowerTexture* get_instance()
 	{
@@ -44,6 +46,9 @@ class Tower
 {
 	int m_ressourcen;
 	//double m_hp;
+	float m_radius{6};
+	int m_penetration{5};
+	float m_speed{5};//i show speed
 	double m_damage;
 	float m_angle{};
 	glm::vec3 m_prev_bullet_dir{ 1,0,0 };

@@ -170,3 +170,12 @@ void Player::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 glm::ivec3 Player::get_movement_speed() const {
 	return speed;
 }
+
+void Player::take_damage(const double damage)
+{
+	m_health -= damage;
+	if (m_health < 0)
+		m_health = 0;
+	else if (m_health > 20)
+		m_health = 20;
+}

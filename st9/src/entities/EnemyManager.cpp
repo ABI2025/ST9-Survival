@@ -11,30 +11,6 @@ constexpr float CellSize = 135.0f;
 
 EnemyManager::EnemyManager()
 {
-	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[0]->m_id = 0;
-
-	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[1]->m_id = 0;
-	//m_enemys[1]->m_pos = {135,135,0};
-
-
-	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[2]->m_id = 0;
-	//m_enemys[2]->m_pos = { 135*3,135*3,0 };
-
-	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[3]->m_id = 0;
-
-	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[4]->m_id = 0;
-	//m_enemys[4]->m_pos = {135,135,0};
-
-
-	//m_enemys.push_back(std::make_shared<Enemy>());
-	//m_enemys[5]->m_id = 0;
-	//m_enemys[5]->m_pos = { 135*3,135*3,0 };
-
 	m_textures.resize(1);
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
 
@@ -219,12 +195,6 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 					nearest_cell_position = { x,y };
 				}
 #endif
-
-				//LOG_INFO("manhatten_distance_new_point_to_tower {}", manhatten_distance_new_point_to_tower);
-				//LOG_INFO("manhatten_distance_nearest_to_tower {}", manhatten_distance_nearest_to_tower);
-				//LOG_INFO("x: {} y: {}", x,y);
-
-
 			}
 		}
 	}
@@ -245,8 +215,6 @@ void EnemyManager::add_enemy()
 
 void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority)
 {
-	LOG_INFO("pos: x : {} y: {} z: {}", pos.x, pos.y, pos.z);
-	LOG_INFO("pos:x: {} y: {} z: {}", pos.x / 135.0f, pos.y / 135.0f, pos.z / 135.0f);
 	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
 	m_enemys.push_back(spawned_enemy);
 	spawned_enemy->m_priority = priority;

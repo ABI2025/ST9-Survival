@@ -69,8 +69,7 @@ void Entity::take_damage(const double damage)
 	m_health -= damage;
 	if (m_health < 0)
 		m_health = 0;
-	else if (m_health > 20)
-		m_health = 20;
+
 }
 
 double Entity::get_hp() const

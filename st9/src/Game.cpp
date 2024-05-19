@@ -148,7 +148,7 @@ void Game::run_game(int)
 	m_sounds.add_group("music");
 	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false, "player");
 	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false, "player");
-	m_sounds.load_buffer("resources/Sounds/schuss.ogg", false, "player");
+	m_sounds.load_buffer("resources/Sounds/hitmarker.ogg", false, "player");
 	m_sounds.load_buffer("resources/Sounds/record.wav", true, "music");
 	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
 
@@ -263,11 +263,28 @@ void Game::run_game(int)
 
 		if (!paused)
 		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)){
-				if (Utils::Random::UInt(0, 1))
-					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH),0,0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-				else 
-					ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
+				switch (const int dir =(signed)Utils::Random::UInt(0, 3))
+				{
+				case 0://oben
+					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), 0, 0),
+						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					break;
+				case 1://links
+					ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
+						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					break;
+				case 2://unten
+					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), (height-1)*BACKGROUND_HEIGHT, 0),
+						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					break;
+				case 3://rechts
+					ma->add_enemy(glm::vec3((width-1)*BACKGROUND_WIDTH, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
+						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					break;
+				default:
+						break;
+				}
 
 			}
 			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
@@ -347,7 +364,7 @@ void Game::run_game(int)
 			Projectile::update_all(deltatime);
 
 
-			
+
 			p->update(deltatime);
 
 			if (should_do_dockspace)
@@ -377,9 +394,9 @@ void Game::run_game(int)
 
 			// ReSharper disable once CppUseRangeAlgorithm
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
-				[this,&ma, &deltatime](const std::shared_ptr<Tower>& tower)
+				[this, &ma, &deltatime](const std::shared_ptr<Tower>& tower)
 				{
-					tower->fire(*ma,m_sounds ,deltatime);
+					tower->fire(*ma, m_sounds, deltatime);
 				});
 
 
@@ -411,7 +428,7 @@ void Game::run_game(int)
 
 			if (first_run == true || EnemyManager::should_update() == true)
 			{
-				pa->calculate_paths(towers,mb);
+				pa->calculate_paths(towers, mb);
 			}
 			ma->update(deltatime);
 
@@ -419,9 +436,9 @@ void Game::run_game(int)
 			m_sounds.music(deltatime);
 
 
-			if(!hb.alive())
+			if (!hb.alive())
 			{
-				
+
 			}
 			if (mb->get_hp() <= 0)
 			{
@@ -469,7 +486,7 @@ void Game::run_game(int)
 			//hier ist die render order
 			m_window.clear();//das momentane fenster wird gecleared
 
-	
+
 
 			if (should_do_dockspace) {
 				texture.clear();
@@ -482,7 +499,7 @@ void Game::run_game(int)
 				}
 				render_tower(texture);
 				ma->draw(texture);
-				if (p->get_hp() > 0) 
+				if (p->get_hp() > 0)
 				{
 					texture.draw(*p);
 				}
@@ -530,9 +547,9 @@ void Game::run_game(int)
 
 	for (int i = 0; i < m_map.size(); i++)
 	{
-		for (int j = 0; j < m_map[i].size();j++)
+		for (int j = 0; j < m_map[i].size(); j++)
 		{
-			for (int k = 0; k < m_map[i][j].size();k++)
+			for (int k = 0; k < m_map[i][j].size(); k++)
 			{
 				m_map[i][j][k] = Utils::Cell::NOTHING;
 				m_EntityMap[i][j][k].reset();

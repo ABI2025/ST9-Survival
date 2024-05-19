@@ -11,6 +11,8 @@ public:
 	void shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const;
 	glm::ivec3 get_movement_speed() const;
 
+	void take_damage(const double damage) override;
+
 protected:
 	std::vector<std::vector<std::vector<sf::Texture>>> m_textures;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
