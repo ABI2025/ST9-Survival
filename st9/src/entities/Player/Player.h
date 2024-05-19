@@ -8,7 +8,7 @@ class Player : public Entity
 public:
 	Player();
 	void update(float deltatime);
-	void shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos);
+	void shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const;
 	glm::ivec3 get_movement_speed() const;
 
 protected:

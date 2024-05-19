@@ -13,7 +13,8 @@ class Sounds
 {
 	std::unordered_map<int, std::string> m_mapping; // Mapped Gruppen ID zu Gruppen Nammen
 	std::unordered_map<std::string, float> m_volumes; // Speichert Lautstärken für jede Gruppe
-	std::unordered_map<std::string, std::vector<sf::SoundBuffer>> m_buffers; // Speichert Sound Buffers für jede ID die positiv ist in deren Gruppe
+	std::map<std::string, std::vector<sf::SoundBuffer>> m_buffers; // Speichert Sound Buffers für jede ID die positiv ist in deren Gruppe
+	//std::unordered_map<std::string, std::list<sf::SoundBuffer>> m_buffers; // Speichert Sound Buffers für jede ID die positiv ist in deren Gruppe
 	std::unordered_map<std::string, std::vector<std::pair<std::deque<sf::Sound>, bool>>> m_sounds; // Speicher Sounds pro ID mit Priorität Per Gruppe
 
 	int m_current_music = -1;

@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "MainBuilding.h"
 #include "Tower.h"
 #include "entities/Player/Player.h"
 
@@ -320,23 +321,42 @@ namespace Utils {
 
 	}
 
-	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers)
+	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers, const std::shared_ptr<MainBuilding>& main_building)
 	{
 		//priority player
-		if(EnemyManager::is_player_moving())
+		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0)
 		{
-			const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
-			dijkstra({ start }, m_player_cellmap);
+			if (m_player->get_hp() > 0) 
+			{
+				const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
+				dijkstra({ start }, m_player_cellmap);
+			}
+			else
+			{
+				std::vector<glm::ivec3> start_points;
+				for (const std::shared_ptr<Tower>& tower : towers)
+				{
+					start_points.emplace_back(tower->get_pos() / 135.0f);
+				}
+				start_points.emplace_back(main_building->get_pos() / 135.0f);
+				start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{ 0,1,0 });
+				if (start_points.empty() == true)
+				{
+					start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
+				}
+			}
 		}
 
 		//priority tower
 		if(EnemyManager::is_tower_updated() || towers.empty())
 		{
 			std::vector<glm::ivec3> start_points;
-			for (const auto tower : towers)
+			for (const std::shared_ptr<Tower>& tower : towers)
 			{
 				start_points.emplace_back(tower->get_pos() / 135.0f);
 			}
+			start_points.emplace_back(main_building->get_pos() / 135.0f);
+			start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{0,1,0});
 			if (start_points.empty() == true)
 			{
 				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
@@ -347,10 +367,13 @@ namespace Utils {
 		//priority nothing
 		{
 			std::vector<glm::ivec3> start_points;
-			for (const auto tower : towers)
+			for (const std::shared_ptr<Tower>& tower : towers)
 			{
 				start_points.emplace_back(tower->get_pos() / 135.0f);
 			}
+			start_points.emplace_back(main_building->get_pos() / 135.0f);
+			start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{ 0,1,0 });
+
 			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
 		}

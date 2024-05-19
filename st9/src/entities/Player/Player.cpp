@@ -40,6 +40,8 @@ Player::Player()
 	m_textures[1][1][1].loadFromFile("Resources/images/charakter_HR1.png");
 	m_textures[1][1][2].loadFromFile("Resources/images/charakter_HR2.png");
 	m_sprite.setTexture(m_textures[0][0][0]);
+
+	m_health = 20;
 }
 
 static int i = 0;
@@ -48,6 +50,9 @@ static int prevfront_back = 0;
 
 void Player::update(const float deltatime)
 {
+	if (m_health <= 0)
+		return;
+
 	float speed_scalar = 1.0f;
 	int left_right = -1;
 	int front_back = -1;
@@ -134,8 +139,11 @@ void Player::update(const float deltatime)
 }
 float condt = 0.0f;
 float cooldown = 0.25f;
-void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos)
+void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const
 {
+	if (m_health <= 0)
+		return;
+
 	ImGui::Begin("DEBUG WINDOW");
 	ImGui::SliderFloat("shoot cooldown", &cooldown, 0.0f, 1.0f);
 	ImGui::End();

@@ -2,19 +2,19 @@
 #include <SFML/Graphics.hpp>
 #include <glm/glm.hpp>
 
-class MainBuilding
+#include "Tower.h"
+#include "entities/entity/Entity.h"
+
+class MainBuilding: public Entity
 {
-	int m_hp;
 	float m_pos_x;
 	float m_pos_y;
-	sf::Sprite m_sprite;
 	sf::Texture m_texture;
 
 
 public:
 	MainBuilding();
-	void main_sprite(sf::RenderTarget&) const;
-
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };
 

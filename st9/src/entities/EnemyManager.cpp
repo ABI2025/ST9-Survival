@@ -124,7 +124,7 @@ void EnemyManager::update(float deltatime)
 
 
 					e->m_pos = temp;
-					e->m_sprite.setPosition(temp.x, temp.y);
+					e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
 					e->m_movements.pop_back();
 
 				}

@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <SFML/Graphics.hpp>
 
+class Sounds;
+
 namespace Utils {
 	class Pathfinding;
 }
@@ -26,7 +28,6 @@ public:
 	glm::vec3 get_hit_box() const;
 	void take_damage(double damage);
 	double get_hp() const;
-
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

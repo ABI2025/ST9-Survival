@@ -5,10 +5,10 @@
 
 void Sounds::change_music()
 {
-	const int m_sounds_size = static_cast<signed>(m_sounds["music"].size()) - 1;
+	const int m_sounds_size = static_cast<signed>(m_buffers["music"].size()) - 1;
 	if(m_sounds_size == 0)
 	{
-		m_sounds["music"][m_current_music].first.back().play();
+		m_sounds["music"][0].first.back().play();
 	}
 	else
 	{
@@ -24,7 +24,9 @@ void Sounds::change_music()
 		LOG_INFO("m_sounds_size {}", m_sounds_size);
 		LOG_INFO("new current_music {}", new_current_music);
 #endif
-		m_sounds["music"][new_current_music].first.back().play();
+		sf::Sound& current_sound = m_sounds["music"][0].first.back();
+		current_sound.setBuffer(m_buffers["music"][new_current_music]);
+		current_sound.play();
 		m_current_music = new_current_music;
 	}
 }
@@ -45,23 +47,18 @@ void Sounds::load_buffer(const std::string& location, bool priority, const std::
 {
 	sf::SoundBuffer temp_buffer;
 	temp_buffer.loadFromFile(location);
+	//m_buffers[group].insert({ static_cast<signed int>(m_sounds.size()), temp_buffer });
 	m_buffers[group].emplace_back(temp_buffer);
+
 	std::deque<sf::Sound> temp_deque;
 
 	if (group == "music") 
 	{
-		auto& current_sounds = m_sounds[group].emplace_back(temp_deque, true).first;
-
-		const float group_volume = m_volumes["music"];
-		const float allgemeiner_volume = m_volumes[m_mapping[-1]];
-		const float volume_sound = group_volume * allgemeiner_volume * 100.f;
-
-		current_sounds.emplace_back();
-		sf::Sound& current_sound = current_sounds.back();
-
-		current_sound.pause();
-		current_sound.setVolume(volume_sound);
-		current_sound.setRelativeToListener(true);
+		if(m_sounds["music"].empty())
+		{
+			std::deque<sf::Sound>& sounds = m_sounds["music"].emplace_back(temp_deque, true).first;
+			sounds.emplace_back();
+		}
 	}
 	else
 		m_sounds[group].emplace_back(temp_deque, priority);
@@ -73,7 +70,7 @@ void Sounds::add_group(const std::string& group)
 {
 	m_buffers.insert({ group, {} });
 	m_sounds.insert({ group, {} });
-	m_mapping[m_sounds.size() - 1] = group;
+	m_mapping[static_cast<signed>(m_sounds.size()) - 1] = group;
 	m_volumes.insert({ group ,1.0f });
 
 }
@@ -85,6 +82,10 @@ void Sounds::add_sound(int group_id, int id)
 		return;
 
 	const std::string& group_id_string = m_mapping[group_id];
+
+	// Check if the group is "music" because music is handeld specially
+	if (group_id_string == "music")
+		return;
 
 	// Check if the group has associated sounds and buffers
 	if (!m_sounds.contains(group_id_string) || !m_buffers.contains(group_id_string))
@@ -114,6 +115,9 @@ void Sounds::add_sound(int group_id, int id)
 
 void Sounds::add_sound(const std::string& group_id, const int id)
 {
+	// Check if the group is "music" because music is handeld specially
+	if (group_id == "music")
+		return;
 	// Check if the group has associated sounds and buffers
 	if (!m_sounds.contains(group_id) || !m_buffers.contains(group_id))
 		return;
@@ -148,6 +152,10 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 
 	const std::string& group_id_string = m_mapping[group_id];
 
+	// Check if the group is "music" because music is handeld specially
+	if (group_id_string == "music")
+		return;
+
 	// Check if the group has associated sounds and buffers
 	if (!m_sounds.contains(group_id_string) || !m_buffers.contains(group_id_string))
 		return;
@@ -178,6 +186,9 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 
 void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 {
+	// Check if the group is "music" because music is handeld specially
+	if (group_id == "music")
+		return;
 
 	// Check if the group has associated sounds and buffers
 	if (!m_sounds.contains(group_id) || !m_buffers.contains(group_id))
@@ -219,16 +230,15 @@ void Sounds::music(float deltatime)
 		{
 			//add_sound("music", 0);
 
-			for(int i = 0; i < m_buffers.size();++i)
-			{
-				m_sounds["music"][i].first.back().setBuffer(m_buffers["music"][i]);
-			}
+
+			m_sounds["music"][0].first.back().setBuffer(m_buffers["music"][0]);
+			m_sounds["music"][0].first.back().play();
+		
 
 			m_current_music = 0;
-			m_sounds["music"][m_current_music].first.back().play();
 
 		}
-		if(m_sounds["music"][m_current_music].first.back().getStatus() == sf::SoundSource::Stopped)
+		if(m_sounds["music"][0].first.back().getStatus() == sf::SoundSource::Stopped)
 			change_music();
 		m_condt = 0;
 	}

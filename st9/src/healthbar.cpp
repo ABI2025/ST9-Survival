@@ -22,11 +22,13 @@ bool healthbar::alive() const
 }
 bool healthbar::damage_input(const int damage)
 {
-	m_health -= damage;
 	if (m_health <= 0)
 	{
 		return false;
 	}
+
+	m_health -= damage;
+	
 	return true;
 }
 void healthbar::draw_healthbar(sf::RenderTarget& target, Player& p) const

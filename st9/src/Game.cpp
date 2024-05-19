@@ -148,9 +148,9 @@ void Game::run_game(int)
 	m_sounds.add_group("music");
 	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false, "player");
 	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false, "player");
-	m_sounds.load_buffer("resources/Sounds/Hitmarker.wav", false, "player");
-	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
+	m_sounds.load_buffer("resources/Sounds/schuss.ogg", false, "player");
 	m_sounds.load_buffer("resources/Sounds/record.wav", true, "music");
+	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
 
 	m_sounds.set_volume(50, -1);
 	m_sounds.set_volume(50, 0);
@@ -171,7 +171,14 @@ void Game::run_game(int)
 	bool left_click = false;
 
 	EnemyManager* ma = EnemyManager::get_instance();
-	MainBuilding mb;
+	std::shared_ptr<MainBuilding> mb = std::make_shared<MainBuilding>();
+	{
+		const glm::vec2 cell_pos = mb->get_pos() / 135.0f;
+		m_EntityMap[0][static_cast<int>(cell_pos.y)][static_cast<int>(cell_pos.x)] = mb;
+		m_EntityMap[0][static_cast<int>(cell_pos.y) + 1][static_cast<int>(cell_pos.x)] = mb;
+		m_map[0][static_cast<int>(cell_pos.y)][static_cast<int>(cell_pos.x)] = Utils::Cell::TURRET;
+		m_map[0][static_cast<int>(cell_pos.y) + 1][static_cast<int>(cell_pos.x)] = Utils::Cell::TURRET;
+	}
 	healthbar hb{};
 	BuildSystem buildsystem;
 
@@ -191,7 +198,7 @@ void Game::run_game(int)
 	float lautstarke[3] = { 50.0f,50.0f,50.0f };
 	bool paused = false;
 	bool should_do_dockspace = true;
-	bool lautstaerke_UwU{ false };
+	bool player_alive = true;
 	while (m_window.isOpen() && m_open)
 	{
 
@@ -260,11 +267,15 @@ void Game::run_game(int)
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L)) //Depression.exe 
 			{
 				m_sounds.add_sound("player", 1);
+				p->take_damage(1);
+
 				hb.damage_input(1);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
 			{
 				m_sounds.add_sound("player", 0);
+				p->take_damage(-1);
+
 				hb.regeneration(1);
 			}
 		}
@@ -276,38 +287,13 @@ void Game::run_game(int)
 		else
 			m_sounds.play_all();
 
-		Utils::Cell tem_cell = buildsystem.display();
+		Utils::Cell temp_cell = buildsystem.display();
 
 		if (should_do_dockspace)
 		{
-
-			//if (ImGui::BeginMainMenuBar())
-			//{
-			//	if (ImGui::BeginMenu("File"))
-			//	{
-			//		if (ImGui::BeginMenu("Sounds bitte UwU"))
-			//		{
-
-			//			ImGui::EndMenu();
-			//		}
-			//		ImGui::EndMenu();
-			//	}
-			//	if (ImGui::BeginMenu("Edit"))
-			//	{
-			//		if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-			//		if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-			//		ImGui::Separator();
-			//		if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-			//		if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-			//		if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-			//		ImGui::EndMenu();
-			//	}
-			//	ImGui::EndMainMenuBar();
-			//}
 			ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
 
 			ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-
 
 			if (ImGui::BeginMenuBar())
 			{
@@ -337,7 +323,7 @@ void Game::run_game(int)
 
 			ImVec2 content_size = ImGui::GetContentRegionAvail();
 
-			texture.create(content_size.x, content_size.y);
+			texture.create(static_cast<uint32_t>(content_size.x), static_cast<uint32_t>(content_size.y));
 			texture_camera.set_RenderTarget(&texture);
 		}
 		window_camera.move_cam_to_player();
@@ -349,7 +335,7 @@ void Game::run_game(int)
 			Projectile::update_all(deltatime);
 
 
-
+			
 			p->update(deltatime);
 
 			if (should_do_dockspace)
@@ -413,7 +399,7 @@ void Game::run_game(int)
 
 			if (first_run == true || EnemyManager::should_update() == true)
 			{
-				pa->calculate_paths(towers);
+				pa->calculate_paths(towers,mb);
 			}
 			ma->update(deltatime);
 
@@ -421,8 +407,11 @@ void Game::run_game(int)
 			m_sounds.music(deltatime);
 
 
-
-			if (!hb.alive())
+			if(!hb.alive())
+			{
+				
+			}
+			if (mb->get_hp() <= 0)
 			{
 				m_open = false;
 			}
@@ -472,7 +461,7 @@ void Game::run_game(int)
 			if (should_do_dockspace) {
 				texture.clear();
 				render_map(p->get_pos(), texture); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
-				mb.main_sprite(texture);
+				texture.draw(*mb);
 				for (auto& tower : towers)
 				{
 					//texture.draw(*tower);
@@ -480,7 +469,10 @@ void Game::run_game(int)
 				}
 				render_tower(texture);
 				ma->draw(texture);
-				texture.draw(*p);
+				if (p->get_hp() > 0) 
+				{
+					texture.draw(*p);
+				}
 				Projectile::draw_all_projectiles(texture);
 				hb.draw_healthbar(texture, *p);
 				texture.display();
@@ -492,7 +484,7 @@ void Game::run_game(int)
 			else
 			{
 				render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
-				mb.main_sprite(m_window);
+				m_window.draw(*mb);
 				for (auto& tower : towers)
 				{
 					//texture.draw(*tower);
@@ -515,6 +507,7 @@ void Game::run_game(int)
 	m_sounds.clear_all();
 	m_tiles.clear();
 	m_open = true;
+	EnemyManager::delete_instance();
 	window_camera.move_to_default();
 	texture_camera.move_to_default();
 	Utils::Pathfinding::Delete();
