@@ -317,54 +317,111 @@ void Sounds::clear_all()
 
 void Sounds::set_volume(float volume, int id)
 {
-	// Ensure the volume is within the valid range [0.0, 100.0]
+	// Sicherstellen, dass die Lautstärke im gültigen Bereich [0.0, 100.0] liegt
 	if (volume < 0.0f || volume > 100.0f) return;
 
-	// Check if the ID exists in the mapping
+	// Überprüfen, ob die ID in der Zuordnung existiert
 	if (!m_mapping.contains(id)) return;
 
-	// Get the group ID string from the mapping
+	// Hole die Gruppen-ID-Zeichenkette aus der Zuordnung
 	const std::string& group_id_string = m_mapping[id];
-	const float normalized_volume = volume / 100.0f;
-	m_volumes[group_id_string] = normalized_volume;
+	const float normalisierte_lautstärke = volume / 100.0f;
+	m_volumes[group_id_string] = normalisierte_lautstärke;
 
-	// If the ID is -1, update the global volume and apply it to all sounds
+	// Wenn die ID -1 ist, aktualisiere die globale Lautstärke und wende sie auf alle Sounds an
 	if (id == -1)
 	{
-		// Update volume for all sound groups
+		// Lautstärke für alle Soundgruppen aktualisieren
 		for (const auto& group_name : m_mapping | std::views::values)
 		{
-			// Skip if the group name does not have sounds
+			// Überspringen, wenn die Gruppe keine Sounds hat
 			if (!m_sounds.contains(group_name)) continue;
 
-			// Update the volume for each sound in the group
+			// Berechne die Lautstärke
+			const float gruppen_lautstärke = m_volumes[group_name];
+			const float end_lautstärke = normalisierte_lautstärke * gruppen_lautstärke * 100.0f;
+
+			// Aktualisiere die Lautstärke für jeden Sound in der Gruppe
 			for (auto& sounds : m_sounds[group_name] | std::views::keys)
 			{
 				for (sf::Sound& sound : sounds)
 				{
-					sound.setVolume(normalized_volume * m_volumes[group_name] * 100.0f);
+					sound.setVolume(end_lautstärke);
 				}
 			}
 		}
 	}
 	else
 	{
-		// Update the volume for the specific sound group
+		// Aktualisiere die Lautstärke für die spezifische Soundgruppe
 		if (m_volumes.contains(group_id_string))
 		{
-			const float global_volume = m_volumes[m_mapping[-1]];
+			// Berechne die Lautstärke
+			const float globale_lautstärke = m_volumes[m_mapping[-1]];
+			const float end_lautstärke = globale_lautstärke * normalisierte_lautstärke * 100.0f;
 
-			// Update the volume for each sound in the specific group
+			// Aktualisiere die Lautstärke für jeden Sound in der spezifischen Gruppe
 			for (auto& sounds : m_sounds[group_id_string] | std::views::keys)
 			{
 				for (sf::Sound& sound : sounds)
 				{
-					sound.setVolume(global_volume * normalized_volume * 100.0f);
+					sound.setVolume(end_lautstärke);
 				}
 			}
 		}
 	}
 }
+
+//void Sounds::set_volume(float volume, int id)
+//{
+//	// Ensure the volume is within the valid range [0.0, 100.0]
+//	if (volume < 0.0f || volume > 100.0f) return;
+//
+//	// Check if the ID exists in the mapping
+//	if (!m_mapping.contains(id)) return;
+//
+//	// Get the group ID string from the mapping
+//	const std::string& group_id_string = m_mapping[id];
+//	const float normalized_volume = volume / 100.0f;
+//	m_volumes[group_id_string] = normalized_volume;
+//
+//	// If the ID is -1, update the global volume and apply it to all sounds
+//	if (id == -1)
+//	{
+//		// Update volume for all sound groups
+//		for (const auto& group_name : m_mapping | std::views::values)
+//		{
+//			// Skip if the group name does not have sounds
+//			if (!m_sounds.contains(group_name)) continue;
+//
+//			// Update the volume for each sound in the group
+//			for (auto& sounds : m_sounds[group_name] | std::views::keys)
+//			{
+//				for (sf::Sound& sound : sounds)
+//				{
+//					sound.setVolume(normalized_volume * m_volumes[group_name] * 100.0f);
+//				}
+//			}
+//		}
+//	}
+//	else
+//	{
+//		// Update the volume for the specific sound group
+//		if (m_volumes.contains(group_id_string))
+//		{
+//			const float global_volume = m_volumes[m_mapping[-1]];
+//
+//			// Update the volume for each sound in the specific group
+//			for (auto& sounds : m_sounds[group_id_string] | std::views::keys)
+//			{
+//				for (sf::Sound& sound : sounds)
+//				{
+//					sound.setVolume(global_volume * normalized_volume * 100.0f);
+//				}
+//			}
+//		}
+//	}
+//}
 
 
 
@@ -402,7 +459,6 @@ void Sounds::set_volume(float volume, int id)
 //						sound.setVolume(allgemeiner_volume * m_volumes[group_id_string] * 100);
 //					}
 //				}
-//
 //			}
 //		}
 //	}
