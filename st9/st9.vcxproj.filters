@@ -98,7 +98,4 @@
     <ClCompile Include="src\Wave.cpp" />
     <ClCompile Include="src\Optionen.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\Alternative_für_Währung.png" />
-  </ItemGroup>
 </Project>
