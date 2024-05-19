@@ -58,6 +58,7 @@
     <ClInclude Include="src\Sounds.h" />
     <ClInclude Include="src\Wall.h" />
     <ClInclude Include="src\Wave.h" />
+    <ClInclude Include="src\Optionen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BuildSystem.cpp" />
@@ -95,6 +96,7 @@
     <ClCompile Include="src\Sounds.cpp" />
     <ClCompile Include="src\Wall.cpp" />
     <ClCompile Include="src\Wave.cpp" />
+    <ClCompile Include="src\Optionen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\Alternative_für_Währung.png" />
