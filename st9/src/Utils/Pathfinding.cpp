@@ -324,9 +324,9 @@ namespace Utils {
 	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers, const std::shared_ptr<MainBuilding>& main_building)
 	{
 		//priority player
-		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0)
+ 		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0.0)
 		{
-			if (m_player->get_hp() > 0) 
+			if (m_player->get_hp() > 0.0) 
 			{
 				const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
 				dijkstra({ start }, m_player_cellmap);
@@ -340,10 +340,8 @@ namespace Utils {
 				}
 				start_points.emplace_back(main_building->get_pos() / 135.0f);
 				start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{ 0,1,0 });
-				if (start_points.empty() == true)
-				{
-					start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
-				}
+				dijkstra(start_points, m_nothing_cellmap);
+
 			}
 		}
 
@@ -357,7 +355,7 @@ namespace Utils {
 			}
 			start_points.emplace_back(main_building->get_pos() / 135.0f);
 			start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{0,1,0});
-			if (start_points.empty() == true)
+			if (start_points.empty() == true && m_player->get_hp() > 0)
 			{
 				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			}
@@ -373,8 +371,8 @@ namespace Utils {
 			}
 			start_points.emplace_back(main_building->get_pos() / 135.0f);
 			start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{ 0,1,0 });
-
-			start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
+			if(m_player->get_hp() > 0)
+				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
 		}
 
