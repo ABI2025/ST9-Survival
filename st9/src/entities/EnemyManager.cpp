@@ -163,6 +163,7 @@ void EnemyManager::update(float deltatime)
 			{
 				tower[0][i][j]->take_damage(enemys_per_cell[i][j] * 0.1);
 			}
+			
 		}
 	}
 
