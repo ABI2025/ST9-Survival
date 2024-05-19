@@ -165,6 +165,12 @@ void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 
 }
 
+void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(sprites[1],states);
+	target.draw(sprites[0],states);
+}
+
 
 
 
