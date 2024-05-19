@@ -96,7 +96,4 @@
     <ClCompile Include="src\Wall.cpp" />
     <ClCompile Include="src\Wave.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\1111mit rissen.png" />
-  </ItemGroup>
 </Project>
