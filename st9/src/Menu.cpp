@@ -7,6 +7,7 @@
 #include "../Resources/Images/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
 #include "SFML/Opengl.hpp"
+#include "Optionen.h"
 
 constexpr int NUM_BUTTONS = 3;
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
@@ -32,6 +33,7 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
 
 void Menu::show_menu()
 {
+	Optionen* opt = Optionen::get_instance();
 	Game::erstelle_game(m_window);
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("fuck"); }
@@ -87,6 +89,7 @@ void Menu::show_menu()
 
 		if (button_index != -1 && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
+			
 			switch (button_index)
 			{
 			case 0: // Start-Button
@@ -97,7 +100,12 @@ void Menu::show_menu()
 
 				Game::get_game()->run_game(0);
 				break;
-			case 1: // Optionen
+			case 1: 
+				m_window.clear();//damit falls hier eine imgui sachen passiert w‰re nichts crasht
+				ImGui::SFML::Render(m_window);
+				m_window.display();
+
+				opt->optionen_exe(m_window);
 
 				break;
 			case 2: // Schlieﬂen
