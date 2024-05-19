@@ -259,9 +259,9 @@ void Game::run_game(int)
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)){
 				if (Utils::Random::UInt(0, 1))
-					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH),0,0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH),0,0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
 				else 
-					ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT), 0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+					ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
 
 			}
 			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
