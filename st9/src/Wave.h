@@ -33,7 +33,8 @@ public:
 		
 	}
 	void spawn_wave(EnemyManager* ma,float dt);
-	bool was_spawned() { return spawned; }
+	bool was_spawned() const { return spawned; }
+	float get_cooldown_before_start() const{ return m_cooldown_before_start; }
 };
 
 
@@ -84,6 +85,14 @@ public:
 				LOG_INFO("done");
 				//current_wave = std::make_shared<Wave>(Wave{ Utils::Random::Float(100,200),Utils::Random::Float(10,20) });
 				done = true;
+			}
+			else
+			{
+				if(current_wave->get_cooldown_before_start() == 0.f)
+				{
+					spawnening(ma, 0);
+				}
+
 			}
 		}
 	}

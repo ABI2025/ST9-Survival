@@ -154,12 +154,6 @@ void Game::render_tower(sf::RenderTarget& render_target)
 }
 void Game::run_game(int)
 {
-
-
-	m_sounds.set_volume(0, -1);
-	m_sounds.set_volume(0, 0);
-	m_sounds.set_volume(0, 1);
-
 	m_sounds.music(0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Optionen* opt = Optionen::get_instance();
