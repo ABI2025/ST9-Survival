@@ -7,7 +7,7 @@ public:
 	explicit Wall(glm::vec3 i_pos)
 	{
 		m_pos = i_pos;
-		m_health = 500;
+		m_health = 2000;
 	}
 };
 
