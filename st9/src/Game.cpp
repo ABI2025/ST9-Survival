@@ -90,6 +90,9 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
 			{
 				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH, static_cast<float>(j) * BACKGROUND_HEIGHT);
 				render_target.draw(m_background_sprites[m_tiles[i][j][0]]);
+				
+				if(glm::vec2(i,j) != glm::vec2{20,10} && glm::vec2(i,j) != glm::vec2(20,10) && m_EntityMap[0][j][i])
+					render_target.draw(*m_EntityMap[0][j][i]);
 			}
 		}
 	}
@@ -185,9 +188,9 @@ void Game::run_game(int)
 
 	m_tiles = erstelle_map();
 
-	m_window.clear();
-	render_map(p->get_pos(), m_window);
-	m_window.display();
+	//m_window.clear();
+	//render_map(p->get_pos(), m_window);
+	//m_window.display();
 
 	Utils::Cell selected = Utils::Cell::NOTHING;
 
@@ -502,13 +505,16 @@ void Game::run_game(int)
 				texture.clear();
 				render_map(p->get_pos(), texture); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				texture.draw(*mb);
-				for (auto& tower : towers)
-				{
-					//texture.draw(*tower);
-					tower->drawtower(texture);
-				}
-				render_tower(texture);
+
+				//for (auto& tower : towers)
+				//{
+				//	texture.draw(*tower);
+				//	tower->drawtower(texture);
+				//}
+
+				//render_tower(texture);
 				ma->draw(texture);
+
 				if (p->get_hp() > 0)
 				{
 					texture.draw(*p);
@@ -525,11 +531,11 @@ void Game::run_game(int)
 			{
 				render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				m_window.draw(*mb);
-				for (auto& tower : towers)
-				{
-					//texture.draw(*tower);
-					tower->drawtower(m_window);
-				}
+				//for (auto& tower : towers)
+				//{
+				//	//texture.draw(*tower);
+				//	tower->drawtower(m_window);
+				//}
 				render_tower(m_window);
 				ma->draw(m_window);
 				m_window.draw(*p);
