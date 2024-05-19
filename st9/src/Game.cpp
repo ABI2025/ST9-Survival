@@ -45,7 +45,7 @@ Game::Game(sf::RenderWindow& window) :m_window(window)
 {
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
-
+	m_geld = 500;
 	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
 	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
@@ -152,9 +152,9 @@ void Game::run_game(int)
 	m_sounds.load_buffer("resources/Sounds/record.wav", true, "music");
 	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
 
-	m_sounds.set_volume(50, -1);
-	m_sounds.set_volume(50, 0);
-	m_sounds.set_volume(50, 1);
+	m_sounds.set_volume(0, -1);
+	m_sounds.set_volume(0, 0);
+	m_sounds.set_volume(0, 1);
 
 	m_sounds.music(0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
@@ -195,7 +195,7 @@ void Game::run_game(int)
 	std::vector<std::shared_ptr<Tower>> towers;
 
 	bool first_run = true;
-	float lautstarke[3] = { 50.0f,50.0f,50.0f };
+	float lautstarke[3] = { 10.0f,10.0f,10.0f };
 	bool paused = false;
 	bool should_do_dockspace = true;
 	bool player_alive = true;
@@ -257,8 +257,13 @@ void Game::run_game(int)
 
 		if (!paused)
 		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
-				ma->add_enemy();
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)){
+				if (Utils::Random::UInt(0, 1))
+					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH),0,0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+				else 
+					ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT), 0), static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+
+			}
 			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
 			//{
 			//	m_sounds.add_sound("player", 2);
@@ -429,8 +434,9 @@ void Game::run_game(int)
 
 		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
-			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
-			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
+			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
+			//ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
+			ImGui::TextWrapped("geld %f", m_geld);
 			if (ImGui::Button("should do docking"))
 			{
 				should_do_dockspace = !should_do_dockspace;
@@ -526,6 +532,11 @@ void Game::run_game(int)
 
 
 
+}
+
+void Game::add_geld(double m_geld)
+{
+	(*this).m_geld += m_geld; // schönster code des 21 jahunderts
 }
 
 void Game::erstelle_game(sf::RenderWindow& i_window)

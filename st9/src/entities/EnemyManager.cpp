@@ -64,6 +64,7 @@ void EnemyManager::update(float deltatime)
 					e->die();
 					if (e->can_be_removed)
 					{
+						Game::get_game()->add_geld(10); // müssten wir gebalanced gehabt haben, später
 						e.reset();
 					}
 					return;
@@ -234,20 +235,24 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 
 void EnemyManager::add_enemy()
 {
-	m_enemys.push_back(std::make_shared<Enemy>());
-	m_enemys.back()->m_priority = static_cast<Utils::Priority>(Utils::Random::UInt(0, 2));
-	LOG_TRACE("priority: {}", static_cast<int>(m_enemys.back()->m_priority));
-	m_enemys.back()->m_id = 0;
+	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
+	m_enemys.push_back(spawned_enemy);
+
+	spawned_enemy->m_priority = static_cast<Utils::Priority>(Utils::Random::UInt(0, 2));
+	LOG_TRACE("priority: {}", static_cast<int>(spawned_enemy->m_priority));
+	spawned_enemy->m_id = 0;
 }
 
 void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority)
 {
-	m_enemys.push_back(std::make_shared<Enemy>());
-	m_enemys.back()->m_priority = priority;
-	m_enemys.back()->m_pos = pos;
-	m_enemys.back()->m_id = 0;
+	LOG_INFO("pos: x : {} y: {} z: {}", pos.x, pos.y, pos.z);
+	LOG_INFO("pos:x: {} y: {} z: {}", pos.x / 135.0f, pos.y / 135.0f, pos.z / 135.0f);
+	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
+	m_enemys.push_back(spawned_enemy);
+	spawned_enemy->m_priority = priority;
+	spawned_enemy->m_pos = pos;
+	spawned_enemy->m_id = 0;
 }
-
 void EnemyManager::draw(sf::RenderTarget& i_window) const
 {
 	glm::vec3 prev_pos(-1);

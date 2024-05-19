@@ -13,6 +13,7 @@ class BuildSystem
 	std::vector<sf::Texture> m_textures;
 	std::vector<sf::Sprite> m_sprites;
 	Utils::Cell m_selected;
+	std::map<int, double> m_costs;
 	int m_id{ -1 };
 public:
 

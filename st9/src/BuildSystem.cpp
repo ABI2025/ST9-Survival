@@ -17,6 +17,14 @@ constexpr float CellSize = 135.0f;
 
 BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 {
+	m_costs.insert({0,100});
+	m_costs.insert({1,100});
+	m_costs.insert({2,100});
+	m_costs.insert({3,100});
+	m_costs.insert({4,100});
+	m_costs.insert({5,100});
+	//prophesionallen coding
+
 	m_texture_textures.resize(2);
 	m_texture_sprites.resize(2);
 
@@ -70,7 +78,7 @@ Utils::Cell BuildSystem::display()
 	ImGui::Begin("Build System");
 	const float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 	const ImGuiStyle& style = ImGui::GetStyle();
-
+	if(m_selected != Utils::Cell::TURRET)
 	m_id = -1;
 	for (uint32_t current_button_id = 0; current_button_id < m_sprites.size(); current_button_id++)
 	{
@@ -107,8 +115,9 @@ Utils::Cell BuildSystem::display()
 				break;
 			case 1:
 				ImGui::BeginTooltip();
-				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("Basic:");
 				ImGui::Text("200 leben");
+				ImGui::Text("100 geld");
 				ImGui::EndTooltip();
 				break;
 			case 2:
@@ -138,7 +147,7 @@ Utils::Cell BuildSystem::display()
 
 			case 6:
 				ImGui::BeginTooltip();
-				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("Bigus Chungus");
 				ImGui::Text("700 leben");
 				ImGui::EndTooltip();
 				break;
@@ -146,6 +155,7 @@ Utils::Cell BuildSystem::display()
 				ImGui::BeginTooltip();
 				ImGui::Text("Eine Wand mit:");
 				ImGui::Text("500 leben");
+				ImGui::Text("25  Geld");
 				ImGui::EndTooltip();
 				break;
 			default:
@@ -204,23 +214,31 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 			map[0][cell_mouse_pos.y][cell_mouse_pos.x] != m_selected)
 		{
 			// Platzierung eines Turms
+			LOG_INFO("m_ID: {}", m_id);
 			if (m_selected == Utils::Cell::TURRET &&
-				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::TURRET)
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::TURRET &&
+				(Game::get_game()->m_geld >= m_costs.at(m_id)))
 			{
+				(*Game::get_game()).add_geld(-m_costs.at(m_id));
 				towers.emplace_back(std::make_shared<Tower>(cell_mouse_pos * 135));
 				entities.push_back(towers.back());
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = towers.back();
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
+				EnemyManager::set_updated_tower(true);
 			}
 			//platzierung einer Mauer
 			else if (m_selected == Utils::Cell::WALL &&
-				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::WALL)
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::WALL &&
+				(Game::get_game()->m_geld >= 25))
 			{
+				Game::get_game()->add_geld(-25);
 				entities.emplace_back(std::make_shared<Wall>(cell_mouse_pos * 135));
 				Game::get_game()->getEntityMap()[0][cell_mouse_pos.y][cell_mouse_pos.x] = entities.back();
+				map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
+				EnemyManager::set_updated_tower(true);
 			}
 			// Aktualisieren der Karte
-			map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
-			EnemyManager::set_updated_tower(true);
+			
 		}
 	}
 

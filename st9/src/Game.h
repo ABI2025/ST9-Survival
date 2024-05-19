@@ -23,10 +23,11 @@ public:
 	void run_game(int);
 
 	Game(Game&) = delete;
+	void add_geld(double);
 private:
 	sf::RenderTexture texture;
-
-
+	double m_geld; // für den Kapitalismus (nicht kommunismus, sonst ist frau arend sauer
+	friend class BuildSystem;
 	inline static Game* s_game;
 	explicit Game(sf::RenderWindow&);
 	sf::RenderWindow& m_window;
@@ -37,6 +38,5 @@ private:
 	std::vector<sf::Texture> m_building_textures;
 	std::vector<std::vector<std::array<uint8_t, 2>>> m_tiles;
 	Sounds m_sounds;
-
 	bool m_open = true;
 };
