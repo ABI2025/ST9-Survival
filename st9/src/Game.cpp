@@ -20,7 +20,7 @@
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
 
-constexpr int height = 21;
+constexpr int height = 22;
 constexpr int width = 41;
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map()
@@ -386,6 +386,16 @@ void Game::run_game(int)
 
 			(*buildsystem)(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos,mb->get_pos());
 
+			std::ranges::sort(towers,
+			[&p](const std::shared_ptr<Tower>& tower1, const std::shared_ptr<Tower>& tower2)
+			{
+				const glm::ivec2 distance_player_tower1 = (p->get_pos() - tower1->get_pos());
+				const glm::ivec2 distance_player_tower2 = (p->get_pos() - tower2->get_pos());
+				const int manhattan_distance_player_to_tower1 = abs(distance_player_tower1.x) + abs(distance_player_tower1.y);
+				const int manhattan_distance_player_to_tower2 = abs(distance_player_tower2.x) + abs(distance_player_tower2.y);
+				return manhattan_distance_player_to_tower1 < manhattan_distance_player_to_tower2;
+			});
+
 			if (should_do_dockspace) {
 				ImGui::PopItemWidth();
 				ImGui::End();
@@ -394,10 +404,10 @@ void Game::run_game(int)
 
 			// ReSharper disable once CppUseRangeAlgorithm
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
-				[this, &ma, &deltatime](const std::shared_ptr<Tower>& tower)
-				{
-					tower->fire(*ma, m_sounds, deltatime);
-				});
+			[this, &ma, &deltatime](const std::shared_ptr<Tower>& tower)
+			{
+				tower->fire(*ma, m_sounds, deltatime);
+			});
 
 
 			for (auto it = towers.begin(); it != towers.end();)
