@@ -384,7 +384,7 @@ void Game::run_game(int)
 
 
 
-			(*buildsystem)(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos);
+			(*buildsystem)(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos,mb->get_pos());
 
 			if (should_do_dockspace) {
 				ImGui::PopItemWidth();

@@ -39,5 +39,8 @@ public:
 		std::vector<std::vector<std::vector<Utils::Cell>>>& map,
 		std::vector<std::shared_ptr<Entity>>& entities,
 		std::vector<std::shared_ptr<Tower>>& towers,
-		glm::vec3 mouse_pos) const;
+		glm::vec3 mouse_pos,
+		glm::vec3 mainbuilding_pos
+		
+		) const;
 };

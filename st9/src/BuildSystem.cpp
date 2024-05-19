@@ -191,7 +191,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 	std::vector<std::vector<std::vector<Utils::Cell>>>& map,
 	std::vector<std::shared_ptr<Entity>>& entities,
 	std::vector<std::shared_ptr<Tower>>& towers,
-	glm::vec3 mouse_pos
+	glm::vec3 mouse_pos,
+	glm::vec3 mainbuilding_pos
 	) const
 {
 
@@ -216,6 +217,12 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 
 	// Berechnung der Zellposition der Maus
 	const glm::ivec3 cell_mouse_pos = mouse_pos / CellSize;
+	const glm::ivec3 cell_mainbuilding_pos = mainbuilding_pos / 135.0f;
+	if((left_click || right_click) &&  (cell_mouse_pos == cell_mainbuilding_pos || cell_mouse_pos == cell_mainbuilding_pos + glm::ivec3{0,1,0}))
+	{
+		LOG_INFO("das mainbuilding ist wichtig ig");
+		return;
+	}
 
 	// Behandlung von Linksklicks
 	if (left_click && is_windows_focused)
