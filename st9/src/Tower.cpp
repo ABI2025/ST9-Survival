@@ -80,6 +80,7 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 		m_damage = 0.2;
 		m_cooldown = 0.15f;
 		m_penetration = 1;
+		m_speed = 8;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[1]);
 		break;
 	case tower_3:
