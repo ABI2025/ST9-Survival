@@ -154,6 +154,7 @@ void Game::render_tower(sf::RenderTarget& render_target)
 }
 void Game::run_game(int)
 {
+	m_geld = 1000;
 	m_sounds.music(0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
 	Optionen* opt = Optionen::get_instance();
@@ -471,7 +472,7 @@ void Game::run_game(int)
 			ImGui::Begin("DEBUG WINDOW");
 			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
 			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
-			ImGui::TextWrapped("geld %f", m_geld);
+			ImGui::TextWrapped("V-Bucks %f", m_geld);
 			ImGui::SameLine();
 			sf::Sprite temp_drawable(m_ui_textures[0]);
 			temp_drawable.setScale(0.1, 0.1);

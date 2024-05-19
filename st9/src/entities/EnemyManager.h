@@ -6,7 +6,7 @@
 class EnemyManager
 {
 	std::vector<std::shared_ptr<Enemy>> m_enemys;
-	std::vector<sf::Texture> m_textures;
+	std::vector<sf::Texture> m_textures; //Enemy Texturen
 
 	inline static bool s_player_moving = false;
 	inline static bool s_tower_update = false;
@@ -54,6 +54,7 @@ public:
 	[[nodiscard]] glm::vec2 enemypos(double radius, glm::vec2 tower_position) const;
 	void add_enemy();
 	void add_enemy(glm::ivec3 pos, Utils::Priority);
+	void add_enemy(glm::ivec3 pos, Utils::Priority priority, int enemy_type);
 	[[nodiscard]] std::vector<std::shared_ptr<Enemy>>& get_enemies() { return m_enemys; }
 	int naive_enemy_killer();
 

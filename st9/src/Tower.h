@@ -24,12 +24,13 @@ class TowerTexture
 	inline static TowerTexture* s_instance;
 public:
 	sf::Texture base;
-	sf::Texture tops[2];
+	sf::Texture tops[3];
 	TowerTexture()
 	{
 		base.loadFromFile("resources/images/buttom.png");
 		tops[0].loadFromFile("resources/images/top.png");
 		tops[1].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
+		tops[2].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
 	}
 	static TowerTexture* get_instance()
 	{
@@ -56,6 +57,8 @@ class Tower
 	float m_condt{ 0.8f };
 	sf::Sprite sprites[2];
 	sf::Transform t;
+	bool is_not_economy;
+
 public:
 	Tower(glm::vec3);
 	Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health);

@@ -46,12 +46,13 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[1].draw(m_texture_sprites[2]);
 	m_texture[1].display();
 
-	m_textures.resize(4);
+	m_textures.resize(5);
 
 	m_textures[0].loadFromFile("resources/images/none.png");
-	m_textures[1] =m_texture[0].getTexture();
-	m_textures[2] =m_texture[1].getTexture();
-	m_textures[3].loadFromFile("resources/images/1111.png");
+	m_textures[1] = m_texture[0].getTexture();
+	m_textures[2] = m_texture[1].getTexture();
+	m_textures[3].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
+	m_textures[4].loadFromFile("resources/images/1111.png");
 
 	m_sprites.resize(8);
 
@@ -60,7 +61,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	
 	m_sprites[1].setTexture(m_textures[1]);
 	m_sprites[2].setTexture(m_textures[2]);
-	m_sprites[3].setTexture(m_textures[1]);
+	m_sprites[3].setTexture(m_textures[3]);
 	m_sprites[4].setTexture(m_textures[1]);
 	m_sprites[5].setTexture(m_textures[1]);
 	m_sprites[6].setTexture(m_textures[1]);
@@ -72,7 +73,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_sprites[5].setColor(sf::Color::Blue);
 	m_sprites[6].setColor(sf::Color::Black);
 
-	m_sprites[7].setTexture(m_textures[3]);
+	m_sprites[7].setTexture(m_textures[4]);
 }
 
 Utils::Cell BuildSystem::display()

@@ -1,12 +1,15 @@
 #pragma once
 #include "entities/entity/Entity.h"
 #include "Utils/Utils.h"
-
+enum enemy_type {
+	Default_Enemy,
+	Red_Enemy
+};
 class Enemy :
 	public Entity
 {
 private:
-
+	enemy_type m_enemy_type = Default_Enemy;
 	std::vector<glm::vec3> m_movements;
 	Utils::Priority m_priority;
 	size_t prev_size{};

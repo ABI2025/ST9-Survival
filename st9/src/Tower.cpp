@@ -2,6 +2,7 @@
 #include "Tower.h"
 #include <cmath>
 
+#include "Game.h"
 #include "imgui.h"
 #include "Sounds.h"
 #include "entities/EnemyManager.h"
@@ -67,7 +68,7 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 
 
 	m_ressourcen = ressourcen;
-
+	is_not_economy = true;
 	switch (tower_kind)
 	{
 	case tower_1:
@@ -84,9 +85,11 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[1]);
 		break;
 	case tower_3:
+		is_not_economy = false;
 		m_health = 400;
-		m_damage = 0.3;
-		sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
+		m_damage = 600.0;
+		m_cooldown = 1.0f;
+		sprites[0].setTexture(TowerTexture::get_instance()->tops[2]);
 		break;
 	case tower_4:
 		m_health = 500;
@@ -132,43 +135,53 @@ void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 	m_condt += deltatime;
 	if (m_condt >= m_cooldown)
 	{
-		const glm::vec2 closest_enemy = { em.enemypos(m_radius, m_pos) };
-		if (closest_enemy != glm::vec2{ -1.0f,-1.0f })
+		if (is_not_economy) 
 		{
-			const glm::vec3 dir = glm::vec3{ closest_enemy ,0.0f } - m_pos;
-			//Prüfen ob der näheste gegner auf dem Turm ist
-
-			const glm::vec2 position_center = glm::vec3{ tower_sprite_center,0 } + m_pos;
-			const glm::vec2 position_for_bullet_to_spawn = position_center - glm::vec2{2.0f,12.5f};
-			if (dir != glm::vec3{ 0.0f,0.0f,0.0f })
+			const glm::vec2 closest_enemy = { em.enemypos(m_radius, m_pos) };
+			if (closest_enemy != glm::vec2{ -1.0f,-1.0f })
 			{
-				const glm::vec3 bullet_dir = glm::normalize(dir);
-				m_prev_bullet_dir = bullet_dir;
-				//winkel von dem Schuss berechnen damit der Turm richtig Rotiert ist
-				m_angle = std::atan2(bullet_dir.y, bullet_dir.x) * 180.0f / M_PI;
-				m_angle += 90;
+				const glm::vec3 dir = glm::vec3{ closest_enemy ,0.0f } - m_pos;
+				//Prüfen ob der näheste gegner auf dem Turm ist
 
-				new Projectile({ position_for_bullet_to_spawn,0.0f },
-					bullet_dir * m_speed, 180, m_damage, m_penetration);
+				const glm::vec2 position_center = glm::vec3{ tower_sprite_center,0 } + m_pos;
+				const glm::vec2 position_for_bullet_to_spawn = position_center - glm::vec2{ 2.0f,12.5f };
+				if (dir != glm::vec3{ 0.0f,0.0f,0.0f })
+				{
+					const glm::vec3 bullet_dir = glm::normalize(dir);
+					m_prev_bullet_dir = bullet_dir;
+					//winkel von dem Schuss berechnen damit der Turm richtig Rotiert ist
+					m_angle = std::atan2(bullet_dir.y, bullet_dir.x) * 180.0f / M_PI;
+					m_angle += 90;
+
+					new Projectile({ position_for_bullet_to_spawn,0.0f },
+						bullet_dir * m_speed, 180, m_damage, m_penetration);
+				}
+				else
+				{
+					//wenn der näheste gegner auf dem Turm ist nehmen wir die vorher gespeicherte rotierung und projektil Richtung
+					new Projectile({ position_for_bullet_to_spawn ,0.0f },
+						m_prev_bullet_dir * m_speed, 180, m_damage, m_penetration);
+				}
+				//const glm::vec3 player_pos = Utils::Pathfinding::get_instance()->get_player_pos();
+				sound.add_sound("player", 2, m_pos);
+				sprites[0].setRotation(m_angle);
 			}
-			else
-			{
-				//wenn der näheste gegner auf dem Turm ist nehmen wir die vorher gespeicherte rotierung und projektil Richtung
-				new Projectile({ position_for_bullet_to_spawn ,0.0f },
-					m_prev_bullet_dir * m_speed, 180, m_damage, m_penetration);
-			}
-			//const glm::vec3 player_pos = Utils::Pathfinding::get_instance()->get_player_pos();
-			sound.add_sound("player", 2, m_pos);
-			sprites[0].setRotation(m_angle);
-			m_condt = 0.0f;
 		}
+		else
+		{
+			Game::get_game()->add_geld(m_damage);
+		}
+
+		m_condt = 0.0f;
+
 	}
 
 }
 
 void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(sprites[1],states);
+	if(is_not_economy)
+		target.draw(sprites[1],states);
 	target.draw(sprites[0],states);
 }
 

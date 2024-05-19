@@ -11,9 +11,9 @@ constexpr float CellSize = 135.0f;
 
 EnemyManager::EnemyManager()
 {
-	m_textures.resize(1);
+	m_textures.resize(2);
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
-
+	m_textures[1].loadFromFile("resources/images/Roter_gegner1-1.png");
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
@@ -55,7 +55,7 @@ void EnemyManager::update(float deltatime)
 				{
 					if (tower[0][cell_pos.y][cell_pos.x] != nullptr)
 					{
-						e->m_sprite.setTexture(this->m_textures[0]);
+						
 
 						e->attack();
 
@@ -80,7 +80,7 @@ void EnemyManager::update(float deltatime)
 				e->prev_size = e->m_movements.size();
 			}
 
-			e->m_sprite.setTexture(this->m_textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
+			//e->m_sprite.setTexture(this->m_textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
 
 			for (int i = 0; i < 300 * deltatime; i++)
 			{
@@ -214,13 +214,23 @@ void EnemyManager::add_enemy()
 	spawned_enemy->m_id = 0;
 }
 
-void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority)
+void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority) //veraltet nutzung meiden
 {
 	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
 	m_enemys.push_back(spawned_enemy);
 	spawned_enemy->m_priority = priority;
 	spawned_enemy->m_pos = pos;
 	spawned_enemy->m_id = 0;
+}
+void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_enemy_type)
+{
+	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
+	m_enemys.push_back(spawned_enemy);
+	spawned_enemy->m_priority = priority;
+	spawned_enemy->m_pos = pos;
+	spawned_enemy->m_id = 0;
+	spawned_enemy->m_enemy_type = static_cast<enemy_type>(i_enemy_type);
+	spawned_enemy->m_sprite.setTexture(m_textures[i_enemy_type]);
 }
 void EnemyManager::draw(sf::RenderTarget& i_window) const
 {
