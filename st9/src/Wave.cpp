@@ -35,5 +35,6 @@ void Wave::spawn_wave(EnemyManager* ma,float dt)
 				break;
 			}
 		}
+		spawned = true;
 	}
 }

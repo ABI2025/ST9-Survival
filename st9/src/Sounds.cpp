@@ -42,6 +42,14 @@ Sounds::Sounds()
 Sounds::~Sounds()
 = default;
 
+std::vector<float> Sounds::get_volumes() const
+{
+	std::vector<float> return_values;
+	for (float volume : m_volumes | std::views::values)
+		return_values.push_back(volume);
+	return return_values;
+}
+
 void Sounds::load_buffer(const std::string& location, bool priority, const std::string& group)
 {
 	sf::SoundBuffer temp_buffer;

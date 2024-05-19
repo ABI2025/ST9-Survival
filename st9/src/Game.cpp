@@ -13,9 +13,11 @@
 #include "MainBuilding.h"
 #include "BuildSystem.h"
 #include "imgui_internal.h"
+#include "Optionen.h"
 #include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier
 #include "Sounds.h"
 #include "Tower.h"
+#include "Wave.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
@@ -41,7 +43,7 @@ std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map()
 	return karte;
 }
 
-Game::Game(sf::RenderWindow& window) :m_window(window)
+Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds(sounds)
 {
 	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
@@ -147,13 +149,7 @@ void Game::render_tower(sf::RenderTarget& render_target)
 }
 void Game::run_game(int)
 {
-	m_sounds.add_group("player");
-	m_sounds.add_group("music");
-	m_sounds.load_buffer("resources/Sounds/Heilung.mp3", false, "player");
-	m_sounds.load_buffer("resources/Sounds/Aufzeichnung(2).mp3", false, "player");
-	m_sounds.load_buffer("resources/Sounds/hitmarker.ogg", false, "player");
-	m_sounds.load_buffer("resources/Sounds/record.wav", true, "music");
-	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
+
 
 	m_sounds.set_volume(0, -1);
 	m_sounds.set_volume(0, 0);
@@ -161,6 +157,7 @@ void Game::run_game(int)
 
 	m_sounds.music(0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
+	Optionen* opt = Optionen::get_instance();
 
 	Camera window_camera(&m_window, p.get());
 	Camera texture_camera(&texture, p.get());
@@ -174,6 +171,7 @@ void Game::run_game(int)
 	bool left_click = false;
 
 	EnemyManager* ma = EnemyManager::get_instance();
+	WaveManager wave_manager;
 	std::shared_ptr<MainBuilding> mb = std::make_shared<MainBuilding>();
 	{
 		const glm::vec2 cell_pos = mb->get_pos() / 135.0f;
@@ -198,7 +196,6 @@ void Game::run_game(int)
 	std::vector<std::shared_ptr<Tower>> towers;
 
 	bool first_run = true;
-	float lautstarke[3] = { 10.0f,10.0f,10.0f };
 	bool paused = false;
 	bool should_do_dockspace = true;
 	bool player_alive = true;
@@ -206,7 +203,7 @@ void Game::run_game(int)
 	EnemyManager::set_updated_tower(true);
 	EnemyManager::set_player_moving(true);
 	pa->calculate_paths(towers, mb);
-
+	bool show_option_menu = false;
 
 	while (m_window.isOpen() && m_open)
 	{
@@ -244,7 +241,8 @@ void Game::run_game(int)
 					/*m_sounds.pause_all(false);
 					m_open = showpausemenu();
 					m_sounds.play_all();*/
-					m_open = false;
+					show_option_menu = true;
+					//m_open = false;
 				}
 
 				break;
@@ -266,30 +264,29 @@ void Game::run_game(int)
 
 		if (!paused)
 		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
-				switch (const int dir =(signed)Utils::Random::UInt(0, 3))
-				{
-				case 0://oben
-					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), 0, 0),
-						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-					break;
-				case 1://links
-					ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
-						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-					break;
-				case 2://unten
-					ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), (height-1)*BACKGROUND_HEIGHT, 0),
-						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-					break;
-				case 3://rechts
-					ma->add_enemy(glm::vec3((width-1)*BACKGROUND_WIDTH, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
-						static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-					break;
-				default:
-						break;
-				}
-
-			}
+			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
+			//	switch (const int dir =(signed)Utils::Random::UInt(0, 3))
+			//	{
+			//	case 0://oben
+			//		ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), 0, 0),
+			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+			//		break;
+			//	case 1://links
+			//		ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
+			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+			//		break;
+			//	case 2://unten
+			//		ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), (height-1)*BACKGROUND_HEIGHT, 0),
+			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+			//		break;
+			//	case 3://rechts
+			//		ma->add_enemy(glm::vec3((width-1)*BACKGROUND_WIDTH, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
+			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
+			//		break;
+			//	default:
+			//			break;
+			//	}
+			//}
 			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
 			//{
 			//	m_sounds.add_sound("player", 2);
@@ -445,6 +442,8 @@ void Game::run_game(int)
 			}
 			ma->update(deltatime);
 
+			wave_manager.spawnening(ma, deltatime);
+
 			m_sounds.cleanup();
 			m_sounds.music(deltatime);
 
@@ -484,12 +483,7 @@ void Game::run_game(int)
 			else
 				ImGui::TextWrapped("not paused");
 
-			ImGui::SliderFloat("Allgemein", lautstarke, 0, 100);
-			ImGui::SliderFloat("Player", &lautstarke[1], 0, 100);
-			ImGui::SliderFloat("Musik", &lautstarke[2], 0, 100);
-			m_sounds.set_volume(lautstarke[0], -1);
-			m_sounds.set_volume(lautstarke[1], 0);
-			m_sounds.set_volume(lautstarke[2], 1);
+
 
 			ImGui::End();
 		}
@@ -546,6 +540,15 @@ void Game::run_game(int)
 			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)
 
 			m_window.display();
+
+
+			if(show_option_menu)
+			{
+				m_open = opt->optionen_exe(m_window, true);
+				show_option_menu = false;
+			}
+
+
 		}
 		first_run = false;
 	}
@@ -577,15 +580,15 @@ void Game::run_game(int)
 
 }
 
-void Game::add_geld(double m_geld)
+void Game::add_geld(double i_geld)
 {
-	(*this).m_geld += m_geld; // schönster code des 21 jahunderts
+	m_geld += i_geld; // schönster code des 21 jahunderts
 }
 
-void Game::erstelle_game(sf::RenderWindow& i_window)
+void Game::erstelle_game(sf::RenderWindow& i_window,Sounds& sounds)
 {
 	if (!s_game)
-		s_game = new Game(i_window);
+		s_game = new Game(i_window,sounds);
 }
 
 Game* Game::get_game()

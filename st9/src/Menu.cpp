@@ -34,7 +34,7 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
 void Menu::show_menu()
 {
 	Optionen* opt = Optionen::get_instance();
-	Game::erstelle_game(m_window);
+	Game::erstelle_game(m_window,opt->get_sounds());
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("fuck"); }
 	sf::Sound sound;
@@ -105,7 +105,7 @@ void Menu::show_menu()
 				ImGui::SFML::Render(m_window);
 				m_window.display();
 
-				opt->optionen_exe(m_window);
+				opt->optionen_exe(m_window,false);
 
 				break;
 			case 2: // Schlieﬂen

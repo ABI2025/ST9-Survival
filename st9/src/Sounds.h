@@ -27,6 +27,9 @@ public:
 	Sounds();
 	~Sounds();
 
+	std::vector<float> get_volumes() const;
+
+
 	//Lädt eine music file spezifiziert in location und erstellt eine neue deque für sounds
 	void load_buffer(const std::string& location, bool priority, const std::string& group);
 

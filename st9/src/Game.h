@@ -13,7 +13,7 @@ class Game
 public:
 	void render_map(glm::vec3 player_pos, sf::RenderTarget& render_target);
 	void render_tower(sf::RenderTarget& render_target);
-	static void erstelle_game(sf::RenderWindow&);
+	static void erstelle_game(sf::RenderWindow&,Sounds&);
 	static Game* get_game();
 	std::vector<std::vector<std::vector<std::shared_ptr<Entity>>>>& getEntityMap();
 	void set_map(const Utils::Cell&, int x, int y, int z); // Cell x,y,z
@@ -29,7 +29,7 @@ private:
 	double m_geld; // für den Kapitalismus (nicht kommunismus, sonst ist frau arend sauer
 	friend class BuildSystem;
 	inline static Game* s_game;
-	explicit Game(sf::RenderWindow&);
+	explicit Game(sf::RenderWindow&,Sounds&);
 	sf::RenderWindow& m_window;
 	std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	std::vector<std::vector<std::vector<std::shared_ptr<Entity>>>> m_EntityMap;
@@ -37,6 +37,6 @@ private:
 	std::vector<sf::Texture> m_background_textures;
 	std::vector<sf::Texture> m_building_textures;
 	std::vector<std::vector<std::array<uint8_t, 2>>> m_tiles;
-	Sounds m_sounds;
+	Sounds& m_sounds;
 	bool m_open = true;
 };
