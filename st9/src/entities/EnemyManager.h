@@ -10,6 +10,7 @@ class EnemyManager
 
 	inline static bool s_player_moving = false;
 	inline static bool s_tower_update = false;
+	inline static bool s_walls_update = false;
 	std::vector<std::vector<int>> enemys_per_cell;
 
 	inline static EnemyManager* s_instance;
@@ -37,9 +38,13 @@ public:
 	{
 		s_tower_update = i_tower_update;
 	}
+	static void set_walls_update(const bool i_walls_update)
+	{
+		s_walls_update = i_walls_update;
+	}
 	[[nodiscard]] static bool should_update()
 	{
-		return s_tower_update || s_player_moving;
+		return s_tower_update || s_player_moving || s_walls_update;
 	}
 	[[nodiscard]] static bool is_tower_updated()
 	{
@@ -48,6 +53,10 @@ public:
 	[[nodiscard]] static bool is_player_moving()
 	{
 		return s_player_moving;
+	}
+	[[nodiscard]] static bool is_walls_update()
+	{
+		return s_walls_update;
 	}
 	void update(float deltatime);
 

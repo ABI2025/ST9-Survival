@@ -324,7 +324,7 @@ namespace Utils {
 	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers, const std::shared_ptr<MainBuilding>& main_building)
 	{
 		//priority player
- 		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0.0)
+ 		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0.0 || EnemyManager::is_walls_update())
 		{
 			if (m_player->get_hp() > 0.0) 
 			{
@@ -346,7 +346,7 @@ namespace Utils {
 		}
 
 		//priority tower
-		if(EnemyManager::is_tower_updated() || towers.empty())
+		if(EnemyManager::is_tower_updated() || towers.empty() || EnemyManager::is_walls_update())
 		{
 			std::vector<glm::ivec3> start_points;
 			for (const std::shared_ptr<Tower>& tower : towers)

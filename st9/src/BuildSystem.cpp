@@ -269,7 +269,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 
 				// Aktualisieren der Karte
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] = m_selected;
-				EnemyManager::set_updated_tower(true);
+				EnemyManager::set_walls_update(true);
 			}
 			
 			
@@ -325,8 +325,13 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				}
 			}
 			// Aktualisieren der Karte
+			if(map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::TURRET)
+				EnemyManager::set_updated_tower(true);
+			if(map[0][cell_mouse_pos.y][cell_mouse_pos.x] == Utils::Cell::WALL)
+				EnemyManager::set_walls_update(true);
+
 			map[0][cell_mouse_pos.y][cell_mouse_pos.x] = Utils::Cell::NOTHING;
-			EnemyManager::set_updated_tower(true);
+			
 		}
 	}
 }

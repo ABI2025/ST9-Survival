@@ -201,6 +201,7 @@ void Game::run_game(int)
 	p->set_pos(mb->get_pos());
 	EnemyManager::set_updated_tower(true);
 	EnemyManager::set_player_moving(true);
+	EnemyManager::set_walls_update(true);
 	pa->calculate_paths(towers, mb);
 	bool show_option_menu = false;
 
@@ -209,6 +210,9 @@ void Game::run_game(int)
 
 		EnemyManager::set_updated_tower(false);
 		EnemyManager::set_player_moving(false);
+
+		EnemyManager::set_walls_update(false);
+
 		float deltatime = delta_timer.Elapsed();
 		delta_timer.Reset();
 		sf::Event event{};
@@ -426,10 +430,13 @@ void Game::run_game(int)
 				if ((*it)->get_hp() <= 0)
 				{
 					const glm::ivec3 cell_pos = (*it)->get_pos() / 135.0f;
+					if (m_map[0][cell_pos.y][cell_pos.x] == Utils::Cell::TURRET)
+						EnemyManager::set_updated_tower(true);
+					else if(m_map[0][cell_pos.y][cell_pos.x] == Utils::Cell::WALL)
+						EnemyManager::set_walls_update(true);
 					m_map[0][cell_pos.y][cell_pos.x] = Utils::Cell::NOTHING;
 					m_EntityMap[0][cell_pos.y][cell_pos.x].reset();
 					it = entities.erase(it);
-					EnemyManager::set_updated_tower(true);
 				}
 				else
 					++it;

@@ -57,7 +57,7 @@ class Tower
 	float m_radius{6};
 	int m_penetration{5};
 	float m_speed{5};//i show speed
-	double m_damage;
+	double m_damage{0};
 	float m_angle{};
 	glm::vec3 m_prev_bullet_dir{ 1,0,0 };
 	float m_cooldown = 0.8f;
