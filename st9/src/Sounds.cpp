@@ -249,7 +249,10 @@ void Sounds::music(float deltatime)
 			//add_sound("music", 0);
 
 			if (m_sounds["music"][0].first.empty())
+			{
 				m_sounds["music"][0].first.emplace_back(m_buffers["music"][0]);
+				m_sounds["music"][0].first.back().setVolume(m_volumes["music"] * m_volumes["allgemein"]*100);
+			}
 			m_sounds["music"][0].first.back().setBuffer(m_buffers["music"][0]);
 			m_sounds["music"][0].first.back().play();
 
