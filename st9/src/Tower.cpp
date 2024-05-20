@@ -87,14 +87,17 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 	case tower_3:
 		is_not_economy = false;
 		m_health = 400;
-		m_damage = 20;
-		m_cooldown = 2.5f;
+		m_damage = 25;
+		m_cooldown = 2.0f;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[2]);
 		break;
 	case tower_4:
-		m_health = 500;
-		m_damage = 0.4;
-		sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
+		m_health = 1000;
+		m_damage = 1;
+		m_cooldown = 0.15f;
+		m_penetration = 2;
+		m_speed = 8;
+		sprites[0].setTexture(TowerTexture::get_instance()->tops[3]);
 		break;
 	case tower_5:
 		m_health = 600;
