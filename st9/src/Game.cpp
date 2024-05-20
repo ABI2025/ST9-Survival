@@ -98,8 +98,10 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
 				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH, static_cast<float>(j) * BACKGROUND_HEIGHT);
 				render_target.draw(m_background_sprites[m_tiles[i][j][0]]);
 				
-				if(glm::vec2(i,j) != glm::vec2{20,10} && glm::vec2(i,j) != glm::vec2(20,11) && m_EntityMap[0][j][i])
+				if (glm::vec2(i, j) != glm::vec2{ 20,10 } && glm::vec2(i, j) != glm::vec2(20, 11) && m_EntityMap[0][j][i]) {
+					m_EntityMap[0][j][i]->update();
 					render_target.draw(*m_EntityMap[0][j][i]);
+				}
 			}
 		}
 	}
