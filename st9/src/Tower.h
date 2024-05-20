@@ -24,7 +24,7 @@ class TowerTexture
 	inline static TowerTexture* s_instance;
 public:
 	sf::Texture base;
-	sf::Texture tops[4];
+	sf::Texture tops[5];
 	TowerTexture()
 	{
 		base.loadFromFile("resources/images/buttom.png");
@@ -32,6 +32,7 @@ public:
 		tops[1].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
 		tops[2].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
 		tops[3].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
+		tops[4].loadFromFile("resources/images/Gold-Kanone.png");
 	}
 	static TowerTexture* get_instance()
 	{

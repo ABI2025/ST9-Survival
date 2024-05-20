@@ -71,12 +71,12 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 	is_not_economy = true;
 	switch (tower_kind)
 	{
-	case tower_1:
+	case tower_1: // Basic
 		m_health = 200;
 		m_damage = 0.1;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
 		break;
-	case tower_2:
+	case tower_2: // Maschienen gewehr
 		m_health = 300;
 		m_damage = 0.2;
 		m_cooldown = 0.15f;
@@ -84,14 +84,14 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 		m_speed = 8;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[1]);
 		break;
-	case tower_3:
+	case tower_3: // Geld raffinerie
 		is_not_economy = false;
 		m_health = 400;
 		m_damage = 25;
 		m_cooldown = 2.0f;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[2]);
 		break;
-	case tower_4:
+	case tower_4: // Gold Maschienen Gewehr
 		m_health = 1000;
 		m_damage = 1;
 		m_cooldown = 0.15f;
@@ -99,10 +99,14 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 		m_speed = 8;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[3]);
 		break;
-	case tower_5:
-		m_health = 600;
-		m_damage = 0.5;
-		sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
+	case tower_5: // Schwere Gold kanone
+		m_health = 3000;
+		m_damage = 2;
+		m_cooldown = 1.3f;
+		m_penetration = 30;
+		m_speed = 4;
+		m_radius = 20;
+		sprites[0].setTexture(TowerTexture::get_instance()->tops[4]);
 		break;
 	case tower_6:
 		m_health = 700;
