@@ -248,7 +248,8 @@ void Sounds::music(float deltatime)
 		{
 			//add_sound("music", 0);
 
-
+			if (m_sounds["music"][0].first.empty())
+				m_sounds["music"][0].first.emplace_back(m_buffers["music"][0]);
 			m_sounds["music"][0].first.back().setBuffer(m_buffers["music"][0]);
 			m_sounds["music"][0].first.back().play();
 
@@ -288,6 +289,23 @@ void Sounds::cleanup()
 	}
 }
 
+void Sounds::delete_sounds()
+{
+	for (auto& all_sounds : m_sounds | std::views::values)
+	{
+		for (auto& sounds : all_sounds | std::views::keys)
+		{
+
+			for (auto it = sounds.begin(); it != sounds.end();)
+			{
+				it = sounds.erase(it);
+				current_playing_sounds--;
+			}
+			
+		}
+	}
+	m_current_music = -1;
+}
 
 
 void Sounds::pause_all(bool priority_ignorieren)

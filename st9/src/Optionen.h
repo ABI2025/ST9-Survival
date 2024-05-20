@@ -16,6 +16,19 @@ public:
 			s_instance = new Optionen;
 		return s_instance;
 	}
+	static void delete_instance()
+	{
+		if (!s_instance)
+			return;
+		s_instance->m_sounds.clear_all();
+
+		const std::vector<float> volumes = s_instance->m_sounds.get_volumes();
+		std::ofstream fout("optionen.txt");
+		fout << volumes[0] << ';' << volumes[1] << ';' << volumes[2];
+		fout.close();
+		delete s_instance;
+		s_instance = nullptr;
+	}
 
 
 	bool get_should_do_dockspace() const

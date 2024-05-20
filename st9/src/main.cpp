@@ -23,7 +23,8 @@ int main(int argc, char** argv)
 int Main(int argc, char** argv)
 {
 	Utils::Init();
-	Menu::get()->show_menu();
+	Menu::get_instance()->show_menu();
+	Menu::delete_instance();
 	return 0;
 }
 

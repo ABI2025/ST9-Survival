@@ -51,7 +51,10 @@ public:
 		current_wave = waves.front();
 		waves.pop_front();
 		waves.push_back(std::make_shared<Wave>(Wave{10,10 }));
-		waves.push_back(std::make_shared<Wave>(Wave{10,10,1 }));
+		waves.push_back(std::make_shared<Wave>(Wave{10,0,1 }));
+		waves.push_back(std::make_shared<Wave>(Wave{10,0,1 }));
+		waves.push_back(std::make_shared<Wave>(Wave{10,0,1 }));
+		waves.push_back(std::make_shared<Wave>(Wave{10,0,1 }));
 		waves.push_back(std::make_shared<Wave>(Wave{15,10 }));
 		waves.push_back(std::make_shared<Wave>(Wave{20,10 }));
 		waves.push_back(std::make_shared<Wave>(Wave{30,10 }));

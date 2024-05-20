@@ -40,6 +40,12 @@ public:
 		}
 		return s_instance;
 	}
+
+	static void delete_instance()
+	{
+		delete s_instance;
+		s_instance = nullptr;
+	}
 };
 
 class Tower

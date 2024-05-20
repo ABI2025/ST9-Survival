@@ -15,6 +15,26 @@ Optionen::Optionen()
 	m_sounds.load_buffer("resources/Sounds/hitmarker.ogg", false, "player");
 	m_sounds.load_buffer("resources/Sounds/record.wav", true, "music");
 	m_sounds.load_buffer("resources/Sounds/record-1.wav", true, "music");
+	std::ifstream fin("optionen.txt");
+	if (fin.is_open())
+	{
+		std::string line;
+		std::getline(fin, line, ';');
+		float volume1 = std::stof(line);
+		std::getline(fin, line, ';');
+		float volume2 = std::stof(line);
+		std::getline(fin, line, ';');
+		float volume3 = std::stof(line);
+
+		m_sounds.set_volume(volume1 * 100, -1);
+		m_sounds.set_volume(volume2 * 100, 0);
+		m_sounds.set_volume(volume3 * 100, 1);
+	}
+	else
+	{
+		std::ofstream fout("optionen.txt");
+		fout.close();
+	}
 
 }
 

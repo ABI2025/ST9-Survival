@@ -8,6 +8,9 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Opengl.hpp"
 #include "Optionen.h"
+#include "Tower.h"
+#include "Wall.h"
+#include "entities/EnemyManager.h"
 
 constexpr int NUM_BUTTONS = 3;
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
@@ -131,6 +134,12 @@ void Menu::show_menu()
 		ImGui::SFML::Render(m_window);
 		m_window.display();
 	}
+	Optionen::delete_instance();
+	WallTexture::delete_instance();
+	TowerTexture::delete_instance();
+	ProjectileTexture::delete_instance();
+	
+	opt = nullptr;
 }
 
 void Menu::draw_button_labels(const int numButtons)

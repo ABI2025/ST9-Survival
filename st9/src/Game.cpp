@@ -241,6 +241,7 @@ void Game::run_game(int)
 					/*m_sounds.pause_all(false);
 					m_open = showpausemenu();
 					m_sounds.play_all();*/
+					
 					show_option_menu = true;
 					//m_open = false;
 				}
@@ -258,7 +259,7 @@ void Game::run_game(int)
 			}
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());//Imgui funktion damit alles geupdatet wird
-		if (should_do_dockspace)
+		if (opt->get_should_do_dockspace())
 			ImGui::DockSpaceOverViewport();
 
 
@@ -475,7 +476,7 @@ void Game::run_game(int)
 			ImGui::TextWrapped("V-Bucks %f", m_geld);
 			ImGui::SameLine();
 			sf::Sprite temp_drawable(m_ui_textures[0]);
-			temp_drawable.setScale(0.1, 0.1);
+			temp_drawable.setScale(0.1f, 0.1f);
 			ImGui::Image(temp_drawable);
 			if (ImGui::Button("should do docking"))
 			{
@@ -548,6 +549,8 @@ void Game::run_game(int)
 			if(show_option_menu)
 			{
 				m_open = opt->optionen_exe(m_window, true);
+				delta_timer.Reset();
+				deltaClock.restart();
 				show_option_menu = false;
 			}
 
@@ -556,16 +559,18 @@ void Game::run_game(int)
 		first_run = false;
 	}
 
-	m_sounds.clear_all();
 	m_tiles.clear();
 	m_open = true;
 	EnemyManager::delete_instance();
+	ma = nullptr;
 	window_camera.move_to_default();
 	texture_camera.move_to_default();
 	Utils::Pathfinding::Delete();
 	pa = nullptr;
 	BuildSystem::delete_instance();
 	buildsystem = nullptr;
+
+	m_sounds.delete_sounds();
 
 	for (int i = 0; i < m_map.size(); i++)
 	{

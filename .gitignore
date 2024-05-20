@@ -376,3 +376,4 @@ MigrationBackup/
 FodyWeavers.xsd
 **/imgui.ini
 *.lastcodeanalysissucceeded
+/st9/optionen.txt

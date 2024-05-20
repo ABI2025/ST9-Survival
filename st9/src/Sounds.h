@@ -55,6 +55,8 @@ public:
 	//Löscht alle gestoppten Sounds
 	void cleanup();
 
+	//löscht alles sounds aber nicht buffer
+	void delete_sounds();
 
 	//pausiert alle nicht gestoppten lieder
 	void pause_all(bool priority_ignorieren);
