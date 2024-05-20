@@ -88,7 +88,7 @@ public:
 		if (done) 
 		{
 				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 3.f ,20.f , 3}));
-				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 9.f ,0.f , 4}));
+				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 5.f ,0.f , 4}));
 				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 2.f ,0.f , 1}));
 				done = false;
 				LOG_INFO("boah einfach crazy");
