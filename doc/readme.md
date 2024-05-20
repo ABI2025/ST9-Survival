@@ -1,4 +1,3 @@
--
 - [log](#Log)
     - [usage](#usage)
 - [Random](#Random)  
@@ -15,7 +14,7 @@
 
 ## usage
 ![when to use which log](res/log.png)
-So loggt man einfach eine Nachricht
+So loggt man eine Nachricht
 ```c++
 LOG_DEBUG("test");
 
