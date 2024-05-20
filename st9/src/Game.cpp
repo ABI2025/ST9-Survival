@@ -446,7 +446,7 @@ void Game::run_game(int)
 			ma->naive_enemy_killer();
 
 			ImGui::Begin("DEBUG WINDOW");
-			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
+			//ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f); // zum fps Debuggen
 			ImGui::End();
 		}
 		else if (opt->get_should_do_dockspace())
@@ -457,11 +457,11 @@ void Game::run_game(int)
 
 		{//Debug Fenster
 			ImGui::Begin("DEBUG WINDOW");
-			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
-			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
+			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime); //zum fps Debuggen 
+			ImGui::TextWrapped("Menge An Lebenden Gegnern: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("V-Bucks %f", m_geld);
 			if(!player_alive)
-				ImGui::TextWrapped("Respawn Time %f", player_rem_cooldown);
+				ImGui::TextWrapped("Wiederbelebungs Zeit %f", player_rem_cooldown);
 			ImGui::SameLine();
 			sf::Sprite temp_drawable(m_ui_textures[0]);
 			temp_drawable.setScale(0.1f, 0.1f);
@@ -469,9 +469,9 @@ void Game::run_game(int)
 
 
 			if (paused)
-				ImGui::TextWrapped("paused");
+				ImGui::TextWrapped("Pausiert");
 			else
-				ImGui::TextWrapped("not paused");
+				ImGui::TextWrapped("nicht Pausiert");
 
 
 
