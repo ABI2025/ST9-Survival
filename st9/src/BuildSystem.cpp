@@ -149,7 +149,7 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Geld Raffinerie:");
 				ImGui::Text("400 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[2]);
-				ImGui::Text("Erzeugt alle 2.5 Sekunden 20 V-Bucks");
+				ImGui::Text("Erzeugt alle 2 Sekunden 25 V-Bucks");
 				ImGui::EndTooltip();
 				break;
 			case 4:
