@@ -209,6 +209,8 @@ void Game::run_game(int)
 	bool show_option_menu = false;
 	constexpr float player_cooldown = 5;
 	float player_rem_cooldown = 0.0f;
+	constexpr float player_grace = 5;
+	float player_rem_grace = 0.0f;
 	Utils::Timer highscore;
 	while (m_window.isOpen() && m_open)
 	{
@@ -286,33 +288,7 @@ void Game::run_game(int)
 		if (opt->get_should_do_dockspace())
 		{
 			ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
-
 			ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-
-			//if (ImGui::BeginMenuBar())
-			//{
-			//	if (ImGui::BeginMenu("Menu"))
-			//	{
-			//		if (ImGui::MenuItem("MenuItem")) {}
-			//		ImGui::EndMenu();
-			//	}
-			//	if (ImGui::BeginMenu("Examples"))
-			//	{
-			//		if (ImGui::MenuItem("MenuItem")) {}
-			//		ImGui::EndMenu();
-			//	}
-			//	//if (ImGui::MenuItem("MenuItem")) {} // You can also use MenuItem() inside a menu bar!
-			//	if (ImGui::BeginMenu("Tools"))
-			//	{
-			//		if (ImGui::MenuItem("MenuItem"))
-			//		{
-			//		}
-			//		ImGui::EndMenu();
-			//	}
-			//	ImGui::EndMenuBar();
-			//}
-
-
 
 			ImVec2 content_size = ImGui::GetContentRegionAvail();
 
@@ -336,13 +312,15 @@ void Game::run_game(int)
 				{
 					hb->regeneration(21);
 
-					p->set_hp(20);
+					p->set_hp(200);
 					p->set_pos(mb->get_pos());
 					player_alive = true;
 					EnemyManager::set_player_moving(true);
+					player_rem_grace = player_grace;
 				}
 			}
-
+			else if(player_rem_grace >0.0)
+				player_rem_grace -= deltatime;
 
 			p->update_player(deltatime);
 
@@ -423,8 +401,8 @@ void Game::run_game(int)
 				pa->calculate_paths(towers, mb);
 			}
 			ma->update(deltatime);
-
-			p->do_damage_calc();
+			if(player_rem_grace <= 0)
+				p->do_damage_calc();
 
 			wave_manager.spawnening(ma, deltatime);
 
@@ -453,7 +431,7 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-		{//Debug Fenster
+		{//Spiel Info Fenster
 			ImGui::Begin("Spiel Infos");
 			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime); //zum fps Debuggen 
 			ImGui::TextWrapped("Menge An Lebenden Gegnern: %llu", ma->get_enemies().size());
@@ -467,25 +445,15 @@ void Game::run_game(int)
 			ImGui::End();
 		}
 
-		{//Rendern (Bitte keine als zu große logik ab hier)
+		{//RENDERN
 
-			//hier ist die render order
+			
 			m_window.clear();//das momentane fenster wird gecleared
-
-
 
 			if (opt->get_should_do_dockspace()) {
 				texture.clear();
 				render_map(p->get_pos(), texture); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				texture.draw(*mb);
-
-				//for (auto& tower : towers)
-				//{
-				//	texture.draw(*tower);
-				//	tower->drawtower(texture);
-				//}
-
-				//render_tower(texture);
 				ma->draw(texture);
 
 				if (p->get_hp() > 0)
@@ -503,12 +471,6 @@ void Game::run_game(int)
 			{
 				render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				m_window.draw(*mb);
-				//for (auto& tower : towers)
-				//{
-				//	//texture.draw(*tower);
-				//	tower->drawtower(m_window);
-				//}
-				//render_tower(m_window);
 				ma->draw(m_window);
 				m_window.draw(*p);
 				Projectile::draw_all_projectiles(m_window);
@@ -527,7 +489,6 @@ void Game::run_game(int)
 				deltaClock.restart();
 				show_option_menu = false;
 			}
-
 
 		}
 		first_run = false;

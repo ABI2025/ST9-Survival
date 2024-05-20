@@ -180,6 +180,9 @@ Utils::Cell BuildSystem::display()
 				//	m_speed = 5;
 				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
 				//	break;
+			sf::Sprite temp;
+			temp.setTexture(Game::get_game()->m_ui_textures[0]);
+			temp.scale(0.1, 0.1);
 			switch (current_button_id)
 			{
 			case 0:
@@ -192,6 +195,8 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Basic:"); // Brauch noch einen besseren sprite
 				ImGui::Text("200 leben");
 				ImGui::Text("%.0f V-Bucks",m_costs[0]);
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::Text("0.1 Schaden");
 				ImGui::Text("0.8 s Cooldown");
 				ImGui::Text("6 radius");
@@ -204,6 +209,8 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Maschienen Gewaehr:");
 				ImGui::Text("300 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[1]);
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::Text("0.2 Schaden");
 				ImGui::Text("0.15 s Cooldown");
 				ImGui::Text("6 radius");
@@ -216,7 +223,11 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Geld Raffinerie:");
 				ImGui::Text("400 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[2]);
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::Text("Erzeugt alle 2 Sekunden 25 V-Bucks");
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::EndTooltip();
 				break;
 			case 4:
@@ -224,6 +235,8 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Goldenes Maschienen Gewaehr:");
 				ImGui::Text("1000 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[3]);
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::Text("1 Schaden");
 				ImGui::Text("0.15 s Cooldown");
 				ImGui::Text("6 radius");
@@ -236,6 +249,8 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Schwere Gold Kanone:");
 				ImGui::Text("3000 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[4]);
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::Text("2 Schaden");
 				ImGui::Text("1.3 s Cooldown");
 				ImGui::Text("20 radius");
@@ -249,6 +264,8 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Schwere Kanone");
 				ImGui::Text("700 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[5]);
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::Text("1.0 Schaden");
 				ImGui::Text("1.0 s Cooldown");
 				ImGui::Text("10 radius");
@@ -261,6 +278,8 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Eine Wand mit:");
 				ImGui::Text("500 leben");
 				ImGui::Text("25.0  V-Bucks");
+				ImGui::SameLine();
+				ImGui::Image(temp);
 				ImGui::EndTooltip();
 				break;
 			default:
@@ -286,7 +305,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 	glm::vec3 mainbuilding_pos
 	) const
 {
-
+	if (left_click && right_click)
+		return;
 
 	Utils::Pathfinding* pa = Utils::Pathfinding::get_instance();
 	// Überprüfen, ob die Mausposition eine gültige Zelle ist
