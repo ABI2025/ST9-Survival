@@ -75,7 +75,10 @@ public:
 	void drawtower(sf::RenderTarget&) const;
 	void fire(const EnemyManager& em,Sounds& sounds ,float deltatime);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+	double get_value()
+	{
+		return m_ressourcen;
+	}
 	//glm::vec3 get_pos()const { return m_pos; }
 	//warten auf hinzufügen von projectile klasse
 

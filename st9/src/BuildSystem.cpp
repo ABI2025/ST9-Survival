@@ -400,7 +400,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 						if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
 							(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
 						{
-
+							Game::get_game()->add_geld(it->get()->get_value()/2.0);
 							it->reset();
 							it = towers.erase(it);
 						}
