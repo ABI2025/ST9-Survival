@@ -25,6 +25,8 @@ bool Enemy::is_alive() const
 Enemy::Enemy() : m_priority()
 {
 	m_health = 2;
+	m_speed = 1;
+	m_damage = 0.1;
 }
 
 void Enemy::die()

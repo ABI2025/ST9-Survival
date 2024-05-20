@@ -11,9 +11,10 @@ constexpr float CellSize = 135.0f;
 
 EnemyManager::EnemyManager()
 {
-	m_textures.resize(2);
+	m_textures.resize(3);
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
 	m_textures[1].loadFromFile("resources/images/Roter_gegner1-1.png");
+	m_textures[2].loadFromFile("resources/images/Blauer_gegner1-1.png");
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
@@ -40,7 +41,7 @@ void EnemyManager::update(float deltatime)
 					e->die();
 					if (e->can_be_removed)
 					{
-						Game::get_game()->add_geld(10); // müssten wir gebalanced gehabt haben, später
+						Game::get_game()->add_geld(10); // müssten wir gebalanced gehabt haben
 						e.reset();
 					}
 					return;
@@ -82,7 +83,7 @@ void EnemyManager::update(float deltatime)
 
 			//e->m_sprite.setTexture(this->m_textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
 
-			for (int i = 0; i < 300 * deltatime; i++)
+			for (int i = 0; i < 300 * deltatime * e->m_speed; i++)
 			{
 				if (e->m_movements.empty() == false)
 				{
@@ -96,6 +97,7 @@ void EnemyManager::update(float deltatime)
 						enemys_per_cell[cell_pos.y][cell_pos.x]++;
 						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 						e->attack();
+						tower[0][cell_pos.y][cell_pos.x]->take_damage(e->m_damage);
 						return;
 					}
 
@@ -231,6 +233,17 @@ void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_en
 	spawned_enemy->m_id = 0;
 	spawned_enemy->m_enemy_type = static_cast<enemy_type>(i_enemy_type);
 	spawned_enemy->m_sprite.setTexture(m_textures[i_enemy_type]);
+	switch(i_enemy_type){
+	case 1:
+		spawned_enemy->m_health = 1.4; // ist default
+		spawned_enemy->m_damage = 5; // 0.1 ist default
+		spawned_enemy->m_speed = 2; // 1 ist default
+		break;
+	case 2:
+		spawned_enemy->m_health = 8;
+		spawned_enemy->m_damage = 0.5;
+		break;
+	}
 }
 void EnemyManager::draw(sf::RenderTarget& i_window) const
 {

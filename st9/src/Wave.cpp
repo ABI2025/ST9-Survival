@@ -6,11 +6,13 @@ constexpr int BACKGROUND_WIDTH = 135;
 constexpr int height = 22;
 constexpr int width = 41;
 
+
 void Wave::spawn_wave(EnemyManager* ma,float dt)
 {
 	condt += dt;
 	if (condt >= m_cooldown_before_start)
 	{
+		wave_counter++;
 		for (int i = 0; i < m_num_enemies; i++)
 		{
 			switch (const int dir = (signed)Utils::Random::UInt(0, 3))

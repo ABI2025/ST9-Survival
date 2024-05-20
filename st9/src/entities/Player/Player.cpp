@@ -157,7 +157,7 @@ void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const
 		glm::vec3 bullet_dir = normalize(mouse_pos - m_pos);
 		//LOG_INFO("Bullet dir: {} {} {}", bullet_dir.x, bullet_dir.y, bullet_dir.z);
 
-		new Projectile(m_pos, bullet_dir, 180, 0.1, 5);
+		new Projectile(m_pos, bullet_dir, 180, 0.2, 5);
 		condt = 0;
 	}
 }
