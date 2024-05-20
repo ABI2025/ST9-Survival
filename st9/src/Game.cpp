@@ -380,8 +380,8 @@ void Game::run_game(int)
 			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f };
 
 
-
-			(*buildsystem)(left_click, right_click, opt->get_should_do_dockspace(), m_map, entities, towers, mouse_pos,mb->get_pos());
+			if(player_alive)
+				(*buildsystem)(left_click, right_click, opt->get_should_do_dockspace(), m_map, entities, towers, mouse_pos,mb->get_pos());
 
 			std::ranges::sort(towers,
 			[&p](const std::shared_ptr<Tower>& tower1, const std::shared_ptr<Tower>& tower2)
