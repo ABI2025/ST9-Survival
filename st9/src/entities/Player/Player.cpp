@@ -147,11 +147,6 @@ void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const
 	if (m_health <= 0)
 		return;
 
-	ImGui::Begin("DEBUG WINDOW");
-	ImGui::SliderFloat("shoot cooldown", &cooldown, 0.0f, 1.0f);
-	ImGui::End();
-
-
 	condt += deltatime;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && condt >= cooldown)
 	{

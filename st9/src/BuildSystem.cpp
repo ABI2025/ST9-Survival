@@ -132,6 +132,54 @@ Utils::Cell BuildSystem::display()
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
 		{
+
+
+
+				//case tower_1: // Basic
+				//	m_health = 200;
+				//	m_damage = 0.1;
+				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
+				//	break;
+				//case tower_2: // Maschienen gewehr
+				//	m_health = 300;
+				//	m_damage = 0.2;
+				//	m_cooldown = 0.15f;
+				//	m_penetration = 1;
+				//	m_speed = 8;
+				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[1]);
+				//	break;
+				//case tower_3: // Geld raffinerie
+				//	is_not_economy = false;
+				//	m_health = 400;
+				//	m_damage = 25;
+				//	m_cooldown = 2.0f;
+				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[2]);
+				//	break;
+				//case tower_4: // Gold Maschienen Gewehr
+				//	m_health = 1000;
+				//	m_damage = 1;
+				//	m_cooldown = 0.15f;
+				//	m_penetration = 2;
+				//	m_speed = 8;
+				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[3]);
+				//	break;
+				//case tower_5: // Schwere Gold kanone
+				//	m_health = 3000;
+				//	m_damage = 2;
+				//	m_cooldown = 1.3f;
+				//	m_penetration = 30;
+				//	m_speed = 4;
+				//	m_radius = 20;
+				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[4]);
+				//	break;
+				//case tower_6:
+				//	m_health = 700;
+				//	m_damage = 1.0;
+				//	m_radius = 10;
+				//	m_cooldown = 1.0f;
+				//	m_speed = 5;
+				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
+				//	break;
 			switch (current_button_id)
 			{
 			case 0:
@@ -144,6 +192,11 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Basic:"); // Brauch noch einen besseren sprite
 				ImGui::Text("200 leben");
 				ImGui::Text("%.0f V-Bucks",m_costs[0]);
+				ImGui::Text("0.1 Schaden");
+				ImGui::Text("0.8 s Cooldown");
+				ImGui::Text("6 radius");
+				ImGui::Text("5 penetration");
+				ImGui::Text("5 geschwindigkeit");
 				ImGui::EndTooltip();
 				break;
 			case 2:
@@ -151,6 +204,11 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Maschienen Gewaehr:");
 				ImGui::Text("300 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[1]);
+				ImGui::Text("0.2 Schaden");
+				ImGui::Text("0.15 s Cooldown");
+				ImGui::Text("6 radius");
+				ImGui::Text("1 penetration");
+				ImGui::Text("8 geschwindigkeit");
 				ImGui::EndTooltip();
 				break;
 			case 3:
@@ -166,6 +224,11 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Goldenes Maschienen Gewaehr:");
 				ImGui::Text("1000 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[3]);
+				ImGui::Text("1 Schaden");
+				ImGui::Text("0.15 s Cooldown");
+				ImGui::Text("6 radius");
+				ImGui::Text("2 penetration");
+				ImGui::Text("8 geschwindigkeit");
 				ImGui::EndTooltip();
 				break;
 			case 5:
@@ -173,14 +236,24 @@ Utils::Cell BuildSystem::display()
 				ImGui::Text("Schwere Gold Kanone:");
 				ImGui::Text("3000 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[4]);
+				ImGui::Text("2 Schaden");
+				ImGui::Text("1.3 s Cooldown");
+				ImGui::Text("20 radius");
+				ImGui::Text("30 penetration");
+				ImGui::Text("4 geschwindigkeit");
 				ImGui::EndTooltip();
 				break;
 
 			case 6:
 				ImGui::BeginTooltip();
-				ImGui::Text("Bigus Chungus");
+				ImGui::Text("Schwere Kanone");
 				ImGui::Text("700 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[5]);
+				ImGui::Text("1.0 Schaden");
+				ImGui::Text("1.0 s Cooldown");
+				ImGui::Text("10 radius");
+				ImGui::Text("5 penetration");
+				ImGui::Text("5 geschwindigkeit");
 				ImGui::EndTooltip();
 				break;
 			case 7:

@@ -58,11 +58,11 @@ class Tower
 	float m_radius{6};
 	int m_penetration{5};
 	float m_speed{5};//i show speed
-	double m_damage{0};
+	double m_damage{1};
 	float m_angle{};
 	glm::vec3 m_prev_bullet_dir{ 1,0,0 };
 	float m_cooldown = 0.8f;
-	float m_condt{ 0.8f };
+	float m_condt{ 0.0f };
 	sf::Sprite sprites[2];
 	sf::Transform t;
 	bool is_not_economy;
