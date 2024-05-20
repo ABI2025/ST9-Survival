@@ -87,7 +87,7 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 	case tower_3: // Geld raffinerie
 		is_not_economy = false;
 		m_health = 400;
-		m_damage = 25;
+		m_damage = 2500;
 		m_cooldown = 2.0f;
 		sprites[0].setTexture(TowerTexture::get_instance()->tops[2]);
 		break;

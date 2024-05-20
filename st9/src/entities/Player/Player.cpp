@@ -48,7 +48,7 @@ static int i = 0;
 static int prevleft_right = 0;
 static int prevfront_back = 0;
 
-void Player::update(const float deltatime)
+void Player::update_player(const float deltatime)
 {
 	if (m_health <= 0)
 		return;

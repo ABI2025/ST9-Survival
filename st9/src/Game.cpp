@@ -206,7 +206,9 @@ void Game::run_game(int)
 	EnemyManager::set_walls_update(true);
 	pa->calculate_paths(towers, mb);
 	bool show_option_menu = false;
-
+	constexpr float player_cooldown = 20;
+	float player_rem_cooldown = 0.0f;
+	Utils::Timer highscore;
 	while (m_window.isOpen() && m_open)
 	{
 
@@ -216,6 +218,9 @@ void Game::run_game(int)
 		EnemyManager::set_walls_update(false);
 
 		float deltatime = delta_timer.Elapsed();
+
+
+
 		delta_timer.Reset();
 		sf::Event event{};
 
@@ -364,13 +369,30 @@ void Game::run_game(int)
 		texture_camera.move_cam_to_player();
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
+
+
+
 			sf::Vector2f temp;
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
 
+			if (player_alive == false)
+			{
+
+				player_rem_cooldown -= deltatime;
+				if (player_rem_cooldown <= 0)
+				{
+					hb.regeneration(21);
+
+					p->set_hp(20);
+					p->set_pos(mb->get_pos());
+					player_alive = true;
+					EnemyManager::set_player_moving(true);
+				}
+			}
 
 
-			p->update(deltatime);
+			p->update_player(deltatime);
 
 			if (opt->get_should_do_dockspace())
 			{
@@ -456,9 +478,10 @@ void Game::run_game(int)
 			m_sounds.music(deltatime);
 
 
-			if (!hb.alive())
+			if (!hb.alive() && player_alive)
 			{
-
+				player_rem_cooldown = player_cooldown;
+				player_alive = false;
 			}
 			if (mb->get_hp() <= 0)
 			{
@@ -481,6 +504,8 @@ void Game::run_game(int)
 			ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime);
 			ImGui::TextWrapped("amount of enemies: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("V-Bucks %f", m_geld);
+			if(!player_alive)
+				ImGui::TextWrapped("Respawn Time %f", player_rem_cooldown);
 			ImGui::SameLine();
 			sf::Sprite temp_drawable(m_ui_textures[0]);
 			temp_drawable.setScale(0.1f, 0.1f);
@@ -573,7 +598,7 @@ void Game::run_game(int)
 	pa = nullptr;
 	BuildSystem::delete_instance();
 	buildsystem = nullptr;
-
+	LOG_INFO("highscore:" , highscore.Elapsed());
 	m_sounds.delete_sounds();
 
 	for (int i = 0; i < m_map.size(); i++)
