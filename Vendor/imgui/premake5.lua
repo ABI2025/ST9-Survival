@@ -30,7 +30,6 @@ project "ImGui"
 
 	 links
 	 {
-		"opengl32",
         "openal32",
 		"freetype",
 		"winmm",
@@ -52,11 +51,19 @@ project "ImGui"
 	filter "system:windows"
 		systemversion "latest"
 		cppdialect "C++20"
+        links
+        {
+        		"opengl32",
+        }
 
 	filter "system:linux"
 		pic "On"
 		systemversion "latest"
 		cppdialect "C++17"
+        links
+        {
+            "GL"
+        }
 
 	filter "configurations:Debug"
 		runtime "Debug"

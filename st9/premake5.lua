@@ -18,10 +18,10 @@ project "st9"
    defines {"SFML_STATIC"}
  
    libdirs { "../vendor/SFML/SFML-2.6.0/lib" }
-	links
+
+    links
 	{
         "imgui",
-		"opengl32",
         "openal32",
 		"freetype",
 		"winmm",
@@ -41,6 +41,15 @@ project "st9"
    filter "system:windows"
       systemversion "latest"
       defines { "PLATFORM_WINDOWS" }
+      links
+      {
+          "opengl32",
+      }
+   filter "system:linux"
+        links
+        {
+          "gl"
+        }
 
    filter "configurations:Debug"
       defines { "DEBUG" }
