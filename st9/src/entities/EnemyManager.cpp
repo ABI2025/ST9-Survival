@@ -1,7 +1,7 @@
 // ReSharper disable CppTooWideScopeInitStatement
 #include "EnemyManager.h"
 #include <execution>
-
+#include "Wave.h"
 #include "Game.h"
 #include "Utils/Utils.h"
 
@@ -11,10 +11,12 @@ constexpr float CellSize = 135.0f;
 
 EnemyManager::EnemyManager()
 {
-	m_textures.resize(3);
+	m_textures.resize(5);
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
 	m_textures[1].loadFromFile("resources/images/Roter_gegner1-1.png");
 	m_textures[2].loadFromFile("resources/images/Blauer_gegner1-1.png");
+	m_textures[3].loadFromFile("resources/images/Gold_gegner1-1.png");
+	m_textures[4].loadFromFile("resources/images/Schwarzer_gegner1-1.png");
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
@@ -234,14 +236,24 @@ void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_en
 	spawned_enemy->m_enemy_type = static_cast<enemy_type>(i_enemy_type);
 	spawned_enemy->m_sprite.setTexture(m_textures[i_enemy_type]);
 	switch(i_enemy_type){
-	case 1:
+	case 1: // Roter Gegner
 		spawned_enemy->m_health = 1.4; // ist default
 		spawned_enemy->m_damage = 5; // 0.1 ist default
 		spawned_enemy->m_speed = 2; // 1 ist default
 		break;
-	case 2:
+	case 2: // Blauer Gegner
 		spawned_enemy->m_health = 8;
 		spawned_enemy->m_damage = 0.5;
+		break;
+	case 3: //gold
+		spawned_enemy->m_speed = 1.3 + Wave::wave_counter * 0.02;
+		spawned_enemy->m_damage = 1 + Wave::wave_counter * 0.08;
+		spawned_enemy->m_health = 8 + Wave::wave_counter;
+		break;
+	case 4: //schwarz
+		spawned_enemy->m_speed = 0.5;
+		spawned_enemy->m_damage = 0.5;
+		spawned_enemy->m_health = 20;
 		break;
 	}
 }
