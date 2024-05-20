@@ -72,8 +72,8 @@ public:
 		
 
 
-		waves.push_back(std::make_shared<Wave>(Wave{40,10 ,4}));
-		waves.push_back(std::make_shared<Wave>(Wave{70,2 ,2}));
+		waves.push_back(std::make_shared<Wave>(Wave{30,10 ,4}));
+		waves.push_back(std::make_shared<Wave>(Wave{60,2 ,2}));
 
 		waves.push_back(std::make_shared<Wave>(Wave{160,10 }));
 		waves.push_back(std::make_shared<Wave>(Wave{240,20 }));

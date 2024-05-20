@@ -11,10 +11,12 @@ constexpr float CellSize = 135.0f;
 
 EnemyManager::EnemyManager()
 {
-	m_textures.resize(3);
+	m_textures.resize(5);
 	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
 	m_textures[1].loadFromFile("resources/images/Roter_gegner1-1.png");
 	m_textures[2].loadFromFile("resources/images/Blauer_gegner1-1.png");
+	m_textures[3].loadFromFile("resources/images/Gold_gegner1-1.png");
+	m_textures[4].loadFromFile("resources/images/Schwarzer_gegner1-1.png");
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
