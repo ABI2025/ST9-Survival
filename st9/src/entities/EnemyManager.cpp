@@ -1,7 +1,7 @@
 // ReSharper disable CppTooWideScopeInitStatement
 #include "EnemyManager.h"
 #include <execution>
-
+#include "Wave.h"
 #include "Game.h"
 #include "Utils/Utils.h"
 
@@ -234,15 +234,23 @@ void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_en
 	spawned_enemy->m_enemy_type = static_cast<enemy_type>(i_enemy_type);
 	spawned_enemy->m_sprite.setTexture(m_textures[i_enemy_type]);
 	switch(i_enemy_type){
-	case 1:
+	case 1: // Roter Gegner
 		spawned_enemy->m_health = 1.4; // ist default
 		spawned_enemy->m_damage = 5; // 0.1 ist default
 		spawned_enemy->m_speed = 2; // 1 ist default
 		break;
-	case 2:
+	case 2: // Blauer Gegner
 		spawned_enemy->m_health = 8;
 		spawned_enemy->m_damage = 0.5;
 		break;
+	case 3: //gold
+		spawned_enemy->m_speed = 1.3 + Wave::wave_counter * 0.05;
+		spawned_enemy->m_damage = 1;
+		spawned_enemy->m_health = 8 + Wave::wave_counter;
+	case 4: //schwarz
+		spawned_enemy->m_speed = 0.5;
+		spawned_enemy->m_damage = 0.5;
+		spawned_enemy->m_health = 15;
 	}
 }
 void EnemyManager::draw(sf::RenderTarget& i_window) const

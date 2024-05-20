@@ -67,29 +67,32 @@ public:
 		waves.push_back(std::make_shared<Wave>(Wave{10,10 ,2 }));
 		waves.push_back(std::make_shared<Wave>(Wave{20,4 ,1 }));
 
-		waves.push_back(std::make_shared<Wave>(Wave{70,10 }));
-		waves.push_back(std::make_shared<Wave>(Wave{90,10 }));
-		waves.push_back(std::make_shared<Wave>(Wave{70,10 ,2 }));
+		waves.push_back(std::make_shared<Wave>(Wave{ 10,10 ,4}));
+		waves.push_back(std::make_shared<Wave>(Wave{70,3 }));
+		
+
+
+		waves.push_back(std::make_shared<Wave>(Wave{40,10 ,4}));
+		waves.push_back(std::make_shared<Wave>(Wave{70,2 ,2}));
+
 		waves.push_back(std::make_shared<Wave>(Wave{160,10 }));
 		waves.push_back(std::make_shared<Wave>(Wave{240,20 }));
-		waves.push_back(std::make_shared<Wave>(Wave{400,20 }));
-		waves.push_back(std::make_shared<Wave>(Wave{700,20 }));
-		waves.push_back(std::make_shared<Wave>(Wave{1000,20 }));
-		waves.push_back(std::make_shared<Wave>(Wave{500,20,1 }));
+		waves.push_back(std::make_shared<Wave>(Wave{100,20,4 }));
+		waves.push_back(std::make_shared<Wave>(Wave{400,20,1}));
+		waves.push_back(std::make_shared<Wave>(Wave{300,20,2 }));
+		waves.push_back(std::make_shared<Wave>(Wave{100,3,1 }));
 	}
 	void spawnening(EnemyManager* ma,float dt)
 	{
 		
 		if (done) 
 		{
-			current_wave->spawn_wave(ma, dt);
-			if(current_wave->was_spawned())
-			{
-				current_wave.reset();
-				current_wave = std::make_shared<Wave>(Wave{ Wave::wave_counter * 100.0f,20});
+				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 3.f ,20.f , 3}));
+				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 9.f ,0.f , 4}));
+				waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 2.f ,0.f , 1}));
+				done = false;
 				LOG_INFO("boah einfach crazy");
-			}
-			return;
+			
 		}
 
 		current_wave->spawn_wave(ma, dt);
