@@ -93,7 +93,6 @@ bool Optionen::optionen_exe(sf::RenderWindow& window, bool in_game)
 		ImGui::Text("Rechte Maustaste: Entfernen eines Turms oder einer Mauer an der aktuellen Mausposition");
 		ImGui::Text("ESC: Pausiert das Spiel und oeffnet das Optionsmenue");
 		ImGui::Text("F: Abfeuern eines Projektils in Richtung der Maus");
-		ImGui::Text("R: Heilt den Spieler um 10 HP");
 	
 		if (ImGui::Button("close"))
 		{
