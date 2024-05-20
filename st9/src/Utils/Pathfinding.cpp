@@ -326,13 +326,14 @@ namespace Utils {
 		//priority player
  		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0.0 || EnemyManager::is_walls_update())
 		{
-			if (m_player->get_hp() > 0.0) 
+			if (m_player->get_hp() > 0.0)
 			{
 				const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
 				dijkstra({ start }, m_player_cellmap);
 			}
 			else
 			{
+				LOG_INFO("success");
 				std::vector<glm::ivec3> start_points;
 				for (const std::shared_ptr<Tower>& tower : towers)
 				{
@@ -371,7 +372,7 @@ namespace Utils {
 			}
 			start_points.emplace_back(main_building->get_pos() / 135.0f);
 			start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{ 0,1,0 });
-			if(m_player->get_hp() > 0)
+			if(m_player->get_hp() > 0.0)
 				start_points.push_back((glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0)));
 			dijkstra(start_points, m_nothing_cellmap);
 		}

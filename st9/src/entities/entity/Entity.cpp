@@ -73,7 +73,7 @@ void Entity::take_damage(const double damage)
 
 }
 
-double Entity::get_hp() const
+double& Entity::get_hp() 
 {
 	return m_health;
 }

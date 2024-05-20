@@ -182,7 +182,8 @@ void Game::run_game(int)
 		m_map[0][static_cast<int>(cell_pos.y)][static_cast<int>(cell_pos.x)] = Utils::Cell::TURRET;
 		m_map[0][static_cast<int>(cell_pos.y) + 1][static_cast<int>(cell_pos.x)] = Utils::Cell::TURRET;
 	}
-	healthbar hb{};
+	healthbar::init(p->get_hp());
+	healthbar* hb = healthbar::get_instance();
 	BuildSystem* buildsystem = BuildSystem::get_instance();
 
 
@@ -206,7 +207,7 @@ void Game::run_game(int)
 	EnemyManager::set_walls_update(true);
 	pa->calculate_paths(towers, mb);
 	bool show_option_menu = false;
-	constexpr float player_cooldown = 20;
+	constexpr float player_cooldown = 5;
 	float player_rem_cooldown = 0.0f;
 	Utils::Timer highscore;
 	while (m_window.isOpen() && m_open)
@@ -274,47 +275,19 @@ void Game::run_game(int)
 
 		if (!paused)
 		{
-			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
-			//	switch (const int dir =(signed)Utils::Random::UInt(0, 3))
-			//	{
-			//	case 0://oben
-			//		ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), 0, 0),
-			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-			//		break;
-			//	case 1://links
-			//		ma->add_enemy(glm::vec3(0, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
-			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-			//		break;
-			//	case 2://unten
-			//		ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), (height-1)*BACKGROUND_HEIGHT, 0),
-			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-			//		break;
-			//	case 3://rechts
-			//		ma->add_enemy(glm::vec3((width-1)*BACKGROUND_WIDTH, Utils::Random::UInt(0, height * BACKGROUND_HEIGHT - BACKGROUND_WIDTH), 0),
-			//			static_cast<Utils::Priority>(Utils::Random::UInt(0, 2)));
-			//		break;
-			//	default:
-			//			break;
-			//	}
-			//}
-			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F))  // nur zum debuggen
-			//{
-			//	m_sounds.add_sound("player", 2);
-			//	new Projectile(p->get_pos(), glm::vec3(p->get_movement_speed().x * 2.5, p->get_movement_speed().y * 2.5, 0), 180, 0.1, 5);
-			//}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L)) //Depression.exe 
 			{
 				m_sounds.add_sound("player", 1);
 				p->take_damage(1);
 
-				hb.damage_input(1);
+				hb->damage_input(1);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
 			{
 				m_sounds.add_sound("player", 0);
 				p->take_damage(-1);
 
-				hb.regeneration(1);
+				hb->regeneration(1);
 
 			}
 		}
@@ -334,29 +307,28 @@ void Game::run_game(int)
 
 			ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("Menu"))
-				{
-					if (ImGui::MenuItem("MenuItem")) {}
-					ImGui::EndMenu();
-				}
-				if (ImGui::BeginMenu("Examples"))
-				{
-					if (ImGui::MenuItem("MenuItem")) {}
-					ImGui::EndMenu();
-				}
-				//if (ImGui::MenuItem("MenuItem")) {} // You can also use MenuItem() inside a menu bar!
-				if (ImGui::BeginMenu("Tools"))
-				{
-					if (ImGui::MenuItem("MenuItem"))
-					{
-
-					}
-					ImGui::EndMenu();
-				}
-				ImGui::EndMenuBar();
-			}
+			//if (ImGui::BeginMenuBar())
+			//{
+			//	if (ImGui::BeginMenu("Menu"))
+			//	{
+			//		if (ImGui::MenuItem("MenuItem")) {}
+			//		ImGui::EndMenu();
+			//	}
+			//	if (ImGui::BeginMenu("Examples"))
+			//	{
+			//		if (ImGui::MenuItem("MenuItem")) {}
+			//		ImGui::EndMenu();
+			//	}
+			//	//if (ImGui::MenuItem("MenuItem")) {} // You can also use MenuItem() inside a menu bar!
+			//	if (ImGui::BeginMenu("Tools"))
+			//	{
+			//		if (ImGui::MenuItem("MenuItem"))
+			//		{
+			//		}
+			//		ImGui::EndMenu();
+			//	}
+			//	ImGui::EndMenuBar();
+			//}
 
 
 
@@ -370,8 +342,6 @@ void Game::run_game(int)
 		if (m_window.hasFocus())//Spiel logik sollte hier rein
 		{
 
-
-
 			sf::Vector2f temp;
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
@@ -382,7 +352,7 @@ void Game::run_game(int)
 				player_rem_cooldown -= deltatime;
 				if (player_rem_cooldown <= 0)
 				{
-					hb.regeneration(21);
+					hb->regeneration(21);
 
 					p->set_hp(20);
 					p->set_pos(mb->get_pos());
@@ -472,17 +442,21 @@ void Game::run_game(int)
 			}
 			ma->update(deltatime);
 
+			p->do_damage_calc();
+
 			wave_manager.spawnening(ma, deltatime);
 
 			m_sounds.cleanup();
 			m_sounds.music(deltatime);
 
 
-			if (!hb.alive() && player_alive)
+			if (!hb->alive() && player_alive)
 			{
 				player_rem_cooldown = player_cooldown;
 				player_alive = false;
 			}
+			else if(player_alive)
+				p->take_damage(3*-deltatime);
 			if (mb->get_hp() <= 0)
 			{
 				m_open = false;
@@ -548,7 +522,7 @@ void Game::run_game(int)
 					texture.draw(*p);
 				}
 				Projectile::draw_all_projectiles(texture);
-				hb.draw_healthbar(texture, *p);
+				hb->draw_healthbar(texture, *p);
 				texture.display();
 				ImGui::Begin("Viewport");
 				ImGui::Image(texture);
@@ -563,11 +537,11 @@ void Game::run_game(int)
 				//	//texture.draw(*tower);
 				//	tower->drawtower(m_window);
 				//}
-				render_tower(m_window);
+				//render_tower(m_window);
 				ma->draw(m_window);
 				m_window.draw(*p);
 				Projectile::draw_all_projectiles(m_window);
-				hb.draw_healthbar(m_window, *p);
+				hb->draw_healthbar(m_window, *p);
 			}
 
 			ImGui::SFML::Render(m_window); //zu guter letzt kommt imgui (die fenster wie Debug und so)

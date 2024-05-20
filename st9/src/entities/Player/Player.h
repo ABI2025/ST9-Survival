@@ -10,12 +10,10 @@ public:
 	void update_player(float deltatime);
 	void shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const;
 	glm::ivec3 get_movement_speed() const;
-	void set_hp(double i_health)
-	{
-		m_health = i_health;
-		if (m_health > 20.0)
-			m_health = 20.0;
-	}
+	void set_hp(double i_health);
+
+	void do_damage_calc();
+
 	void take_damage(const double damage) override;
 
 protected:

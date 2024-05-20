@@ -64,8 +64,8 @@ void EnemyManager::update(float deltatime)
 
 						enemys_per_cell[cell_pos.y][cell_pos.x]++;
 
-						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 						e->m_pos = temp;
+						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 						e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
 						return;
 					}
@@ -99,6 +99,7 @@ void EnemyManager::update(float deltatime)
 						enemys_per_cell[cell_pos.y][cell_pos.x]++;
 						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 						e->attack();
+						e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
 						tower[0][cell_pos.y][cell_pos.x]->take_damage(e->m_damage);
 						return;
 					}
