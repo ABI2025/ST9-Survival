@@ -24,7 +24,7 @@ public:
 
 		const std::vector<float> volumes = s_instance->m_sounds.get_volumes();
 		std::ofstream fout("optionen.txt");
-		fout << volumes[0] << ';' << volumes[1] << ';' << volumes[2];
+		fout << s_instance->should_do_dockspace << ';' << volumes[0] << ';' << volumes[1] << ';' << volumes[2];
 		fout.close();
 		delete s_instance;
 		s_instance = nullptr;

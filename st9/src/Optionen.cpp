@@ -20,6 +20,8 @@ Optionen::Optionen()
 	{
 		std::string line;
 		std::getline(fin, line, ';');
+		should_do_dockspace = std::stoi(line);
+		std::getline(fin, line, ';');
 		float volume1 = std::stof(line);
 		std::getline(fin, line, ';');
 		float volume2 = std::stof(line);

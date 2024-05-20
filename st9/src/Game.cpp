@@ -197,7 +197,6 @@ void Game::run_game(int)
 
 	bool first_run = true;
 	bool paused = false;
-	bool should_do_dockspace = true;
 	bool player_alive = true;
 	p->set_pos(mb->get_pos());
 	EnemyManager::set_updated_tower(true);
@@ -262,7 +261,6 @@ void Game::run_game(int)
 		if (opt->get_should_do_dockspace())
 			ImGui::DockSpaceOverViewport();
 
-
 		if (!paused)
 		{
 			//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
@@ -319,7 +317,7 @@ void Game::run_game(int)
 
 		Utils::Cell temp_cell = buildsystem->display();
 
-		if (should_do_dockspace)
+		if (opt->get_should_do_dockspace())
 		{
 			ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
 
@@ -368,7 +366,7 @@ void Game::run_game(int)
 
 			p->update(deltatime);
 
-			if (should_do_dockspace)
+			if (opt->get_should_do_dockspace())
 			{
 				temp = texture.mapPixelToCoords(sf::Mouse::getPosition(m_window));
 				ImVec2 imvec2 = ImGui::GetCursorScreenPos();
@@ -385,7 +383,7 @@ void Game::run_game(int)
 
 
 
-			(*buildsystem)(left_click, right_click, should_do_dockspace, m_map, entities, towers, mouse_pos,mb->get_pos());
+			(*buildsystem)(left_click, right_click, opt->get_should_do_dockspace(), m_map, entities, towers, mouse_pos,mb->get_pos());
 
 			std::ranges::sort(towers,
 			[&p](const std::shared_ptr<Tower>& tower1, const std::shared_ptr<Tower>& tower2)
@@ -397,7 +395,7 @@ void Game::run_game(int)
 				return manhattan_distance_player_to_tower1 < manhattan_distance_player_to_tower2;
 			});
 
-			if (should_do_dockspace) {
+			if (opt->get_should_do_dockspace()) {
 				ImGui::PopItemWidth();
 				ImGui::End();
 			}
@@ -463,7 +461,7 @@ void Game::run_game(int)
 			ImGui::TextWrapped("Game logic: MS: %f ", logic_timer.Elapsed() * 1000.0f);
 			ImGui::End();
 		}
-		else if (should_do_dockspace)
+		else if (opt->get_should_do_dockspace())
 		{
 			ImGui::PopItemWidth();
 			ImGui::End();
@@ -478,10 +476,7 @@ void Game::run_game(int)
 			sf::Sprite temp_drawable(m_ui_textures[0]);
 			temp_drawable.setScale(0.1f, 0.1f);
 			ImGui::Image(temp_drawable);
-			if (ImGui::Button("should do docking"))
-			{
-				should_do_dockspace = !should_do_dockspace;
-			}
+
 
 			if (paused)
 				ImGui::TextWrapped("paused");
@@ -500,7 +495,7 @@ void Game::run_game(int)
 
 
 
-			if (should_do_dockspace) {
+			if (opt->get_should_do_dockspace()) {
 				texture.clear();
 				render_map(p->get_pos(), texture); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				texture.draw(*mb);
