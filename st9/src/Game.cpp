@@ -273,24 +273,6 @@ void Game::run_game(int)
 		if (opt->get_should_do_dockspace())
 			ImGui::DockSpaceOverViewport();
 
-		if (!paused)
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L)) //Depression.exe 
-			{
-				m_sounds.add_sound("player", 1);
-				p->take_damage(1);
-
-				hb->damage_input(1);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R))
-			{
-				m_sounds.add_sound("player", 0);
-				p->take_damage(-1);
-
-				hb->regeneration(1);
-
-			}
-		}
 
 		if (paused)
 		{
