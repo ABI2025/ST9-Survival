@@ -2,6 +2,7 @@
 #include "Utils/Log.h"
 #include <iostream>
 
+#include "healthbar.h"
 #include "entities/EnemyManager.h"
 #include "imgui.h"
 #include "imgui-sfml.h"
@@ -40,8 +41,8 @@ Player::Player()
 	m_textures[1][1][1].loadFromFile("Resources/images/charakter_HR1.png");
 	m_textures[1][1][2].loadFromFile("Resources/images/charakter_HR2.png");
 	m_sprite.setTexture(m_textures[0][0][0]);
-
-	m_health = 20;
+	m_hitbox = m_pos + glm::vec3{ 35,117,0 };
+	m_health = 200;
 }
 
 static int i = 0;
@@ -96,9 +97,9 @@ void Player::update_player(const float deltatime)
 		/*LOG_TRACE("after normalize x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
 		dir *= 300 * speed_scalar * deltatime;
 		m_pos += dir;
+		
 		speed = dir; // ich hol hier speed daten
 		/* LOG_TRACE("after multiplying with 5 x:{:03.2f} y:{:03.2f} z:{:03.2f}", dir.x, dir.y, dir.z);*/
-
 		cell_pos = (glm::vec3{ m_pos.x / 135.0f,m_pos.y / 135.0f,m_pos.z });
 		if (prev_pos != cell_pos)
 		{
@@ -133,6 +134,8 @@ void Player::update_player(const float deltatime)
 	}
 	m_sprite.setPosition(m_pos.x, m_pos.y);
 	sf::Listener::setPosition(m_pos.x /135.0f, m_pos.y / 135.0f, 0.f);
+
+	m_hitbox = m_pos + glm::vec3{ 35,117,0 };
 
 
 
@@ -171,11 +174,53 @@ glm::ivec3 Player::get_movement_speed() const {
 	return speed;
 }
 
+void Player::set_hp(double i_health)
+{
+	m_health = i_health;
+	if (m_health > 200.0)
+		m_health = 200.0;
+}
+
+void Player::do_damage_calc()
+{
+	auto& m_enemys = EnemyManager::get_instance()->get_enemies();
+
+	glm::vec3 player_pos = m_pos;
+	glm::vec3 player_hitbox = m_hitbox; // Using the new get_hitBox method
+	glm::vec3 player_min = player_pos; // warum????
+	glm::vec3 player_max = player_hitbox;
+
+	for (auto& enemy : m_enemys) {
+		if (enemy == nullptr)
+			continue;
+		if (!enemy->is_alive()) {
+			continue;
+		}
+
+
+
+		glm::vec3 enemy_pos = enemy->get_pos();
+		glm::vec3 enemy_hitbox = enemy->get_hit_box(); // Using the new get_hitBox method
+		glm::vec3 enemy_min = enemy_pos;
+		glm::vec3 enemy_max = enemy_hitbox; // btw chat gpt ist richtig inkompetent
+		
+		// Check if hitboxes intersect
+		 //LOG_INFO("collision sfml {}",enemy->get_sprite().getLocalBounds().intersects(m_sprite.getLocalBounds()));
+		const bool collision =  player_pos.x <= enemy_hitbox.x &&
+			 player_hitbox.x >= enemy_pos.x &&
+			 player_pos.y <= enemy_hitbox.y &&
+			 player_hitbox.y >= enemy_pos.y;
+		if (collision) {
+			this->take_damage(enemy->get_damage());
+		}
+	}
+}
+
 void Player::take_damage(const double damage)
 {
 	m_health -= damage;
 	if (m_health < 0)
 		m_health = 0;
-	else if (m_health > 20)
-		m_health = 20;
+	else if (m_health > 200)
+		m_health = 200;
 }

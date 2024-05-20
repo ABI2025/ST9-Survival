@@ -23,6 +23,11 @@ private:
 	double m_speed;
 	friend class EnemyManager;
 public:
+
+	double get_damage() const { return m_damage; }
+	sf::Sprite& get_sprite() { return m_sprite; }
+
+
 	Enemy();
 	void die();
 	void attack();

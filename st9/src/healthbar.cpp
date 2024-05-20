@@ -1,18 +1,16 @@
 #include "healthbar.h"
 #include "entities/Player/Player.h"
 
-healthbar::healthbar()
+healthbar::healthbar(double& i_health) : m_health(i_health)
 {
-	m_health = 20;// Aktuelle HP - Standard HP 20
+	/*m_health = i_health;*/// Aktuelle HP - Standard HP 20
 }
 
-void healthbar::regeneration(const int health)
+void healthbar::regeneration(const double health)
 {// 
-	m_health += health;
-	if (m_health > 20)
-		m_health = 20;
+
 }
-int healthbar::get_health() const
+double healthbar::get_health() const
 {
 	return m_health;
 }
@@ -20,15 +18,8 @@ bool healthbar::alive() const
 {
 	return m_health > 0;
 }
-bool healthbar::damage_input(const int damage)
+bool healthbar::damage_input(const double damage)
 {
-	if (m_health <= 0)
-	{
-		return false;
-	}
-
-	m_health -= damage;
-	
 	return true;
 }
 void healthbar::draw_healthbar(sf::RenderTarget& target, Player& p) const
@@ -39,7 +30,7 @@ void healthbar::draw_healthbar(sf::RenderTarget& target, Player& p) const
 	sf::RectangleShape health_background(sf::Vector2f(292, 32));
 	health_background.setFillColor(sf::Color::Black);
 	health_background.setPosition(sf::Vector2f(p.get_pos().x - target.getView().getSize().x / 2.0f + target.getView().getSize().x * 0.1f, p.get_pos().y - target.getView().getSize().y / 2.0f + target.getView().getSize().y * 0.1f));
-	sf::RectangleShape health(sf::Vector2f(292.0f * static_cast<float>(m_health) / 20.0f, 32));
+	sf::RectangleShape health(sf::Vector2f(292.0f * static_cast<float>(m_health) / 200.0f, 32));
 	health.setFillColor(sf::Color::Red);
 	health.setPosition(sf::Vector2f(p.get_pos().x - target.getView().getSize().x / 2 + target.getView().getSize().x * 0.1f, p.get_pos().y - target.getView().getSize().y / 2.0f + target.getView().getSize().y * 0.1f));
 	target.draw(background);
