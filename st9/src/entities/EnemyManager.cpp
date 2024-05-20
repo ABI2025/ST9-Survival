@@ -247,7 +247,7 @@ void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_en
 		break;
 	case 3: //gold
 		spawned_enemy->m_speed = 1.3 + Wave::wave_counter * 0.02;
-		spawned_enemy->m_damage = 1;
+		spawned_enemy->m_damage = 1 + Wave::wave_counter * 0.08;
 		spawned_enemy->m_health = 8 + Wave::wave_counter;
 		break;
 	case 4: //schwarz
