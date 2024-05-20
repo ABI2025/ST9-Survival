@@ -25,29 +25,11 @@ class TowerTexture
 public:
 	sf::Texture base;
 	sf::Texture tops[5];
-	TowerTexture()
-	{
-		base.loadFromFile("resources/images/buttom.png");
-		tops[0].loadFromFile("resources/images/top.png");
-		tops[1].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
-		tops[2].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
-		tops[3].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
-		tops[4].loadFromFile("resources/images/Gold-Kanone.png");
-	}
-	static TowerTexture* get_instance()
-	{
-		if (!s_instance)
-		{
-			s_instance = new TowerTexture;
-		}
-		return s_instance;
-	}
+	TowerTexture();
 
-	static void delete_instance()
-	{
-		delete s_instance;
-		s_instance = nullptr;
-	}
+	static TowerTexture* get_instance();
+
+	static void delete_instance();
 };
 
 class Tower
@@ -75,10 +57,7 @@ public:
 	void drawtower(sf::RenderTarget&) const;
 	void fire(const EnemyManager& em,Sounds& sounds ,float deltatime);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	double get_value()
-	{
-		return m_ressourcen;
-	}
+	double get_value() const;
 	//glm::vec3 get_pos()const { return m_pos; }
 	//warten auf hinzufügen von projectile klasse
 

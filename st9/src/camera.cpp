@@ -19,6 +19,9 @@ Camera::~Camera()
 {
 }
 
+const sf::FloatRect& Camera::get_player_view() const
+{ return m_view.getViewport(); }
+
 void Camera::set_player(Player* player)
 {
 	m_player = player;

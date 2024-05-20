@@ -37,12 +37,25 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
 	LOG_INFO("  Version: {0}", (const char*)glGetString(GL_VERSION));
 }
 
+Menu* Menu::get_instance()
+{
+	if (!s_instance)
+		s_instance = new Menu;
+	return s_instance;
+}
+
+void Menu::delete_instance()
+{
+	delete s_instance;
+	s_instance = nullptr;
+}
+
 void Menu::show_menu()
 {
 	Optionen* opt = Optionen::get_instance();
 	Game::erstelle_game(m_window,opt->get_sounds());
 	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("fuck"); }
+	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("sound konnte nicht geladen werden"); }
 	sf::Sound sound;
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);
@@ -147,7 +160,6 @@ void Menu::show_menu()
 	WallTexture::delete_instance();
 	TowerTexture::delete_instance();
 	ProjectileTexture::delete_instance();
-	
 	opt = nullptr;
 }
 

@@ -6,6 +6,27 @@
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
+ProjectileTexture::ProjectileTexture()
+{
+	texture.loadFromFile("resources/images/Projektil.png");
+
+}
+
+ProjectileTexture* ProjectileTexture::get_instance()
+{
+	if (!s_instance)
+	{
+		s_instance = new ProjectileTexture;
+	}
+	return s_instance;
+}
+
+void ProjectileTexture::delete_instance()
+{
+	delete s_instance;
+	s_instance = nullptr;
+}
+
 Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double damage, int penetration)
 	: Entity(), m_speed(speed), m_lifetime(lifetime), m_damage(damage), m_penetration(penetration)
 {
@@ -22,7 +43,7 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double dama
 	sprite.setRotation(angle);
 }
 
-Projectile::~Projectile() {}
+Projectile::~Projectile() = default;
 
 void Projectile::update(float deltatime)
 {

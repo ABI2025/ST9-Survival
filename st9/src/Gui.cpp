@@ -32,7 +32,3 @@ bool init_sfml_imgui(sf::RenderWindow& window)
 	}
 	return true;
 }
-
-Gui::Gui(const std::initializer_list<GuiElement> gui_elements) : m_elements(gui_elements)
-{
-}

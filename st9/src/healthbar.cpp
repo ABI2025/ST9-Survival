@@ -6,6 +6,22 @@ healthbar::healthbar(double& i_health) : m_health(i_health)
 	/*m_health = i_health;*/// Aktuelle HP - Standard HP 20
 }
 
+void healthbar::init(double& i_health)
+{
+	s_instance = new healthbar(i_health);
+}
+
+healthbar* healthbar::get_instance()
+{
+	return s_instance;
+}
+
+void healthbar::delete_instance()
+{
+	delete s_instance;
+	s_instance = nullptr;
+}
+
 void healthbar::regeneration(const double health)
 {// 
 

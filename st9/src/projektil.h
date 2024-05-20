@@ -11,25 +11,10 @@ class ProjectileTexture
 	inline static ProjectileTexture* s_instance;
 public:
 	sf::Texture texture;
-	ProjectileTexture()
-	{
-		texture.loadFromFile("resources/images/Projektil.png");
+	ProjectileTexture();
+	static ProjectileTexture* get_instance();
 
-	}
-	static ProjectileTexture* get_instance()
-	{
-		if (!s_instance)
-		{
-			s_instance = new ProjectileTexture;
-		}
-		return s_instance;
-	}
-	static void delete_instance()
-	{
-		delete s_instance;
-		s_instance = nullptr;
-	}
-
+	static void delete_instance();
 };
 
 class Projectile : public Entity {
@@ -42,7 +27,7 @@ private:
 	sf::Sprite sprite;
 public:
 	Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double damage, int penetration);
-	~Projectile();
+	~Projectile() override;
 	int get_penetration() const;
 	double get_damage() const;
 	void decrease_penetration(int);

@@ -10,17 +10,8 @@ class Menu
 public:
 	Menu(const Menu&) = delete;
 	//test
-	static Menu* get_instance()
-	{
-		if (!s_instance)
-			s_instance = new Menu;
-		return s_instance;
-	}
-	static void delete_instance()
-	{
-		delete s_instance;
-		s_instance = nullptr;
-	}
+	static Menu* get_instance();
+	static void delete_instance();
 	void show_menu();
 	void button_events();
 	void story();

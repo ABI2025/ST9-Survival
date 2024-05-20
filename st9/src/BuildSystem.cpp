@@ -92,6 +92,19 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_sprites[7].setTexture(m_textures[4]);
 }
 
+BuildSystem* BuildSystem::get_instance()
+{
+	if (!s_instance)
+		s_instance = new BuildSystem;
+	return s_instance;
+}
+
+void BuildSystem::delete_instance()
+{
+	delete s_instance;
+	s_instance = nullptr;
+}
+
 Utils::Cell BuildSystem::display()
 {
 	//texture.clear(sf::Color::Transparent);
@@ -133,56 +146,9 @@ Utils::Cell BuildSystem::display()
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
 		{
 
-
-
-				//case tower_1: // Basic
-				//	m_health = 200;
-				//	m_damage = 0.1;
-				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
-				//	break;
-				//case tower_2: // Maschienen gewehr
-				//	m_health = 300;
-				//	m_damage = 0.2;
-				//	m_cooldown = 0.15f;
-				//	m_penetration = 1;
-				//	m_speed = 8;
-				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[1]);
-				//	break;
-				//case tower_3: // Geld raffinerie
-				//	is_not_economy = false;
-				//	m_health = 400;
-				//	m_damage = 25;
-				//	m_cooldown = 2.0f;
-				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[2]);
-				//	break;
-				//case tower_4: // Gold Maschienen Gewehr
-				//	m_health = 1000;
-				//	m_damage = 1;
-				//	m_cooldown = 0.15f;
-				//	m_penetration = 2;
-				//	m_speed = 8;
-				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[3]);
-				//	break;
-				//case tower_5: // Schwere Gold kanone
-				//	m_health = 3000;
-				//	m_damage = 2;
-				//	m_cooldown = 1.3f;
-				//	m_penetration = 30;
-				//	m_speed = 4;
-				//	m_radius = 20;
-				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[4]);
-				//	break;
-				//case tower_6:
-				//	m_health = 700;
-				//	m_damage = 1.0;
-				//	m_radius = 10;
-				//	m_cooldown = 1.0f;
-				//	m_speed = 5;
-				//	sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
-				//	break;
 			sf::Sprite temp;
 			temp.setTexture(Game::get_game()->m_ui_textures[0]);
-			temp.scale(0.1, 0.1);
+			temp.scale(0.1f, 0.1f);
 			switch (current_button_id)
 			{
 			case 0:

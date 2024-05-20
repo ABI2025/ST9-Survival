@@ -19,8 +19,16 @@ bool Enemy::is_alive() const
 	return m_health > 0;
 }
 
+Utils::Priority Enemy::get_priority() const
+{
+	return m_priority;
+}
 
 
+double Enemy::get_damage() const
+{
+	return m_damage;
+}
 
 Enemy::Enemy() : m_priority()
 {

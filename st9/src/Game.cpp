@@ -494,6 +494,8 @@ void Game::run_game(int)
 		first_run = false;
 	}
 
+
+	//cleanup
 	m_tiles.clear();
 	m_open = true;
 	EnemyManager::delete_instance();
@@ -506,7 +508,7 @@ void Game::run_game(int)
 	buildsystem = nullptr;
 	LOG_INFO("highscore:" , highscore.Elapsed());
 	m_sounds.delete_sounds();
-
+	healthbar::delete_instance();
 	for (int i = 0; i < m_map.size(); i++)
 	{
 		for (int j = 0; j < m_map[i].size(); j++)

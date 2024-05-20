@@ -23,6 +23,54 @@ EnemyManager::EnemyManager()
 		std::vector(map[0][0].size(), 0));
 }
 
+EnemyManager* EnemyManager::get_instance()
+{
+	if (!s_instance)
+		s_instance = new EnemyManager;
+	return s_instance;
+}
+
+void EnemyManager::delete_instance()
+{
+	delete s_instance;
+	s_instance = nullptr;
+}
+
+void EnemyManager::set_player_moving(const bool i_moving)
+{
+	s_player_moving = i_moving;
+}
+
+void EnemyManager::set_updated_tower(const bool i_tower_update)
+{
+	s_tower_update = i_tower_update;
+}
+
+void EnemyManager::set_walls_update(const bool i_walls_update)
+{
+	s_walls_update = i_walls_update;
+}
+
+bool EnemyManager::should_update()
+{
+	return s_tower_update || s_player_moving || s_walls_update;
+}
+
+bool EnemyManager::is_tower_updated()
+{
+	return s_tower_update;
+}
+
+bool EnemyManager::is_player_moving()
+{
+	return s_player_moving;
+}
+
+bool EnemyManager::is_walls_update()
+{
+	return s_walls_update;
+}
+
 void EnemyManager::update(float deltatime)
 {
 	for (std::vector<int>& vector : enemys_per_cell)

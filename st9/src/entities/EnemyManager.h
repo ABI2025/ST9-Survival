@@ -18,46 +18,23 @@ class EnemyManager
 	EnemyManager();
 public:
 
-	static EnemyManager* get_instance()
-	{
-		if (!s_instance)
-			s_instance = new EnemyManager;
-		return s_instance;
-	}
-	static void delete_instance()
-	{
-		delete s_instance;
-		s_instance = nullptr;
-	}
+	static EnemyManager* get_instance();
 
-	static void set_player_moving(const bool i_moving)
-	{
-		s_player_moving = i_moving;
-	}
-	static void set_updated_tower(const bool i_tower_update)
-	{
-		s_tower_update = i_tower_update;
-	}
-	static void set_walls_update(const bool i_walls_update)
-	{
-		s_walls_update = i_walls_update;
-	}
-	[[nodiscard]] static bool should_update()
-	{
-		return s_tower_update || s_player_moving || s_walls_update;
-	}
-	[[nodiscard]] static bool is_tower_updated()
-	{
-		return s_tower_update;
-	}
-	[[nodiscard]] static bool is_player_moving()
-	{
-		return s_player_moving;
-	}
-	[[nodiscard]] static bool is_walls_update()
-	{
-		return s_walls_update;
-	}
+	static void delete_instance();
+
+	static void set_player_moving(const bool i_moving);
+
+	static void set_updated_tower(const bool i_tower_update);
+
+	static void set_walls_update(const bool i_walls_update);
+
+	[[nodiscard]] static bool should_update();
+
+	[[nodiscard]] static bool is_tower_updated();
+
+	[[nodiscard]] static bool is_player_moving();
+
+	[[nodiscard]] static bool is_walls_update();
 	void update(float deltatime);
 
 	[[nodiscard]] glm::vec2 enemypos(double radius, glm::vec2 tower_position) const;

@@ -21,17 +21,9 @@ class BuildSystem
 	BuildSystem();
 public:
 
-	static BuildSystem* get_instance()
-	{
-		if (!s_instance)
-			s_instance = new BuildSystem;
-		return s_instance;
-	}
-	static void delete_instance()
-	{
-		delete s_instance;
-		s_instance = nullptr;
-	}
+	static BuildSystem* get_instance();
+
+	static void delete_instance();
 
 	Utils::Cell display();
 

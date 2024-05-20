@@ -148,7 +148,6 @@
     <ClInclude Include="src\Sounds.h" />
     <ClInclude Include="src\BuildSystem.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\GameWindow.h" />
     <ClInclude Include="src\Gui.h" />
     <ClInclude Include="src\MainBuilding.h" />
     <ClInclude Include="src\Menu.h" />
@@ -173,7 +172,6 @@
     <ClCompile Include="src\Sounds.cpp" />
     <ClCompile Include="src\BuildSystem.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\Gui.cpp" />
     <ClCompile Include="src\MainBuilding.cpp" />
     <ClCompile Include="src\Menu.cpp" />

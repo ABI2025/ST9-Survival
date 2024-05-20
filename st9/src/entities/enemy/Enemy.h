@@ -24,15 +24,12 @@ private:
 	friend class EnemyManager;
 public:
 
-	double get_damage() const { return m_damage; }
-	sf::Sprite& get_sprite() { return m_sprite; }
-
-
+	double get_damage() const;
 	Enemy();
 	void die();
 	void attack();
 	void update();
 	bool is_alive() const;
-	Utils::Priority get_priority() const { return m_priority; }
+	Utils::Priority get_priority() const;
 };
 

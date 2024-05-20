@@ -70,10 +70,7 @@ namespace Utils
 		[[nodiscard]] const std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
 
 
-		[[nodiscard]] glm::vec3 get_player_pos() const
-		{
-			return m_player->m_pos;
-		}
+		[[nodiscard]] glm::vec3 get_player_pos() const;
 
 		/*
 

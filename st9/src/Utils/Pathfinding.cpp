@@ -35,6 +35,11 @@ namespace Utils {
 		return s_instance;
 	}
 
+	glm::vec3 Pathfinding::get_player_pos() const
+	{
+		return m_player->m_pos;
+	}
+
 	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& start, Priority p) const
 	{
 

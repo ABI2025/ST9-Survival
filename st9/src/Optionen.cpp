@@ -110,3 +110,34 @@ bool Optionen::optionen_exe(sf::RenderWindow& window, bool in_game)
 	}
 	return true;
 }
+
+Optionen* Optionen::get_instance()
+{
+	if (!s_instance)
+		s_instance = new Optionen;
+	return s_instance;
+}
+
+void Optionen::delete_instance()
+{
+	if (!s_instance)
+		return;
+	s_instance->m_sounds.clear_all();
+
+	const std::vector<float> volumes = s_instance->m_sounds.get_volumes();
+	std::ofstream fout("optionen.txt");
+	fout << s_instance->should_do_dockspace << ';' << volumes[0] << ';' << volumes[1] << ';' << volumes[2];
+	fout.close();
+	delete s_instance;
+	s_instance = nullptr;
+}
+
+bool Optionen::get_should_do_dockspace() const
+{
+	return should_do_dockspace;
+}
+
+Sounds& Optionen::get_sounds()
+{
+	return m_sounds;
+}

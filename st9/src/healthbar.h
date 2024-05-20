@@ -10,21 +10,11 @@ private:
 	inline static healthbar* s_instance;
 public:
 
-	static void init(double& i_health)
-	{
-		s_instance = new healthbar(i_health);
-	}
+	static void init(double& i_health);
 
-	static healthbar* get_instance()
-	{
-		return s_instance;
-	}
+	static healthbar* get_instance();
 
-	static void delete_instance()
-	{
-		delete s_instance;
-		s_instance = nullptr;
-	}
+	static void delete_instance();
 
 	~healthbar() = default;
 	void regeneration(double);

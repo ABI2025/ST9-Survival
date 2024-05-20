@@ -14,6 +14,31 @@
 constexpr glm::vec2 tower_sprite_center{ 135.f/2,135.f / 2 }; //danke simon für unsymmetrische texturen
 
 
+TowerTexture::TowerTexture()
+{
+	base.loadFromFile("resources/images/buttom.png");
+	tops[0].loadFromFile("resources/images/top.png");
+	tops[1].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
+	tops[2].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
+	tops[3].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
+	tops[4].loadFromFile("resources/images/Gold-Kanone.png");
+}
+
+TowerTexture* TowerTexture::get_instance()
+{
+	if (!s_instance)
+	{
+		s_instance = new TowerTexture;
+	}
+	return s_instance;
+}
+
+void TowerTexture::delete_instance()
+{
+	delete s_instance;
+	s_instance = nullptr;
+}
+
 Tower::Tower(const glm::vec3 i_pos)
 {
 	m_pos = i_pos;
@@ -33,6 +58,7 @@ Tower::Tower(const glm::vec3 i_pos)
 	m_ressourcen = 0;
 	m_health = 200;
 	m_damage = 0.1;
+	is_not_economy = true;
 }
 
 Tower::Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health)
@@ -56,6 +82,8 @@ Tower::Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health
 	m_condt = i_cooldown;
 	m_health = i_health;
 	m_damage = i_damage;
+	is_not_economy = true;
+
 }
 
 
@@ -190,6 +218,11 @@ void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if(is_not_economy)
 		target.draw(sprites[1],states);
 	target.draw(sprites[0],states);
+}
+
+double Tower::get_value() const
+{
+	return m_ressourcen;
 }
 
 
