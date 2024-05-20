@@ -21,12 +21,12 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_costs.insert({1,200});
 	m_costs.insert({2,300});
 	m_costs.insert({3,2500});
-	m_costs.insert({4,500});
+	m_costs.insert({4,6000});
 	m_costs.insert({5,600});
 	//prophesionallen coding
 
-	m_texture_textures.resize(4);
-	m_texture_sprites.resize(4);
+	m_texture_textures.resize(5);
+	m_texture_sprites.resize(5);
 
 	m_texture_textures[0].loadFromFile("resources/images/top.png");
 	m_texture_textures[1].loadFromFile("resources/images/buttom.png");
@@ -53,7 +53,15 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[2].draw(m_texture_sprites[1]);
 	m_texture[2].draw(m_texture_sprites[3]);
 	m_texture[2].display();
-	m_textures.resize(6);
+
+	m_texture_textures[4].loadFromFile("resources/images/Gold-Kanone.png");
+	m_texture_sprites[4].setTexture(m_texture_textures[4]);
+	m_texture[3].create(135, 135);
+	m_texture[3].clear(sf::Color::Transparent);
+	m_texture[3].draw(m_texture_sprites[1]);
+	m_texture[3].draw(m_texture_sprites[4]);
+	m_texture[3].display();
+	m_textures.resize(7);
 
 	m_textures[0].loadFromFile("resources/images/none.png");
 	m_textures[1] = m_texture[0].getTexture();
@@ -61,16 +69,17 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_textures[3].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
 	m_textures[4].loadFromFile("resources/images/1111.png");
 	m_textures[5] = m_texture[2].getTexture();
+	m_textures[6] = m_texture[3].getTexture();
 	m_sprites.resize(8);
 
 	m_sprites[0].setTexture(m_textures[0]);
 	m_sprites[0].setColor(sf::Color::Transparent);
 	
-	m_sprites[1].setTexture(m_textures[1]);//turm 1
+	m_sprites[1].setTexture(m_textures[1]);//turm 1, brauch eine neue textur
 	m_sprites[2].setTexture(m_textures[2]);//turm 2
 	m_sprites[3].setTexture(m_textures[3]);//turm 3
 	m_sprites[4].setTexture(m_textures[5]);//turm 4
-	m_sprites[5].setTexture(m_textures[1]);//turm 5
+	m_sprites[5].setTexture(m_textures[6]);//turm 5
 	m_sprites[6].setTexture(m_textures[1]);//turm 6
 
 	m_sprites[1].setColor(sf::Color::Magenta);
@@ -132,7 +141,7 @@ Utils::Cell BuildSystem::display()
 				break;
 			case 1:
 				ImGui::BeginTooltip();
-				ImGui::Text("Basic:");
+				ImGui::Text("Basic:"); // Brauch noch einen besseren sprite
 				ImGui::Text("200 leben");
 				ImGui::Text("%.0f V-Bucks",m_costs[0]);
 				ImGui::EndTooltip();
@@ -161,8 +170,8 @@ Utils::Cell BuildSystem::display()
 				break;
 			case 5:
 				ImGui::BeginTooltip();
-				ImGui::Text("Ein Turm mit:");
-				ImGui::Text("600 leben");
+				ImGui::Text("Schwere Gold Kanone:");
+				ImGui::Text("3000 leben");
 				ImGui::Text("%.0f V-Bucks", m_costs[4]);
 				ImGui::EndTooltip();
 				break;

@@ -9,7 +9,7 @@ class BuildSystem
 {
 	std::vector<sf::Texture> m_texture_textures;
 	std::vector<sf::Sprite> m_texture_sprites;
-	sf::RenderTexture m_texture[3];
+	sf::RenderTexture m_texture[4];
 	std::vector<sf::Texture> m_textures;
 	std::vector<sf::Sprite> m_sprites;
 	Utils::Cell m_selected;
