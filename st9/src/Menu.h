@@ -23,6 +23,7 @@ public:
 	}
 	void show_menu();
 	void button_events();
+	void story();
 
 private:
 	//Menu(): m_window(sf::VideoMode(1920, 1080), "Game") {}
@@ -32,7 +33,7 @@ private:
 	std::vector<std::string> m_name_button;
 	//std::vector<std::vector<std::vector<Utils::Cell>>> m_map;
 	inline static Menu* s_instance = nullptr;
-	std::pair<sf::FloatRect, bool> m_buttons[3];
+	std::pair<sf::FloatRect, bool> m_buttons[4];
 	sf::Font m_font;
 };
 
