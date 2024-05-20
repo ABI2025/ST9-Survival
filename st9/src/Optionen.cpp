@@ -88,6 +88,12 @@ bool Optionen::optionen_exe(sf::RenderWindow& window, bool in_game)
 		m_sounds.set_volume(lautstarke[1], 0);
 		m_sounds.set_volume(lautstarke[2], 1);
 
+		ImGui::Text("W, A, S, D: Bewegen des Spielers (W = Hoch, A = Links, S = Runter, D = Rechts)");
+		ImGui::Text("Linke Maustaste: Platzieren eines Turms oder einer Mauer an der aktuellen Mausposition");
+		ImGui::Text("Rechte Maustaste: Entfernen eines Turms oder einer Mauer an der aktuellen Mausposition");
+		ImGui::Text("ESC: Pausiert das Spiel und oeffnet das Optionsmenue");
+		ImGui::Text("F: Abfeuern eines Projektils in Richtung der Maus");
+		ImGui::Text("R: Heilt den Spieler um 10 HP");
 	
 		if (ImGui::Button("close"))
 		{

@@ -12,10 +12,10 @@
 #include "Wall.h"
 #include "entities/EnemyManager.h"
 
-constexpr int NUM_BUTTONS = 3;
+constexpr int NUM_BUTTONS = 4;
 Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
 {
-	m_name_button = { "Start","Options","Exit" };
+	m_name_button = { "Start","Options","Exit","Story"};
 	init_sfml_imgui(m_window);
 	m_font.loadFromMemory(g_RobotoRegular, sizeof(g_RobotoRegular));
 	// Initialisiere Buttons direkt im Konstruktor
@@ -27,6 +27,9 @@ Menu::Menu() : m_window(sf::VideoMode(1920, 1080), "Game")
 
 	m_buttons[2].first = sf::FloatRect(1920.0f / 2.0f - 100.0f, 1080.0f / 2.0f - 0.0f, 200.0f, 50.0f); // Schlieﬂen
 	m_buttons[2].second = false;
+	
+	m_buttons[3].first = sf::FloatRect(1920.0f / 2.0f - 100.0f, 1080.0f / 2.0f + 100.0f, 200.0f, 50.0f); // Story
+	m_buttons[3].second = false;
 
 	LOG_INFO("  OpenGL Info:");
 	LOG_INFO("  Vendor: {0}", (const char*)glGetString(GL_VENDOR));
@@ -114,6 +117,12 @@ void Menu::show_menu()
 			case 2: // Schlieﬂen
 				m_window.close();
 				break;
+			case 3: // Story
+				m_window.clear();//damit falls hier eine imgui sachen passiert w‰re nichts crasht
+				ImGui::SFML::Render(m_window);
+				story();
+				m_window.display();
+				break;
 			default:
 				LOG_ERROR("what in the memory corruption");
 				break;
@@ -161,3 +170,57 @@ void Menu::button_events()
 {
 
 }
+
+void Menu::story()
+{
+	bool show_story_window = true;
+
+	while (show_story_window)
+	{
+		sf::Event event{};
+		while (m_window.pollEvent(event))
+		{
+			ImGui::SFML::ProcessEvent(m_window, event);
+			if (event.type == sf::Event::Closed)
+			{
+				m_window.close();
+				return;
+			}
+		}
+
+		ImGui::SFML::Update(m_window, sf::seconds(1.f / 60.f));
+
+		m_window.clear();
+
+		// Set the window size to be wide
+		ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
+		ImGui::Begin("Story", &show_story_window, ImGuiWindowFlags_AlwaysAutoResize);
+
+		ImGui::BeginChild("StoryText", ImVec2(780, 540), true, ImGuiWindowFlags_HorizontalScrollbar);
+
+		ImGui::TextWrapped("Inmitten einer verlassenen Stadt erhebt sich ein uralter Turm, ein Relikt aus einer laengst vergangenen Zeit. Dieser Turm, der inmitten moderner Ruinen steht, birgt ein Geheimnis, das ueber die Jahrhunderte hinweg vergessen wurde. Doch jetzt ist er das Ziel von Geistern und uebernatuerlichen Kreaturen, die aus dem Schatten auftauchen und versuchen, den Turm zu erobern.\n\n"
+			"Du bist ein erfahrener Soldat, geschickt im Umgang mit modernen Waffen und Technologien. Deine Mission: Den Turm um jeden Preis verteidigen. Ausgestattet mit einem Arsenal an Maschinengewehren, Granatwerfern und High-Tech-Verteidigungssystemen, musst du dich den Horden von Geistern stellen, die in Wellen angreifen.\n\n"
+			"Die Regierung hat dich beauftragt, diesen strategisch wichtigen Punkt zu halten. Der Turm ist nicht nur ein Symbol der Vergangenheit, sondern auch ein Knotenpunkt fuer Kommunikations- und Ueberwachungssysteme, die fuer die Sicherheit der gesamten Region von entscheidender Bedeutung sind.\n\n"
+			"Waehrend du dich vorbereitest, denkst du an die letzten Worte deines Kommandanten: \"Dies ist nicht nur ein Kampf gegen die Geister, sondern ein Kampf fuer die Zukunft unserer Welt. Halte den Turm um jeden Preis.\"\n\n"
+			"Deine Ressourcen sind begrenzt, aber du erhaeltst fuer jede ueberstandene Angriffswelle Belohnungen in Form von Geld und Materialien. Diese kannst du nutzen, um deine Verteidigungen zu verbessern, neue Waffen zu kaufen und schuetzende Mauern zu errichten, die dir im Kampf gegen die immer staerkeren Geisterhorden helfen werden.\n\n"
+			"Mit jedem Angriff lernst du mehr ueber deine Feinde und findest Wege, ihre Schwaechen auszunutzen. Du musst taktisch vorgehen, deine Ressourcen klug einsetzen und deine Verteidigungen stetig verbessern, um den Turm zu schuetzen.\n\n"
+			"Bereite dich vor, Soldat. Die Geister werden kommen, und sie sind zahlreich und gnadenlos. Aber mit deinem Mut, deinem Geschick und deinen modernen Waffen hast du die Macht, sie aufzuhalten. Der Turm muss gehalten werden, und das Schicksal der Stadt liegt in deinen Haenden.\n\n"
+			"Lass den Kampf beginnen!");
+
+		ImGui::EndChild();
+
+		if (ImGui::Button("Close"))
+		{
+			show_story_window = false;
+		}
+
+		ImGui::End();
+
+		ImGui::SFML::Render(m_window);
+		m_window.display();
+	}
+}
+
+
+
+
