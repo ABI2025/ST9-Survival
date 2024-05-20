@@ -127,35 +127,36 @@ Utils::Cell BuildSystem::display()
 				ImGui::BeginTooltip();
 				ImGui::Text("Basic:");
 				ImGui::Text("200 leben");
-				ImGui::Text("%.0f geld",m_costs[0]);
+				ImGui::Text("%.0f V-Bucks",m_costs[0]);
 				ImGui::EndTooltip();
 				break;
 			case 2:
 				ImGui::BeginTooltip();
 				ImGui::Text("Ein Turm mit:");
 				ImGui::Text("300 leben");
-				ImGui::Text("%.0f geld", m_costs[1]);
+				ImGui::Text("%.0f V-Bucks", m_costs[1]);
 				ImGui::EndTooltip();
 				break;
 			case 3:
 				ImGui::BeginTooltip();
-				ImGui::Text("Ein Turm mit:");
+				ImGui::Text("Geld Raffinerie:");
 				ImGui::Text("400 leben");
-				ImGui::Text("%.0f geld", m_costs[2]);
+				ImGui::Text("%.0f V-Bucks", m_costs[2]);
+				ImGui::Text("Erzeugt alle 2.5 Sekunden 20 V-Bucks");
 				ImGui::EndTooltip();
 				break;
 			case 4:
 				ImGui::BeginTooltip();
 				ImGui::Text("Ein Turm mit:");
 				ImGui::Text("500 leben");
-				ImGui::Text("%.0f geld", m_costs[3]);
+				ImGui::Text("%.0f V-Bucks", m_costs[3]);
 				ImGui::EndTooltip();
 				break;
 			case 5:
 				ImGui::BeginTooltip();
 				ImGui::Text("Ein Turm mit:");
 				ImGui::Text("600 leben");
-				ImGui::Text("%.0f geld", m_costs[4]);
+				ImGui::Text("%.0f V-Bucks", m_costs[4]);
 				ImGui::EndTooltip();
 				break;
 
@@ -163,14 +164,14 @@ Utils::Cell BuildSystem::display()
 				ImGui::BeginTooltip();
 				ImGui::Text("Bigus Chungus");
 				ImGui::Text("700 leben");
-				ImGui::Text("%.0f geld", m_costs[5]);
+				ImGui::Text("%.0f V-Bucks", m_costs[5]);
 				ImGui::EndTooltip();
 				break;
 			case 7:
 				ImGui::BeginTooltip();
 				ImGui::Text("Eine Wand mit:");
 				ImGui::Text("500 leben");
-				ImGui::Text("25.0  Geld");
+				ImGui::Text("25.0  V-Bucks");
 				ImGui::EndTooltip();
 				break;
 			default:
