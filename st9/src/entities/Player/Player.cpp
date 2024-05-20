@@ -147,6 +147,9 @@ void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const
 	if (m_health <= 0)
 		return;
 
+
+
+
 	condt += deltatime;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && condt >= cooldown)
 	{
