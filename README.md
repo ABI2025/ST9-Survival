@@ -47,3 +47,4 @@ Dieses Projekt ist ein Tower Defense Spiel, das in C++ mit der SFML-Bibliothek e
 - **GameWindow.cpp/h**: Platzhalter für das GameWindow, das das Hauptfenster des Spiels darstellt.
 - **Utils/Utils.h**: Hilfsfunktionen und -klassen, die im gesamten Projekt verwendet werden.
 
+### Es wird mindestens C++ 20 benötigt
