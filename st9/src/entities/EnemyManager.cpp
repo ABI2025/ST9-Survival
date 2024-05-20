@@ -249,10 +249,12 @@ void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_en
 		spawned_enemy->m_speed = 1.3 + Wave::wave_counter * 0.05;
 		spawned_enemy->m_damage = 1;
 		spawned_enemy->m_health = 8 + Wave::wave_counter;
+		break;
 	case 4: //schwarz
 		spawned_enemy->m_speed = 0.5;
 		spawned_enemy->m_damage = 0.5;
 		spawned_enemy->m_health = 15;
+		break;
 	}
 }
 void EnemyManager::draw(sf::RenderTarget& i_window) const
