@@ -47,17 +47,3 @@ Dieses Projekt ist ein Tower Defense Spiel, das in C++ mit der SFML-Bibliothek e
 - **GameWindow.cpp/h**: Platzhalter für das GameWindow, das das Hauptfenster des Spiels darstellt.
 - **Utils/Utils.h**: Hilfsfunktionen und -klassen, die im gesamten Projekt verwendet werden.
 
-## Kompilierung und Ausführung
-
-### Voraussetzungen
-
-- C++ Compiler (z.B. g++, clang)
-- SFML Bibliothek
-- ImGui Bibliothek
-
-### Kompilierung
-
-Stellen Sie sicher, dass alle notwendigen Bibliotheken installiert sind und in Ihrem Compilerpfad enthalten sind. Kompilieren Sie das Projekt mit dem folgenden Befehl:
-
-```sh
-g++ -std=c++17 main.cpp Game.cpp Gui.cpp Menu.cpp BuildSystem.cpp Tower.cpp Wall.cpp Projectile.cpp EnemyManager.cpp Wave.cpp Player.cpp MainBuilding.cpp healthbar.cpp Sounds.cpp camera.cpp Optionen.cpp GameWindow.cpp -o TowerDefense -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
