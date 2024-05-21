@@ -21,6 +21,27 @@ EnemyManager::EnemyManager()
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
 		std::vector(map[0][0].size(), 0));
+	std::ifstream fin("highscore.txt");
+	if(fin.is_open())
+	{
+		fin >> s_highscore;
+	}
+	else
+	{
+		std::ofstream fout;
+		fout.open("highscore.txt");
+		fout.close();
+	}
+}
+
+long long EnemyManager::get_highscore()
+{
+	return s_highscore;
+}
+
+long long EnemyManager::get_enemies_killed()
+{
+	return s_enemies_killed;
 }
 
 EnemyManager* EnemyManager::get_instance()
@@ -32,6 +53,9 @@ EnemyManager* EnemyManager::get_instance()
 
 void EnemyManager::delete_instance()
 {
+	std::fstream fstream("highscore.txt");
+	if(s_enemies_killed > s_highscore)
+		fstream << s_enemies_killed;
 	delete s_instance;
 	s_instance = nullptr;
 }
@@ -93,6 +117,7 @@ void EnemyManager::update(float deltatime)
 					{
 						Game::get_game()->add_geld(10); // müssten wir gebalanced gehabt haben
 						e.reset();
+						s_enemies_killed++;
 					}
 					return;
 				}

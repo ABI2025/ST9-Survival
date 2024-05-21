@@ -14,9 +14,16 @@ class EnemyManager
 	std::vector<std::vector<int>> enemys_per_cell;
 
 	inline static EnemyManager* s_instance;
+	inline static long long s_enemies_killed = 0;
+	inline static long long s_highscore = 0;
+
 
 	EnemyManager();
 public:
+
+	static long long get_highscore();
+
+	static long long get_enemies_killed();
 
 	static EnemyManager* get_instance();
 
