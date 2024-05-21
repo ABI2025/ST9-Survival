@@ -56,10 +56,7 @@ void Menu::show_menu()
 	Game::erstelle_game(m_window,opt->get_sounds());
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("Resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("sound konnte nicht geladen werden"); }
-	sf::Sound sound;
-	sound.setBuffer(buffer);
-	sound.setVolume(50.0f);
-	sound.setRelativeToListener(true);
+
 	m_window.setFramerateLimit(60);
 	sf::Clock deltaClock;
 	while (m_window.isOpen())
@@ -85,7 +82,6 @@ void Menu::show_menu()
 
 		}
 		ImGui::SFML::Update(m_window, deltaClock.restart());
-		ImGui::ShowDemoWindow();
 
 		sf::FloatRect mouse = { sf::Vector2f(m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))), {1, 1} };
 
@@ -97,7 +93,7 @@ void Menu::show_menu()
 				button_index = i;
 				if (!m_buttons[i].second)
 				{
-					sound.play();
+					opt->get_sounds().add_sound("player", 2);
 				}
 				m_buttons[i].second = true;
 				//break; //entfernt weil es theoretisch möglich ist, dass jemand von einem zum anderen frame von einem knopf zum andern geht.

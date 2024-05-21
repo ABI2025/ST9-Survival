@@ -97,7 +97,7 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
 			{
 				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH, static_cast<float>(j) * BACKGROUND_HEIGHT);
 				render_target.draw(m_background_sprites[m_tiles[i][j][0]]);
-				
+
 				if (glm::vec2(i, j) != glm::vec2{ 20,10 } && glm::vec2(i, j) != glm::vec2(20, 11) && m_EntityMap[0][j][i]) {
 					m_EntityMap[0][j][i]->update();
 					render_target.draw(*m_EntityMap[0][j][i]);
@@ -253,7 +253,7 @@ void Game::run_game(int)
 					/*m_sounds.pause_all(false);
 					m_open = showpausemenu();
 					m_sounds.play_all();*/
-					
+
 					show_option_menu = true;
 					//m_open = false;
 				}
@@ -318,7 +318,7 @@ void Game::run_game(int)
 					player_rem_grace = player_grace;
 				}
 			}
-			else if(player_rem_grace >0.0)
+			else if (player_rem_grace > 0.0)
 				player_rem_grace -= deltatime;
 
 			p->update_player(deltatime);
@@ -339,18 +339,18 @@ void Game::run_game(int)
 			glm::vec3 mouse_pos = glm::vec3{ temp.x,temp.y,0.0f };
 
 
-			if(player_alive)
-				(*buildsystem)(left_click, right_click, opt->get_should_do_dockspace(), m_map, entities, towers, mouse_pos,mb->get_pos());
+			if (player_alive)
+				(*buildsystem)(left_click, right_click, opt->get_should_do_dockspace(), m_map, entities, towers, mouse_pos, mb->get_pos());
 
 			std::ranges::sort(towers,
-			[&p](const std::shared_ptr<Tower>& tower1, const std::shared_ptr<Tower>& tower2)
-			{
-				const glm::ivec2 distance_player_tower1 = (p->get_pos() - tower1->get_pos());
-				const glm::ivec2 distance_player_tower2 = (p->get_pos() - tower2->get_pos());
-				const int manhattan_distance_player_to_tower1 = abs(distance_player_tower1.x) + abs(distance_player_tower1.y);
-				const int manhattan_distance_player_to_tower2 = abs(distance_player_tower2.x) + abs(distance_player_tower2.y);
-				return manhattan_distance_player_to_tower1 < manhattan_distance_player_to_tower2;
-			});
+				[&p](const std::shared_ptr<Tower>& tower1, const std::shared_ptr<Tower>& tower2)
+				{
+					const glm::ivec2 distance_player_tower1 = (p->get_pos() - tower1->get_pos());
+					const glm::ivec2 distance_player_tower2 = (p->get_pos() - tower2->get_pos());
+					const int manhattan_distance_player_to_tower1 = abs(distance_player_tower1.x) + abs(distance_player_tower1.y);
+					const int manhattan_distance_player_to_tower2 = abs(distance_player_tower2.x) + abs(distance_player_tower2.y);
+					return manhattan_distance_player_to_tower1 < manhattan_distance_player_to_tower2;
+				});
 
 			if (opt->get_should_do_dockspace()) {
 				ImGui::PopItemWidth();
@@ -360,10 +360,10 @@ void Game::run_game(int)
 
 			// ReSharper disable once CppUseRangeAlgorithm
 			std::for_each(/*std::execution::par,*/ towers.begin(), towers.end(),
-			[this, &ma, &deltatime](const std::shared_ptr<Tower>& tower)
-			{
-				tower->fire(*ma, m_sounds, deltatime);
-			});
+				[this, &ma, &deltatime](const std::shared_ptr<Tower>& tower)
+				{
+					tower->fire(*ma, m_sounds, deltatime);
+				});
 
 
 			for (auto it = towers.begin(); it != towers.end();)
@@ -385,7 +385,7 @@ void Game::run_game(int)
 					const glm::ivec3 cell_pos = (*it)->get_pos() / 135.0f;
 					if (m_map[0][cell_pos.y][cell_pos.x] == Utils::Cell::TURRET)
 						EnemyManager::set_updated_tower(true);
-					else if(m_map[0][cell_pos.y][cell_pos.x] == Utils::Cell::WALL)
+					else if (m_map[0][cell_pos.y][cell_pos.x] == Utils::Cell::WALL)
 						EnemyManager::set_walls_update(true);
 					m_map[0][cell_pos.y][cell_pos.x] = Utils::Cell::NOTHING;
 					m_EntityMap[0][cell_pos.y][cell_pos.x].reset();
@@ -400,7 +400,7 @@ void Game::run_game(int)
 				pa->calculate_paths(towers, mb);
 			}
 			ma->update(deltatime);
-			if(player_rem_grace <= 0)
+			if (player_rem_grace <= 0)
 				p->do_damage_calc();
 
 			wave_manager.spawnening(ma, deltatime);
@@ -415,8 +415,8 @@ void Game::run_game(int)
 				player_rem_cooldown = player_cooldown;
 				player_alive = false;
 			}
-			else if(player_alive)
-				p->take_damage(3*-deltatime);
+			else if (player_alive)
+				p->take_damage(3 * -deltatime);
 			if (mb->get_hp() <= 0)
 			{
 				m_open = false;
@@ -436,7 +436,7 @@ void Game::run_game(int)
 			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime); //zum fps Debuggen 
 			ImGui::TextWrapped("Menge An Lebenden Gegnern: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("V-Bucks %f", m_geld);
-			if(!player_alive)
+			if (!player_alive)
 				ImGui::TextWrapped("Wiederbelebungs Zeit %f", player_rem_cooldown);
 			ImGui::SameLine();
 			sf::Sprite temp_drawable(m_ui_textures[0]);
@@ -447,7 +447,7 @@ void Game::run_game(int)
 
 		{//RENDERN
 
-			
+
 			m_window.clear();//das momentane fenster wird gecleared
 
 			if (opt->get_should_do_dockspace()) {
@@ -481,8 +481,7 @@ void Game::run_game(int)
 
 			m_window.display();
 
-
-			if(show_option_menu)
+			if (show_option_menu)
 			{
 				m_open = opt->optionen_exe(m_window, true);
 				delta_timer.Reset();
@@ -499,8 +498,7 @@ void Game::run_game(int)
 	m_tiles.clear();
 	m_open = true;
 
-
-	if(EnemyManager::get_enemies_killed() > EnemyManager::get_highscore())
+	if (EnemyManager::get_enemies_killed() > EnemyManager::get_highscore())
 	{
 		bool show_highscore = true;
 
@@ -544,7 +542,6 @@ void Game::run_game(int)
 		}
 	}
 
-
 	EnemyManager::delete_instance();
 	ma = nullptr;
 	window_camera.move_to_default();
@@ -566,20 +563,17 @@ void Game::run_game(int)
 			}
 		}
 	}
-
-
-
 }
 
 void Game::add_geld(double i_geld)
 {
-	m_geld += i_geld; 
+	m_geld += i_geld;
 }
 
-void Game::erstelle_game(sf::RenderWindow& i_window,Sounds& sounds)
+void Game::erstelle_game(sf::RenderWindow& i_window, Sounds& sounds)
 {
 	if (!s_game)
-		s_game = new Game(i_window,sounds);
+		s_game = new Game(i_window, sounds);
 }
 
 Game* Game::get_game()
