@@ -211,7 +211,6 @@ void Game::run_game(int)
 	float player_rem_cooldown = 0.0f;
 	constexpr float player_grace = 5;
 	float player_rem_grace = 0.0f;
-	Utils::Timer highscore;
 	while (m_window.isOpen() && m_open)
 	{
 
@@ -498,6 +497,53 @@ void Game::run_game(int)
 	//cleanup
 	m_tiles.clear();
 	m_open = true;
+
+
+	if(EnemyManager::get_enemies_killed() > EnemyManager::get_highscore())
+	{
+		bool show_highscore = true;
+
+		while (m_window.isOpen() && show_highscore)
+		{
+			sf::Event event{};
+			while (m_window.pollEvent(event))
+			{
+				ImGui::SFML::ProcessEvent(m_window, event);
+				if (event.type == sf::Event::Closed)
+				{
+					m_window.close();
+					return;
+				}
+
+			}
+
+			ImGui::SFML::Update(m_window, sf::seconds(1.f / 60.f));
+
+			m_window.clear();
+
+			// Set the window size to be wide
+			ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
+			ImGui::Begin("Story", &show_highscore, ImGuiWindowFlags_AlwaysAutoResize);
+
+
+			ImGui::Text("NEW HIGHSCORE");
+			ImGui::Text("new: %lld", EnemyManager::get_enemies_killed());
+			ImGui::Text("old: %lld", EnemyManager::get_highscore());
+
+
+			if (ImGui::Button("Close"))
+			{
+				show_highscore = false;
+			}
+
+			ImGui::End();
+
+			ImGui::SFML::Render(m_window);
+			m_window.display();
+		}
+	}
+
+
 	EnemyManager::delete_instance();
 	ma = nullptr;
 	window_camera.move_to_default();
@@ -506,7 +552,6 @@ void Game::run_game(int)
 	pa = nullptr;
 	BuildSystem::delete_instance();
 	buildsystem = nullptr;
-	LOG_INFO("highscore:" , highscore.Elapsed());
 	m_sounds.delete_sounds();
 	healthbar::delete_instance();
 	for (int i = 0; i < m_map.size(); i++)

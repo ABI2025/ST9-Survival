@@ -187,7 +187,7 @@ void Menu::story()
 {
 	bool show_story_window = true;
 
-	while (show_story_window)
+	while (m_window.isOpen() && show_story_window)
 	{
 		sf::Event event{};
 		while (m_window.pollEvent(event))
@@ -198,6 +198,7 @@ void Menu::story()
 				m_window.close();
 				return;
 			}
+			
 		}
 
 		ImGui::SFML::Update(m_window, sf::seconds(1.f / 60.f));
