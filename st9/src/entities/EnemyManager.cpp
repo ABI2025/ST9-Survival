@@ -54,8 +54,12 @@ EnemyManager* EnemyManager::get_instance()
 void EnemyManager::delete_instance()
 {
 	std::fstream fstream("highscore.txt");
-	if(s_enemies_killed > s_highscore)
+	if (s_enemies_killed > s_highscore) 
+	{
 		fstream << s_enemies_killed;
+		s_highscore = s_enemies_killed;
+		s_enemies_killed = 0;
+	}
 	delete s_instance;
 	s_instance = nullptr;
 }
