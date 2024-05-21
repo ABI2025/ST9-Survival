@@ -53,30 +53,30 @@ WaveManager::WaveManager()
 	waves.pop_front();
 	waves.push_back(std::make_shared<Wave>(Wave{10,10 }));
 
-	waves.push_back(std::make_shared<Wave>(Wave{5,10}));
+	waves.push_back(std::make_shared<Wave>(Wave{5,15}));
 	waves.push_back(std::make_shared<Wave>(Wave{15,1 ,1 }));
 
 	waves.push_back(std::make_shared<Wave>(Wave{25,10 }));
 
-	waves.push_back(std::make_shared<Wave>(Wave{10,7,2 }));
+	waves.push_back(std::make_shared<Wave>(Wave{10,10,2 }));
 	waves.push_back(std::make_shared<Wave>(Wave{20,0}));
 
-	waves.push_back(std::make_shared<Wave>(Wave{10,10 ,2 }));
+	waves.push_back(std::make_shared<Wave>(Wave{10,13 ,2 }));
 	waves.push_back(std::make_shared<Wave>(Wave{20,4 ,1 }));
 
-	waves.push_back(std::make_shared<Wave>(Wave{ 10,10 ,4}));
+	waves.push_back(std::make_shared<Wave>(Wave{ 10,12 ,4}));
 	waves.push_back(std::make_shared<Wave>(Wave{70,3 }));
 		
 
 
-	waves.push_back(std::make_shared<Wave>(Wave{30,20 ,4}));
+	waves.push_back(std::make_shared<Wave>(Wave{30,22 ,4}));
 	waves.push_back(std::make_shared<Wave>(Wave{50,2 ,2}));
 
-	waves.push_back(std::make_shared<Wave>(Wave{160,10 }));
-	waves.push_back(std::make_shared<Wave>(Wave{240,20 }));
-	waves.push_back(std::make_shared<Wave>(Wave{100,20,4 }));
-	waves.push_back(std::make_shared<Wave>(Wave{400,20,1}));
-	waves.push_back(std::make_shared<Wave>(Wave{300,20,2 }));
+	waves.push_back(std::make_shared<Wave>(Wave{160,15 }));
+	waves.push_back(std::make_shared<Wave>(Wave{240,22 }));
+	waves.push_back(std::make_shared<Wave>(Wave{100,22,4 }));
+	waves.push_back(std::make_shared<Wave>(Wave{400,22,1}));
+	waves.push_back(std::make_shared<Wave>(Wave{300,22,2 }));
 	waves.push_back(std::make_shared<Wave>(Wave{100,3,1 }));
 }
 
@@ -85,7 +85,7 @@ void WaveManager::spawnening(EnemyManager* ma, float dt)
 		
 	if (done) 
 	{
-		waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 3.f ,20.f , 3}));
+		waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 3.f ,30.f , 3}));
 		waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 5.f ,0.f , 4}));
 		waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 2.f ,0.f , 1}));
 		done = false;
