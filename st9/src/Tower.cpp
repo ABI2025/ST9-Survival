@@ -22,6 +22,7 @@ TowerTexture::TowerTexture()
 	tops[2].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
 	tops[3].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
 	tops[4].loadFromFile("resources/images/Gold-Kanone.png");
+	tops[5].loadFromFile("resources/images/Basic_Waffe.png");
 }
 
 TowerTexture* TowerTexture::get_instance()
@@ -100,9 +101,11 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 	switch (tower_kind)
 	{
 	case tower_1: // Basic
-		m_health = 200;
-		m_damage = 0.1;
-		sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
+		m_health = 150;
+		m_damage = 0.15;
+		m_penetration = 5;
+		m_speed = 6;
+		sprites[0].setTexture(TowerTexture::get_instance()->tops[5]);
 		break;
 	case tower_2: // Maschienen gewehr
 		m_health = 300;
