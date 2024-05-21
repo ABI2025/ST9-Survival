@@ -15,7 +15,7 @@ Dieses Projekt ist ein Tower Defense Spiel, das in C++ mit der SFML-Bibliothek e
 
 ### GUI und Menü
 
-- **Gui.cpp/h**: Verwaltet die grafische Benutzeroberfläche mit ImGui und SFML. Beinhaltet Initialisierungsfunktionen und die Verwaltung von GUI-Elementen.
+- **Gui.cpp/h**: Beinhaltet Initialisierungsfunktionen für Im::Gui.
 - **Menu.cpp/h**: Verwaltet das Hauptmenü des Spiels, einschließlich Optionen zum Starten des Spiels, Ändern von Einstellungen und Anzeigen der Geschichte.
 
 ### Gameplay-Komponenten
@@ -23,7 +23,7 @@ Dieses Projekt ist ein Tower Defense Spiel, das in C++ mit der SFML-Bibliothek e
 - **BuildSystem.cpp/h**: Verwaltet das Bausystem im Spiel. Ermöglicht es den Spielern, Türme zu bauen und zu platzieren.
 - **Tower.cpp/h**: Definiert die Türme, ihre Eigenschaften und ihr Verhalten im Spiel.
 - **Wall.cpp/h**: Definiert die Mauern, die gebaut werden können, um den Weg der Gegner zu blockieren.
-- **Projectile.cpp/h**: Definiert die Projektile, die von den Türmen abgefeuert werden.
+- **Projectile.cpp/h**: Definiert die Projektile, die von den Türmen/Spielern abgefeuert werden.
 - **EnemyManager.cpp/h**: Verwaltet die Gegner im Spiel, einschließlich ihrer Erstellung, Bewegung und Angriffslogik.
 - **Wave.cpp/h**: Verwaltet die Wellen von Gegnern, die das Spielfeld angreifen.
 
@@ -31,7 +31,7 @@ Dieses Projekt ist ein Tower Defense Spiel, das in C++ mit der SFML-Bibliothek e
 
 - **Player.cpp/h**: Definiert den Spielercharakter und seine Interaktionen im Spiel.
 - **MainBuilding.cpp/h**: Definiert das Hauptgebäude, das der Spieler verteidigen muss.
-- **healthbar.cpp/h**: Verwaltet die Gesundheitsleiste des Spielers und anderer Einheiten.
+- **healthbar.cpp/h**: Verwaltet die Gesundheitsleiste des Spielers.
 
 ### Soundsystem
 
@@ -44,7 +44,6 @@ Dieses Projekt ist ein Tower Defense Spiel, das in C++ mit der SFML-Bibliothek e
 ### Zusätzliche Dateien
 
 - **Optionen.cpp/h**: Verwaltet die Optionen und Einstellungen des Spiels, einschließlich Lautstärkeregelung und grafischen Einstellungen.
-- **GameWindow.cpp/h**: Platzhalter für das GameWindow, das das Hauptfenster des Spiels darstellt.
 - **Utils/Utils.h**: Hilfsfunktionen und -klassen, die im gesamten Projekt verwendet werden.
 
 ### Es wird mindestens C++ 20 benötigt

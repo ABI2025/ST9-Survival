@@ -1,43 +1,78 @@
-
 - [log](#Log)
-    - [how it works](#how-it-works)
     - [usage](#usage)
 - [Random](#Random)  
-    - [how it works](#how-it-works-1)
+    - [how it works](#how-it-works)
     - [usage](#usage-1)
 - [Timer](#Timer)
-    - [how it works](#how-it-works-2)
+    - [how it works](#how-it-works-1)
     - [usage](#usage-2)
 - [Pathfinding](#pathfinding)
-    - [how it works](#how-it-works-3)
+    - [how it works](#how-it-works-2)
     - [usage](#usage-3)
 
 # Log
 
-## how it works
-
-
 ## usage
 ![when to use which log](res/log.png)
-
+So loggt man eine Nachricht
 ```c++
-LOG_DEBUG("");
+LOG_DEBUG("test");
 
 ```
+So loggt man eine variable
+```c++
+int ausgabe = 0;
+LOG_DEBUG("ausgabe : {}", ausgabe);
+```
+
 # Random
 
 ## how it works
-
+Wir nutzten eine Mersenne-Twister engine und eine uniform distribution um Zufällige zahlen zu erstellen.
+Für die Float Variante wird einfach der zufalswert durch das unsigned 32 bit integer limit geteilt für eine zahl zwischen 1 und 0.
+Für die Float Variante mit nem min und max wird einfach ein zufälliger float von oben genommen mal die differenz zwischen min und max genommen und plus min gerechnet.
+Für die Unsigned Int Variante wird einfach nur die Mersenne Twister enginer genutzt um eine Zufalls zahl zwischen 0 und unsigned 32 bit integer limit erstellt.
+Fur die Unsigned Int Variant mit nem min und max wird einfach eine zufälliger unsigned Int modulo differenz zwischen min und max plus 1 genommen und plus min gerechnet.
 
 ## usage
+als aller erstes Muss Random Initialisiert werden.
+```c++
+Utils::Random::Init();
+```
+Dann kann man mittels `Utils::Random::UInt();` einen zufälligen Unsigned int bekommen alternativ mit einem min und max.
+Und man kann mittles `Utils::Random::Float()` einen zufälligen float zwischen 0 und 1 erstellen lassen alternativ auch mit min und max.
 
 # Timer
 
 ## how it works
-
-
+Timer nutzt std::chrono für die Zeit.
+mittels `std::chrono::high_resolution_clock::now()` wird der momentane zeitpunkt geholt und gespeichert und bei Elapsed wird die momentane Zeit also `std::chrono::high_resolution_clock::now()` mit der gespeicherten verglichen und so multipliziert, dass man eine Zeit in sekunden bekommt.
+bei elapsed millis wird der wert von elapsed mal 1000 genommen weil 1000 millisekunden eine sekunde sind.
+Zusätzlich gibt es noch einen ScopedTimer der einen Timer speichert und im konstruktor den Timer startet und im destruktor Wird dann mittels Ellapsed Millis die vergangenen Millisekunden seit erstellung des Scoped Timers auf der Konsole ausgegeben.
 ## usage
 
+```
+Utils::Timer delta_timer;
+while(window.is_open())
+{
+	float deltatime = delta_timer.Elapsed();
+	delta_timer.Reset();
+	/*restlicher code hier*/
+}
+
+
+```
+
+
+```
+void bar()
+{
+Utils::ScopedTimer timer("bar timer");
+
+do_something();
+
+}
+```
 # Pathfinding
 
 ## how it works

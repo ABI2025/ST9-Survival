@@ -24,7 +24,7 @@ class TowerTexture
 	inline static TowerTexture* s_instance;
 public:
 	sf::Texture base;
-	sf::Texture tops[5];
+	sf::Texture tops[6];
 	TowerTexture();
 
 	static TowerTexture* get_instance();
