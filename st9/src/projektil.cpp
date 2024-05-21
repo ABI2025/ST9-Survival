@@ -1,6 +1,6 @@
 // ReSharper disable CppTooWideScopeInitStatement
 
-#include "Projektil.h"
+#include "projektil.h"
 #include <algorithm>
 #include "Utils/Log.h"
 #ifndef M_PI

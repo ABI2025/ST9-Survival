@@ -368,8 +368,8 @@ void Sounds::set_volume(float volume, int id)
 
 	// Hole die Gruppen-ID-Zeichenkette aus der Zuordnung
 	const std::string& group_id_string = m_mapping[id];
-	const float normalisierte_lautstärke = volume / 100.0f;
-	m_volumes[group_id_string] = normalisierte_lautstärke;
+	const float normalisierte_lautstaerke = volume / 100.0f;
+	m_volumes[group_id_string] = normalisierte_lautstaerke;
 
 	// Wenn die ID -1 ist, aktualisiere die globale Lautstärke und wende sie auf alle Sounds an
 	if (id == -1)
@@ -381,15 +381,15 @@ void Sounds::set_volume(float volume, int id)
 			if (!m_sounds.contains(group_name)) continue;
 
 			// Berechne die Lautstärke
-			const float gruppen_lautstärke = m_volumes[group_name];
-			const float end_lautstärke = normalisierte_lautstärke * gruppen_lautstärke * 100.0f;
+			const float gruppen_lautstaerke = m_volumes[group_name];
+			const float end_lautstaerke = normalisierte_lautstaerke * gruppen_lautstaerke * 100.0f;
 
 			// Aktualisiere die Lautstärke für jeden Sound in der Gruppe
 			for (std::deque<sf::Sound>& sounds : m_sounds[group_name] | std::views::keys)
 			{
 				for (sf::Sound& sound : sounds)
 				{
-					sound.setVolume(end_lautstärke);
+					sound.setVolume(end_lautstaerke);
 				}
 			}
 		}
@@ -400,15 +400,15 @@ void Sounds::set_volume(float volume, int id)
 		if (m_volumes.contains(group_id_string))
 		{
 			// Berechne die Lautstärke
-			const float globale_lautstärke = m_volumes[m_mapping[-1]];
-			const float end_lautstärke = globale_lautstärke * normalisierte_lautstärke * 100.0f;
+			const float globale_lautstaerke = m_volumes[m_mapping[-1]];
+			const float end_lautstaerke = globale_lautstaerke * normalisierte_lautstaerke * 100.0f;
 
 			// Aktualisiere die Lautstärke für jeden Sound in der spezifischen Gruppe
 			for (std::deque<sf::Sound>& sounds : m_sounds[group_id_string] | std::views::keys)
 			{
 				for (sf::Sound& sound : sounds)
 				{
-					sound.setVolume(end_lautstärke);
+					sound.setVolume(end_lautstaerke);
 				}
 			}
 		}

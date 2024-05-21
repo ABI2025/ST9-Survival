@@ -6,7 +6,7 @@
 #include <imgui.h>
 #include <SFML/Audio.hpp>
 
-#include "Camera.h"
+#include "camera.h"
 #include "imgui-SFML.h"
 #include "entities/Player/Player.h"
 #include "entities/EnemyManager.h"
@@ -14,7 +14,7 @@
 #include "BuildSystem.h"
 #include "imgui_internal.h"
 #include "Optionen.h"
-#include "Projektil.h" //können wir später löschen, ist nur zum debuggen hier // doch jetzt ist es eine kern funktion
+#include "projektil.h" //können wir später löschen, ist nur zum debuggen hier // doch jetzt ist es eine kern funktion
 #include "Sounds.h"
 #include "Tower.h"
 #include "Wave.h"

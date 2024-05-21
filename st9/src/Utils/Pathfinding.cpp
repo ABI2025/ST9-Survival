@@ -31,7 +31,7 @@ namespace Utils {
 	Pathfinding* Pathfinding::get_instance()
 	{
 		if (!s_instance)
-			throw std::exception("Pathfinding::Init muss vor Pathfinding::get_instance() gerufen werden");
+			LOG_ERROR("Pathfinding::Init muss vor Pathfinding::get_instance() gerufen werden");
 		return s_instance;
 	}
 
@@ -124,11 +124,6 @@ namespace Utils {
 		// Fortsetzung des Backtrackings, bis der Startknoten erreicht ist
 		while (current_cell->parent != nullptr)
 		{
-			if (current_cell == nullptr)
-			{
-				LOG_CRITICAL("Speicherfehler aufgetreten"); // Logge kritische Meldung bei Speicherfehlern
-				__debugbreak(); // Unterbreche das Programm fuer Debugzwecke
-			}
 			for (auto pos : bresenham(current_cell->pos * 135, current_cell->parent->pos * 135))
 			{
 				bewegungsablauf.push_back(pos); // Fuege Punkte entlang der Bresenham-Linie zum Bewegungsablauf hinzu

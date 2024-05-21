@@ -6,7 +6,7 @@
 #include "imgui.h"
 #include "../Resources/Images/Roboto-Regular.embed"
 #include "SFML/Audio.hpp"
-#include "SFML/Opengl.hpp"
+#include "SFML/OpenGL.hpp"
 #include "Optionen.h"
 #include "Tower.h"
 #include "Wall.h"
@@ -55,7 +55,7 @@ void Menu::show_menu()
 	Optionen* opt = Optionen::get_instance();
 	Game::erstelle_game(m_window,opt->get_sounds());
 	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("sound konnte nicht geladen werden"); }
+	if (!buffer.loadFromFile("Resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("sound konnte nicht geladen werden"); }
 	sf::Sound sound;
 	sound.setBuffer(buffer);
 	sound.setVolume(50.0f);

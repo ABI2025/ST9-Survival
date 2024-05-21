@@ -5,7 +5,7 @@
 #include "healthbar.h"
 #include "entities/EnemyManager.h"
 #include "imgui.h"
-#include "imgui-sfml.h"
+#include "imgui-SFML.h"
 #include "Sounds.h"
 
 Player::Player()

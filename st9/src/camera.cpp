@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "camera.h"
 #include "entities/Player/Player.h"
 
 Camera::Camera(sf::RenderTarget* render_target)

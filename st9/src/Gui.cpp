@@ -2,7 +2,7 @@
 
 #include "imgui-SFML.h"
 #include "imgui.h"
-#include "../Resources/images/Roboto-regular.embed"
+#include "../Resources/Images/Roboto-Regular.embed"
 
 bool init_sfml_imgui(sf::RenderWindow& window)
 {
