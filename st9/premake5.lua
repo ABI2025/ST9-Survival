@@ -48,7 +48,7 @@ project "st9"
    filter "system:linux"
         links
         {
-          "gl"
+          "GL"
         }
 
    filter "configurations:Debug"
