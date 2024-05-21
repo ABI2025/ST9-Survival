@@ -411,6 +411,7 @@ void Game::run_game(int)
 
 			if (!hb->alive() && player_alive)
 			{
+				p->set_pos(mb->get_pos());
 				player_rem_cooldown = player_cooldown;
 				player_alive = false;
 			}
@@ -523,7 +524,7 @@ void Game::run_game(int)
 
 			// Set the window size to be wide
 			ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
-			ImGui::Begin("Story", &show_highscore, ImGuiWindowFlags_AlwaysAutoResize);
+			ImGui::Begin("HIGHSCORE", &show_highscore);
 
 
 			ImGui::Text("NEW HIGHSCORE");
