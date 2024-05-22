@@ -156,6 +156,7 @@ void Game::render_tower(sf::RenderTarget& render_target)
 }
 void Game::run_game(int)
 {
+	Wave::wave_counter = 0;
 	m_geld = 1000;
 	m_sounds.music(0);
 	std::shared_ptr<Player> p = std::make_shared<Player>();
