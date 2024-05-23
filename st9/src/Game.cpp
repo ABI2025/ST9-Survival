@@ -302,7 +302,7 @@ void Game::run_game(int)
 			sf::Vector2f temp;
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
-
+		
 			if (player_alive == false)
 			{
 
@@ -320,6 +320,16 @@ void Game::run_game(int)
 			}
 			else if (player_rem_grace > 0.0)
 				player_rem_grace -= deltatime;
+
+			if (!hb->alive() && player_alive)
+			{
+				p->set_pos(mb->get_pos());
+				player_rem_cooldown = player_cooldown;
+				player_alive = false;
+				EnemyManager::set_player_moving(true);
+			}
+			else if (player_alive)
+				p->take_damage(3 * -deltatime);
 
 			p->update_player(deltatime);
 
@@ -409,14 +419,6 @@ void Game::run_game(int)
 			m_sounds.music(deltatime);
 
 
-			if (!hb->alive() && player_alive)
-			{
-				p->set_pos(mb->get_pos());
-				player_rem_cooldown = player_cooldown;
-				player_alive = false;
-			}
-			else if (player_alive)
-				p->take_damage(3 * -deltatime);
 			if (mb->get_hp() <= 0)
 			{
 				m_open = false;
