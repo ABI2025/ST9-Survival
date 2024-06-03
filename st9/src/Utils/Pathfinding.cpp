@@ -42,7 +42,10 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& start, Priority p) const
 	{
-
+		if((m_player->is_alive() || !is_valid(m_player->get_pos()/135.0f)) && p == Priority::player)
+		{
+			p = Priority::nothing;
+		}
 		switch (p)
 		{
 		case Priority::nothing:
@@ -61,7 +64,6 @@ namespace Utils {
 			//	return bresenham(dest, start);
 			//}
 			////LOG_INFO("used backtracking");
-
 			return make_path(start, m_player_cellmap);
 			break;
 
@@ -324,27 +326,12 @@ namespace Utils {
 	void Pathfinding::calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers, const std::shared_ptr<MainBuilding>& main_building)
 	{
 		//priority player
- 		if(EnemyManager::is_player_moving() || m_player->get_hp() <= 0.0 || EnemyManager::is_walls_update())
+		if(EnemyManager::is_player_moving() || EnemyManager::is_walls_update() || (m_player->is_alive() == false && EnemyManager::is_tower_updated()))
 		{
-			if (m_player->get_hp() > 0.0)
-			{
-				const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
-				dijkstra({ start }, m_player_cellmap);
-			}
-			else
-			{
-				LOG_INFO("success");
-				std::vector<glm::ivec3> start_points;
-				for (const std::shared_ptr<Tower>& tower : towers)
-				{
-					start_points.emplace_back(tower->get_pos() / 135.0f);
-				}
-				start_points.emplace_back(main_building->get_pos() / 135.0f);
-				start_points.emplace_back(main_building->get_pos() / 135.0f + glm::vec3{ 0,1,0 });
-				dijkstra(start_points, m_nothing_cellmap);
-
-			}
+			const glm::ivec3 start = glm::ivec3(m_player->get_pos().x / 135.0f, m_player->get_pos().y / 135.0f, 0);
+			dijkstra({ start }, m_player_cellmap);
 		}
+		
 
 		//priority tower
 		if(EnemyManager::is_tower_updated() || towers.empty() || EnemyManager::is_walls_update())

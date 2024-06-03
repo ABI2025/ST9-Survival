@@ -1,8 +1,4 @@
 ﻿#include "Entity.h"
-#include <fstream>
-#include <iostream>
-
-#include "Utils/Log.h"
 
 Entity::Entity() {
 	//std::ifstream file("Stats.txt");
@@ -32,6 +28,7 @@ Entity::Entity() {
 	//else {
 	//    std::cerr << "Unable to open file: " << id << std::endl;
 	//}
+	m_health = 0;
 }
 Entity::~Entity()
 {

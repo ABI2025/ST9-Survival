@@ -1,8 +1,11 @@
 // ReSharper disable CppTooWideScopeInitStatement
 #include "EnemyManager.h"
 #include <execution>
+#include <fstream>
+
 #include "Wave.h"
 #include "Game.h"
+#include "Optionen.h"
 #include "Utils/Utils.h"
 
 constexpr float CellHeight = 135.0f;
@@ -109,11 +112,15 @@ void EnemyManager::update(float deltatime)
 		}
 	}
 	auto& tower = Game::get_game()->getEntityMap();
-	std::for_each(std::execution::par, m_enemys.begin(), m_enemys.end(), [this, &deltatime, &tower](std::shared_ptr<Enemy>& e)
+	std::for_each(std::execution::par, m_enemies.begin(), m_enemies.end(), [this, &deltatime, &tower](std::shared_ptr<Enemy>& e)
 		{
 			{
 				if (e == nullptr)
 					return;
+				if (Optionen::get_instance()->get_should_rotate())
+					e->m_sprite.rotate(36 * deltatime);
+				else
+					e->m_sprite.setRotation(0);
 				if (e->m_health <= 0 || e->currently_dying)
 				{
 					e->die();
@@ -143,7 +150,7 @@ void EnemyManager::update(float deltatime)
 
 						e->m_pos = temp;
 						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
-						e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
+						e->m_sprite.setPosition(e->m_pos.x + 135.0f/2.0, e->m_pos.y + 135.0f / 2.0);
 						return;
 					}
 
@@ -176,14 +183,14 @@ void EnemyManager::update(float deltatime)
 						enemys_per_cell[cell_pos.y][cell_pos.x]++;
 						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
 						e->attack();
-						e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
+						e->m_sprite.setPosition(e->m_pos.x + 135.0f / 2.0, e->m_pos.y + 135.0f / 2.0);
 						tower[0][cell_pos.y][cell_pos.x]->take_damage(e->m_damage);
 						return;
 					}
 
 
 					e->m_pos = temp;
-					e->m_sprite.setPosition(e->m_pos.x, e->m_pos.y);
+					e->m_sprite.setPosition(e->m_pos.x + 135.0f / 2.0, e->m_pos.y + 135.0f / 2.0);
 					e->m_movements.pop_back();
 
 				}
@@ -199,11 +206,11 @@ void EnemyManager::update(float deltatime)
 		}
 	);
 
-	for (auto it = m_enemys.begin(); it != m_enemys.end();)
+	for (auto it = m_enemies.begin(); it != m_enemies.end();)
 	{
 		if (*it == nullptr)
 		{
-			it = m_enemys.erase(it);
+			it = m_enemies.erase(it);
 		}
 		else
 		{
@@ -234,7 +241,7 @@ void EnemyManager::update(float deltatime)
 			return Utils::vec3_almost_equal(e1->m_pos, e2->m_pos, epsilon);
 		};
 
-	std::ranges::sort(m_enemys, comp);
+	std::ranges::sort(m_enemies, comp);
 
 }
 
@@ -289,30 +296,31 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 void EnemyManager::add_enemy()
 {
 	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
-	m_enemys.push_back(spawned_enemy);
+	m_enemies.push_back(spawned_enemy);
 
 	spawned_enemy->m_priority = static_cast<Utils::Priority>(Utils::Random::UInt(0, 2));
 	LOG_TRACE("priority: {}", static_cast<int>(spawned_enemy->m_priority));
 	spawned_enemy->m_id = 0;
 }
 
-void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority) //veraltet nutzung meiden
+void EnemyManager::add_enemy(const glm::ivec3 pos, const Utils::Priority priority) //veraltet nutzung meiden
 {
 	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
-	m_enemys.push_back(spawned_enemy);
+	m_enemies.push_back(spawned_enemy);
 	spawned_enemy->m_priority = priority;
 	spawned_enemy->m_pos = pos;
 	spawned_enemy->m_id = 0;
 }
-void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_enemy_type)
+void EnemyManager::add_enemy(const glm::ivec3 pos, const Utils::Priority priority , int i_enemy_type)
 {
 	const std::shared_ptr spawned_enemy = { std::make_shared<Enemy>() };
-	m_enemys.push_back(spawned_enemy);
+	m_enemies.push_back(spawned_enemy);
 	spawned_enemy->m_priority = priority;
 	spawned_enemy->m_pos = pos;
 	spawned_enemy->m_id = 0;
 	spawned_enemy->m_enemy_type = static_cast<enemy_type>(i_enemy_type);
 	spawned_enemy->m_sprite.setTexture(m_textures[i_enemy_type]);
+	spawned_enemy->m_sprite.setOrigin(135.0f / 2.0, 135.0f / 2.0);
 	switch(i_enemy_type){
 	case 1: // Roter Gegner
 		spawned_enemy->m_health = 1.4; // ist default
@@ -338,7 +346,7 @@ void EnemyManager::add_enemy(glm::ivec3 pos, Utils::Priority priority , int i_en
 void EnemyManager::draw(sf::RenderTarget& i_window) const
 {
 	glm::vec3 prev_pos(-1);
-	for (const auto& m : m_enemys)
+	for (const auto& m : m_enemies)
 	{
 		if (!Utils::vec3_almost_equal(prev_pos, m->m_pos, 1e-6f) || m->currently_dying)
 		{
@@ -352,7 +360,7 @@ int EnemyManager::naiveEnemyKiller(Projectile * projectile) {
 	int hitCount = 0;
 	sf::FloatRect projectileBounds = projectile->get_sprite().getGlobalBounds();
 
-	for (auto& enemy : m_enemys) {
+	for (auto& enemy : m_enemies) {
 		if (enemy && enemy->isAlive()) {
 			sf::FloatRect enemyBounds = enemy->get_sprite().getGlobalBounds();
 
@@ -383,7 +391,7 @@ int EnemyManager::naive_enemy_killer() {
 		glm::vec3 projectile_min = projectile_pos; // warum????
 		glm::vec3 projectile_max = projectile_hitbox;
 
-		for (auto& enemy : m_enemys) {
+		for (auto& enemy : m_enemies) {
 			if (!enemy->is_alive()) {
 				continue;
 			}

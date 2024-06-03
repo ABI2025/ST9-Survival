@@ -1,7 +1,8 @@
 // ReSharper disable CppTooWideScopeInitStatement
 
 #include "projektil.h"
-#include <algorithm>
+
+#include "Optionen.h"
 #include "Utils/Log.h"
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
@@ -45,16 +46,20 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double dama
 
 Projectile::~Projectile() = default;
 
-void Projectile::update(float deltatime)
+void Projectile::update(const float deltatime)
 {
 	const glm::vec3 new_pos = (m_pos + m_speed * 600.0f * deltatime);
 	m_pos = new_pos;
 	m_lifetime--;
 	m_hitbox = m_pos + glm::vec3{ 8,25,20 };
 	sprite.setPosition(m_pos.x + 4.0f, m_pos.y + 12.5f);
+	if (Optionen::get_instance()->get_should_rotate())
+		sprite.rotate(3600.f * deltatime);
+	else
+		sprite.setRotation(std::atan2(m_speed.y, m_speed.x) * 180.0f / M_PI + 90);
 }
 
-void Projectile::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Projectile::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	if (m_lifetime > 0)
 	{
@@ -78,7 +83,7 @@ void Projectile::clean_up()
 		});
 }
 
-void Projectile::update_all(float deltatime)
+void Projectile::update_all(const float deltatime)
 {
 	for (Projectile* p : s_projectiles)
 	{

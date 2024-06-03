@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 
@@ -16,11 +15,12 @@ public:
 
 
 	bool get_should_do_dockspace() const;
-
+	bool get_should_rotate() const;
 	Sounds& get_sounds();
 
 private:
-	bool should_do_dockspace;
+	bool should_do_dockspace = true;
+	bool should_rotate = false;
 	Optionen();
 	Sounds m_sounds;
 	//std::vector<std::string> m_name_button;

@@ -6,6 +6,8 @@
 #include <imgui.h>
 #include <SFML/Audio.hpp>
 
+#include "BuildSystem.h"
+#include "BuildSystem.h"
 #include "camera.h"
 #include "imgui-SFML.h"
 #include "entities/Player/Player.h"
@@ -18,6 +20,7 @@
 #include "Sounds.h"
 #include "Tower.h"
 #include "Wave.h"
+#include "Utils/Timer.h"
 
 constexpr int BACKGROUND_HEIGHT = 135;
 constexpr int BACKGROUND_WIDTH = 135;
@@ -60,6 +63,10 @@ Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds
 	m_background_sprites[2].setTexture(m_background_textures[2]);
 	m_background_sprites[3].setTexture(m_background_textures[3]);
 
+	m_background_sprites[0].setOrigin(135.0f/2.0f,135.0f/2.0f);
+	m_background_sprites[1].setOrigin(135.0f/2.0f,135.0f/2.0f);
+	m_background_sprites[2].setOrigin(135.0f/2.0f,135.0f/2.0f);
+	m_background_sprites[3].setOrigin(135.0f/2.0f,135.0f/2.0f);
 
 	m_building_textures.resize(4);
 
@@ -81,25 +88,38 @@ Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
-void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
+void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target, float deltatime)
 {
 	//Utils::ScopedTimer ttt("render_map funktion");
 	player_pos = round(player_pos / 135.0f);
 
 	constexpr int rendersizex = 11;
 	constexpr int rendersizey = 7;
-
+	if(Optionen::get_instance()->get_should_rotate())
+	{
+		m_background_sprites[0].rotate(36 * deltatime);
+		m_background_sprites[1].rotate(36 * deltatime);
+		m_background_sprites[2].rotate(36 * deltatime);
+		m_background_sprites[3].rotate(36 * deltatime);
+	}
+	else
+	{
+		m_background_sprites[0].setRotation(0);
+		m_background_sprites[1].setRotation(0);
+		m_background_sprites[2].setRotation(0);
+		m_background_sprites[3].setRotation(0);
+	}
 	for (int i = static_cast<int>(player_pos.x) - rendersizex; i < static_cast<int>(player_pos.x) + rendersizex; i++)
 	{
 		for (int j = static_cast<int>(player_pos.y) - rendersizey; j < static_cast<int>(player_pos.y) + rendersizey; j++)
 		{
 			if (Utils::is_valid({ i,j,0.0f }))
 			{
-				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH, static_cast<float>(j) * BACKGROUND_HEIGHT);
+				m_background_sprites[m_tiles[i][j][0]].setPosition(static_cast<float>(i) * BACKGROUND_WIDTH + 135.0f/2.0f, static_cast<float>(j) * BACKGROUND_HEIGHT + 135.0f / 2.0f);
 				render_target.draw(m_background_sprites[m_tiles[i][j][0]]);
 
 				if (glm::vec2(i, j) != glm::vec2{ 20,10 } && glm::vec2(i, j) != glm::vec2(20, 11) && m_EntityMap[0][j][i]) {
-					m_EntityMap[0][j][i]->update();
+					m_EntityMap[0][j][i]->update(deltatime);
 					render_target.draw(*m_EntityMap[0][j][i]);
 				}
 			}
@@ -217,7 +237,6 @@ void Game::run_game(int)
 
 		EnemyManager::set_updated_tower(false);
 		EnemyManager::set_player_moving(false);
-
 		EnemyManager::set_walls_update(false);
 
 		float deltatime = delta_timer.Elapsed();
@@ -293,7 +312,7 @@ void Game::run_game(int)
 			ImVec2 content_size = ImGui::GetContentRegionAvail();
 
 			texture.create(static_cast<uint32_t>(content_size.x), static_cast<uint32_t>(content_size.y));
-			texture_camera.set_RenderTarget(&texture);
+			texture_camera.set_render_target(&texture);
 		}
 		window_camera.move_cam_to_player();
 		texture_camera.move_cam_to_player();
@@ -303,7 +322,7 @@ void Game::run_game(int)
 			sf::Vector2f temp;
 			Utils::Timer logic_timer;
 			Projectile::update_all(deltatime);
-		
+
 			if (player_alive == false)
 			{
 
@@ -316,6 +335,7 @@ void Game::run_game(int)
 					p->set_pos(mb->get_pos());
 					player_alive = true;
 					EnemyManager::set_player_moving(true);
+					p->set_is_alive(true);
 					player_rem_grace = player_grace;
 				}
 			}
@@ -328,9 +348,10 @@ void Game::run_game(int)
 				player_rem_cooldown = player_cooldown;
 				player_alive = false;
 				EnemyManager::set_player_moving(true);
+				p->set_is_alive(false);
 			}
 			else if (player_alive)
-				p->take_damage(3 * -deltatime);
+				p->take_damage(5.f * -deltatime);
 
 			p->update_player(deltatime);
 
@@ -405,13 +426,13 @@ void Game::run_game(int)
 				else
 					++it;
 			}
-
+			mb->update(deltatime);
 			if (first_run == true || EnemyManager::should_update() == true)
 			{
 				pa->calculate_paths(towers, mb);
 			}
 			ma->update(deltatime);
-			if (player_rem_grace <= 0)
+			if (player_rem_grace <= 0 && player_alive)
 				p->do_damage_calc();
 
 			wave_manager.spawnening(ma, deltatime);
@@ -455,7 +476,7 @@ void Game::run_game(int)
 
 			if (opt->get_should_do_dockspace()) {
 				texture.clear();
-				render_map(p->get_pos(), texture); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+				render_map(p->get_pos(), texture, deltatime); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				texture.draw(*mb);
 				ma->draw(texture);
 
@@ -472,11 +493,16 @@ void Game::run_game(int)
 			}
 			else
 			{
-				render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+				render_map(p->get_pos(), m_window, deltatime); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				m_window.draw(*mb);
 				ma->draw(m_window);
-				m_window.draw(*p);
+				if (p->get_hp() > 0)
+				{
+					m_window.draw(*p);
+				}
 				Projectile::draw_all_projectiles(m_window);
+				hb->draw_healthbar(m_window, *p);
+
 				hb->draw_healthbar(m_window, *p);
 			}
 
@@ -568,7 +594,7 @@ void Game::run_game(int)
 	}
 }
 
-void Game::add_geld(double i_geld)
+void Game::add_geld(const double i_geld)
 {
 	m_geld += i_geld;
 }

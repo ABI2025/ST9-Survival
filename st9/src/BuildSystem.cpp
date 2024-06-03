@@ -23,7 +23,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_costs.insert({3,2500});
 	m_costs.insert({4,6000});
 	m_costs.insert({5,600});
-	//prophesionallen coding
+
 
 	m_texture_textures.resize(6);
 	m_texture_sprites.resize(6);
@@ -60,7 +60,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[3].clear(sf::Color::Transparent);
 	m_texture[3].draw(m_texture_sprites[1]);
 	m_texture[3].draw(m_texture_sprites[4]);
-
+	m_texture[3].display();
 
 
 	m_texture_textures[5].loadFromFile("resources/images/Basic_Waffe.png");
@@ -132,7 +132,7 @@ Utils::Cell BuildSystem::display()
 	for (uint32_t current_button_id = 0; current_button_id < m_sprites.size(); current_button_id++)
 	{
 		std::string button_id = "test" + std::to_string(current_button_id);
-		ImGui::PushID(current_button_id);
+		ImGui::PushID((signed)current_button_id);
 		if (ImGui::ImageButton(button_id.c_str(), m_sprites[current_button_id], { 135.0f,135.0f },m_sprites[current_button_id].getColor()))
 		{
 
@@ -144,12 +144,12 @@ Utils::Cell BuildSystem::display()
 			}
 			else if (current_button_id > 0 && current_button_id < 7)
 			{
-				m_id = current_button_id - 1;
+				m_id = (signed)current_button_id - 1;
 				temp = 1;
 			}
 			else
 			{
-				temp = current_button_id - 5;
+				temp = (signed)current_button_id - 5;
 			}
 			m_selected = static_cast<Utils::Cell>(temp);
 		}
@@ -273,13 +273,13 @@ Utils::Cell BuildSystem::display()
 	return m_selected;
 }
 
-void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_docking,
-	std::vector<std::vector<std::vector<Utils::Cell>>>& map,
-	std::vector<std::shared_ptr<Entity>>& entities,
-	std::vector<std::shared_ptr<Tower>>& towers,
-	glm::vec3 mouse_pos,
-	glm::vec3 mainbuilding_pos
-	) const
+void BuildSystem::operator()(const bool left_click, const bool right_click, const bool should_do_docking,
+                             std::vector<std::vector<std::vector<Utils::Cell>>>& map,
+                             std::vector<std::shared_ptr<Entity>>& entities,
+                             std::vector<std::shared_ptr<Tower>>& towers,
+                             const glm::vec3 mouse_pos,
+                             const glm::vec3 mainbuilding_pos
+) const
 {
 	if (left_click && right_click)
 		return;
@@ -307,7 +307,6 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 	const glm::ivec3 cell_mainbuilding_pos = mainbuilding_pos / 135.0f;
 	if((left_click || right_click) &&  (cell_mouse_pos == cell_mainbuilding_pos || cell_mouse_pos == cell_mainbuilding_pos + glm::ivec3{0,1,0}))
 	{
-		LOG_INFO("das mainbuilding ist wichtig ig");
 		return;
 	}
 
@@ -339,7 +338,7 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 			//platzierung einer Mauer
 			else if (m_selected == Utils::Cell::WALL &&
 				map[0][cell_mouse_pos.y][cell_mouse_pos.x] != Utils::Cell::WALL &&
-				(Game::get_game()->m_geld >= 25))
+				Game::get_game()->m_geld >= 25)
 			{
 				Game::get_game()->add_geld(-25);
 				entities.emplace_back(std::make_shared<Wall>(cell_mouse_pos * 135));
@@ -373,8 +372,8 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 				{
 					for (auto it = towers.begin(); it != towers.end();)
 					{
-						if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
-							(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+						if ((int)((*it)->get_pos().x / 135.0f) == cell_mouse_pos.x &&
+							(int)((*it)->get_pos().y / 135.0f) == cell_mouse_pos.y)
 						{
 							Game::get_game()->add_geld(it->get()->get_value()/2.0);
 							it->reset();
@@ -387,11 +386,11 @@ void BuildSystem::operator()(bool left_click, bool right_click, bool should_do_d
 					}
 				}
 
-				// Entfernen der Entität
+				// Entfernen der Entitaet
 				for (auto it = entities.begin(); it != entities.end();)
 				{
-					if ((*it)->get_pos().x / 135.0f == cell_mouse_pos.x &&
-						(*it)->get_pos().y / 135.0f == cell_mouse_pos.y)
+					if ((int)((*it)->get_pos().x / 135.0f) == cell_mouse_pos.x &&
+						(int)((*it)->get_pos().y / 135.0f) == cell_mouse_pos.y)
 					{
 						it->reset();
 						it = entities.erase(it);

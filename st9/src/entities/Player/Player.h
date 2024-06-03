@@ -14,7 +14,11 @@ public:
 
 	void do_damage_calc();
 
-	void take_damage(const double damage) override;
+	void take_damage(double damage) override;
+
+	bool is_alive() const;
+
+	void set_is_alive(bool i_is_alive);
 
 protected:
 	std::vector<std::vector<std::vector<sf::Texture>>> m_textures;
@@ -23,6 +27,6 @@ protected:
 	glm::ivec3 prev_cell_pos{};
 	glm::ivec3 prev_pos;
 	int m_geld;
-
+	bool m_is_alive = true;
 	glm::ivec3 speed;
 };

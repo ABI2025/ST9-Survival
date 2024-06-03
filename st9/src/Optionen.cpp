@@ -3,8 +3,7 @@
 #include "imgui-SFML.h"
 #include "imgui.h"
 #include "SFML/Graphics.hpp"
-#include "../Resources/Images/Roboto-Regular.embed"
-
+#include <fstream>
 
 Optionen::Optionen()
 {
@@ -20,13 +19,58 @@ Optionen::Optionen()
 	{
 		std::string line;
 		std::getline(fin, line, ';');
-		should_do_dockspace = std::stoi(line);
+		try
+		{
+			should_do_dockspace = std::stoi(line);
+		}
+		catch (...)
+		{
+			should_do_dockspace = true;
+		}
+
 		std::getline(fin, line, ';');
-		float volume1 = std::stof(line);
+		try
+		{
+			should_rotate = std::stoi(line);
+		}
+		catch (...)
+		{
+			should_rotate = false;
+		}
+
 		std::getline(fin, line, ';');
-		float volume2 = std::stof(line);
+		float volume1;
+		try
+		{
+			volume1 = std::stof(line);
+		}
+		catch (...)
+		{
+			volume1 = 1;
+		}
+
 		std::getline(fin, line, ';');
-		float volume3 = std::stof(line);
+		float volume2;
+		try
+		{
+			volume2 = std::stof(line);
+		}
+		catch (...)
+		{
+			volume2 = 1;
+		}
+
+		std::getline(fin, line, ';');
+		float volume3;
+		try
+		{
+			volume3 = std::stof(line);
+		}
+		catch (...)
+		{
+			volume3 = 1;
+		}
+
 
 		m_sounds.set_volume(volume1 * 100, -1);
 		m_sounds.set_volume(volume2 * 100, 0);
@@ -79,6 +123,11 @@ bool Optionen::optionen_exe(sf::RenderWindow& window, bool in_game)
 			should_do_dockspace = !should_do_dockspace;
 		}
 
+		if (ImGui::Button("rotierung"))
+		{
+			should_rotate = !should_rotate;
+		}
+
 
 
 		ImGui::SliderFloat("Allgemein", &lautstarke[0], 0, 100);
@@ -94,14 +143,24 @@ bool Optionen::optionen_exe(sf::RenderWindow& window, bool in_game)
 		ImGui::Text("ESC: Pausiert das Spiel und oeffnet das Optionsmenue");
 		ImGui::Text("F: Abfeuern eines Projektils in Richtung der Maus");
 	
-		if (ImGui::Button("close"))
+		if (ImGui::Button("close options"))
 		{
 			ImGui::End();
 			ImGui::SFML::Render(window);
 			window.display();
-			return false;
+			return true;
 		}
-		
+
+		if(in_game)
+		{
+			if(ImGui::Button("return to menu"))
+			{
+				ImGui::End();
+				ImGui::SFML::Render(window);
+				window.display();
+				return false;
+			}
+		}
 
 		ImGui::End();
 		ImGui::SFML::Render(window);
@@ -126,7 +185,7 @@ void Optionen::delete_instance()
 
 	const std::vector<float> volumes = s_instance->m_sounds.get_volumes();
 	std::ofstream fout("optionen.txt");
-	fout << s_instance->should_do_dockspace << ';' << volumes[0] << ';' << volumes[1] << ';' << volumes[2];
+	fout << s_instance->should_do_dockspace << ';' << s_instance->should_rotate << ';' << volumes[0] << ';' << volumes[1] << ';' << volumes[2];
 	fout.close();
 	delete s_instance;
 	s_instance = nullptr;
@@ -135,6 +194,11 @@ void Optionen::delete_instance()
 bool Optionen::get_should_do_dockspace() const
 {
 	return should_do_dockspace;
+}
+
+bool Optionen::get_should_rotate() const
+{
+	return should_rotate;
 }
 
 Sounds& Optionen::get_sounds()

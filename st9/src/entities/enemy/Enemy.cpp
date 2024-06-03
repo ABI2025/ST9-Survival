@@ -1,15 +1,10 @@
 #include "Enemy.h"
-#include <fstream>
-#include <string>
-#include <SFML/Graphics.hpp>
-
-#include "imgui.h"
 
 constexpr glm::ivec2 enemy_size{ 135,135 };
 constexpr glm::ivec2 enemy_sprite_sheet_length{ 4, 1 };
 constexpr glm::ivec2 end{ enemy_size.x * enemy_sprite_sheet_length.x, enemy_size.y * enemy_sprite_sheet_length.y };
 
-void Enemy::update()
+void Enemy::update(float deltatime)
 {
 
 }
@@ -41,7 +36,7 @@ void Enemy::die()
 {
 	can_be_removed = true;
 
-	////wenn wir nen großen sprite sheet für enemy tot haben dann kann das hier auskommentiert werden
+	////wenn wir nen grossen sprite sheet für enemy tot haben dann kann das hier auskommentiert werden
 	//if(!currently_dying){
 	//	m_sprite.setTexture(death_sheet);
 	//  m_sprite.setTextureRect({{0,0},enemy_size});
@@ -66,7 +61,7 @@ void Enemy::die()
 
 void Enemy::attack()
 {
-	//wenn wir nen großen sprite sheet für enemy tot haben dann kann das hier auskommentiert werden
+	//wenn wir nen grossen sprite sheet fuer enemy tot haben dann kann das hier auskommentiert werden
 //if(!currently_dying){
 //	//m_sprite.setTexture(death_sheet);
 //	m_sprite.setTextureRect({{0,0},{enemy_size.x,enemy_size.y}});

@@ -1,19 +1,12 @@
 #pragma once
-#include <chrono>
-#include <execution>
 #include <SFML/Graphics.hpp>
-#include <glm/glm.hpp>
 class Player;
 class Camera
 {
-private:
-	Player* m_player;
-	sf::RenderTarget* m_render_target;
-	sf::View m_view;
 public:
-	explicit Camera(sf::RenderTarget* window);
+	explicit Camera(sf::RenderTarget* render_target);
 
-	explicit Camera(sf::RenderTarget* window, Player* player);
+	explicit Camera(sf::RenderTarget* render_target, Player* player);
 
 	~Camera();
 
@@ -21,9 +14,9 @@ public:
 
 	void set_player(Player* player);
 
-	void set_RenderTarget(sf::RenderTarget* i_render_target);
+	void set_render_target(sf::RenderTarget* i_render_target);
 
-	Player* get_player();
+	Player* get_player() const;
 
 	void move_cam_to_player();
 
@@ -36,4 +29,8 @@ public:
 	void move_to_pos(sf::Vector2f vec);
 
 	void move_to_pos(const sf::View& view);
+private:
+	Player* m_player;
+	sf::RenderTarget* m_render_target;
+	sf::View m_view;
 };

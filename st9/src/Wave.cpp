@@ -7,12 +7,12 @@ constexpr int height = 22;
 constexpr int width = 41;
 
 
-Wave::Wave(float num_enemies, float cooldown_before_start, int i_enemy_type):m_cooldown_before_start(cooldown_before_start),m_num_enemies(num_enemies),m_enemy_type(i_enemy_type)
+Wave::Wave(const float num_enemies, const float cooldown_before_start, const int i_enemy_type):m_cooldown_before_start(cooldown_before_start),m_num_enemies(num_enemies),m_enemy_type(i_enemy_type)
 {
 		
 }
 
-void Wave::spawn_wave(EnemyManager* ma,float dt)
+void Wave::spawn_wave(EnemyManager* ma, const float dt)
 {
 	condt += dt;
 	if (condt >= m_cooldown_before_start)
@@ -20,7 +20,7 @@ void Wave::spawn_wave(EnemyManager* ma,float dt)
 		wave_counter++;
 		for (int i = 0; i < m_num_enemies; i++)
 		{
-			switch (const int dir = (signed)Utils::Random::UInt(0, 3))
+			switch (const int dir = static_cast<signed>(Utils::Random::UInt(0, 3)))
 			{
 			case 0://oben
 				ma->add_enemy(glm::vec3(Utils::Random::UInt(0, width * BACKGROUND_WIDTH - BACKGROUND_WIDTH), 0, 0),
@@ -80,7 +80,7 @@ WaveManager::WaveManager()
 	waves.push_back(std::make_shared<Wave>(Wave{100,3,1 }));
 }
 
-void WaveManager::spawnening(EnemyManager* ma, float dt)
+void WaveManager::spawnening(EnemyManager* ma, const float dt)
 {
 		
 	if (done) 

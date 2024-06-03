@@ -1,7 +1,6 @@
 #pragma once
 #include "Random.h"
 #include "Log.h"
-#include "Timer.h"
 #include "Pathfinding.h"
 #include <SFML/Graphics.hpp>
 
@@ -38,7 +37,7 @@ namespace Utils
 
 	}
 
-	inline bool vec3_almost_equal(const glm::vec3& vec1, const glm::vec3& vec2, float maxDifference = 1.0f) {
+	inline bool vec3_almost_equal(const glm::vec3& vec1, const glm::vec3& vec2, const float maxDifference = 1.0f) {
 		const float xDiff = std::fabs(vec1.x - vec2.x);
 		const float yDiff = std::fabs(vec1.y - vec2.y);
 		return (xDiff <= maxDifference) && (yDiff <= maxDifference);

@@ -28,7 +28,7 @@ public:
 	glm::vec3 get_hit_box() const;
 	virtual void take_damage(double damage);
 	double& get_hp();
-	virtual void update() {};
+	virtual void update([[maybe_unused]] float deltatime) {};
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

@@ -82,7 +82,7 @@ void Sounds::add_group(const std::string& group)
 
 }
 
-void Sounds::add_sound(int group_id, int id)
+void Sounds::add_sound(const int group_id, const int id)
 {
 	if (current_playing_sounds >= 256)
 		return;
@@ -156,7 +156,7 @@ void Sounds::add_sound(const std::string& group_id, const int id)
 	}
 }
 
-void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
+void Sounds::add_sound(const int group_id, const int id, const glm::vec2 pos)
 {
 	if (current_playing_sounds >= 256)
 		return;
@@ -199,7 +199,7 @@ void Sounds::add_sound(int group_id, int id, glm::vec2 pos)
 	}
 }
 
-void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
+void Sounds::add_sound(const std::string& group_id, const int id, const glm::vec2 pos)
 {
 	if (current_playing_sounds >= 256)
 		return;
@@ -236,7 +236,7 @@ void Sounds::add_sound(const std::string& group_id, int id, glm::vec2 pos)
 	}
 }
 
-void Sounds::music(float deltatime)
+void Sounds::music(const float deltatime)
 {
 
 	m_condt += deltatime;
@@ -311,7 +311,7 @@ void Sounds::delete_sounds()
 }
 
 
-void Sounds::pause_all(bool priority_ignorieren)
+void Sounds::pause_all(const bool priority_ignorieren)
 {
 	for (auto& all_sounds : m_sounds | std::views::values)
 	{
@@ -356,7 +356,7 @@ void Sounds::clear_all()
 }
 
 
-void Sounds::set_volume(float volume, int id)
+void Sounds::set_volume(const float volume, const int id)
 {
 	// Sicherstellen, dass die Lautstärke im gültigen Bereich [0.0, 100.0] liegt
 	if (volume < 0.0f || volume > 100.0f) 

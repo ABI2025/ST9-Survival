@@ -1,8 +1,6 @@
 #pragma once
 #include <deque>
-#include <vector>
 
-#include "Utils/Random.h"
 #include "Utils/Utils.h"
 #include "entities/EnemyManager.h"
 

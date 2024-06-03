@@ -15,9 +15,7 @@ Camera::Camera(sf::RenderTarget* render_target, Player* player)
 	m_view = sf::View({ 0,0 }, { static_cast<float>(m_render_target->getSize().x),static_cast<float>(m_render_target->getSize().y) });
 }
 
-Camera::~Camera()
-{
-}
+Camera::~Camera() = default;
 
 const sf::FloatRect& Camera::get_player_view() const
 { return m_view.getViewport(); }
@@ -27,12 +25,12 @@ void Camera::set_player(Player* player)
 	m_player = player;
 }
 
-void Camera::set_RenderTarget(sf::RenderTarget* i_render_target)
+void Camera::set_render_target(sf::RenderTarget* i_render_target)
 {
 	m_render_target = i_render_target;
 }
 
-Player* Camera::get_player()
+Player* Camera::get_player() const
 {
 	return m_player;
 }

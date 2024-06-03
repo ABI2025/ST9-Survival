@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <SFML/Graphics.hpp>
 
 //returns false on fail

@@ -2,16 +2,14 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Utils/Utils.h"
-#include <SFML/Graphics.hpp>
 #include "entities/entity/Entity.h"
-#include "Sounds.h"
 
 std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map();
 
 class Game
 {
 public:
-	void render_map(glm::vec3 player_pos, sf::RenderTarget& render_target);
+	void render_map(glm::vec3 player_pos, sf::RenderTarget& render_target, float deltatime);
 	void render_tower(sf::RenderTarget& render_target);
 	static void erstelle_game(sf::RenderWindow&,Sounds&);
 	static Game* get_game();

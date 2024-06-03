@@ -1,8 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <glm/glm.hpp>
 
-#include "Tower.h"
 #include "entities/entity/Entity.h"
 
 class MainBuilding: public Entity
@@ -14,6 +12,7 @@ class MainBuilding: public Entity
 
 public:
 	MainBuilding();
+	void update(float deltatime) override;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };

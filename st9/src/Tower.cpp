@@ -4,6 +4,7 @@
 
 #include "Game.h"
 #include "imgui.h"
+#include "Optionen.h"
 #include "Sounds.h"
 #include "entities/EnemyManager.h"
 
@@ -62,7 +63,7 @@ Tower::Tower(const glm::vec3 i_pos)
 	is_not_economy = true;
 }
 
-Tower::Tower(glm::vec3 i_pos, float i_cooldown, double i_damage, double i_health)
+Tower::Tower(const glm::vec3 i_pos, const float i_cooldown, const double i_damage, const double i_health)
 {
 	m_pos = i_pos;
 	sprites[0].setTexture(TowerTexture::get_instance()->tops[0]);
@@ -93,7 +94,8 @@ Tower::Tower(glm::vec3 i_pos, towerKind tower_kind,int ressourcen)
 	m_pos = i_pos;
 
 	sprites[1].setTexture(TowerTexture::get_instance()->base);
-	sprites[1].setPosition(m_pos.x, m_pos.y);
+	sprites[1].setOrigin(tower_sprite_center.x, tower_sprite_center.y);
+	sprites[1].setPosition(m_pos.x + tower_sprite_center.x, m_pos.y + tower_sprite_center.y);
 
 
 	m_ressourcen = ressourcen;
@@ -171,6 +173,9 @@ void Tower::drawtower(sf::RenderTarget& window) const
 void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 {
 	m_condt += deltatime;
+
+
+
 	if (m_condt >= m_cooldown)
 	{
 		if (is_not_economy) 
@@ -211,12 +216,20 @@ void Tower::fire(const EnemyManager& em, Sounds& sound , const float deltatime)
 		}
 
 		m_condt = 0.0f;
-
 	}
-
+	if (Optionen::get_instance()->get_should_rotate()) 
+	{
+		sprites[0].rotate(36 * deltatime);
+		sprites[1].rotate(36 * deltatime);
+	}
+	else
+	{
+		sprites[0].setRotation(0);
+		sprites[1].setRotation(0);
+	}
 }
 
-void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Tower::draw(sf::RenderTarget& target, const sf::RenderStates states) const
 {
 	if(is_not_economy)
 		target.draw(sprites[1],states);

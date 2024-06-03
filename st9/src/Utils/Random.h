@@ -4,8 +4,6 @@
 
 #include <glm/glm.hpp>
 
-#include "Log.h"
-
 namespace Utils
 {
 

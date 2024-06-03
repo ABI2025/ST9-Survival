@@ -5,7 +5,7 @@
 #include "healthbar.h"
 #include "entities/EnemyManager.h"
 #include "imgui.h"
-#include "imgui-SFML.h"
+#include "Optionen.h"
 #include "Sounds.h"
 
 Player::Player()
@@ -43,6 +43,7 @@ Player::Player()
 	m_sprite.setTexture(m_textures[0][0][0]);
 	m_hitbox = m_pos + glm::vec3{ 35,117,0 };
 	m_health = 200;
+	m_sprite.setOrigin(35.0f / 2.0, 117 / 2.0f);
 }
 
 static int i = 0;
@@ -132,7 +133,11 @@ void Player::update_player(const float deltatime)
 	{
 		m_sprite.setTexture(m_textures[prevfront_back][prevleft_right][0]);
 	}
-	m_sprite.setPosition(m_pos.x, m_pos.y);
+	if (Optionen::get_instance()->get_should_rotate())
+		m_sprite.rotate(36 * deltatime);
+	else
+		m_sprite.setRotation(0);
+	m_sprite.setPosition(m_pos.x + 35.0f/2.0f, m_pos.y + 117.0f/2.0f);
 	sf::Listener::setPosition(m_pos.x /135.0f, m_pos.y / 135.0f, 0.f);
 
 	m_hitbox = m_pos + glm::vec3{ 35,117,0 };
@@ -142,7 +147,7 @@ void Player::update_player(const float deltatime)
 }
 float condt = 0.0f;
 float cooldown = 0.25f;
-void Player::shoot(float deltatime, Sounds& i_sounds, glm::vec3 mouse_pos) const
+void Player::shoot(const float deltatime, Sounds& i_sounds, const glm::vec3 mouse_pos) const
 {
 	if (m_health <= 0)
 		return;
@@ -172,7 +177,7 @@ glm::ivec3 Player::get_movement_speed() const {
 	return speed;
 }
 
-void Player::set_hp(double i_health)
+void Player::set_hp(const double i_health)
 {
 	m_health = i_health;
 	if (m_health > 200.0)
@@ -221,4 +226,14 @@ void Player::take_damage(const double damage)
 		m_health = 0;
 	else if (m_health > 200)
 		m_health = 200;
+}
+
+bool Player::is_alive() const
+{
+	return m_is_alive;
+}
+
+void Player::set_is_alive(const bool i_is_alive)
+{
+	m_is_alive = i_is_alive;
 }

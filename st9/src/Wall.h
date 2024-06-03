@@ -21,11 +21,11 @@ class Wall : public Entity
 public:
 	explicit Wall(glm::vec3 i_pos);
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
+	void draw(sf::RenderTarget& target, const sf::RenderStates states) const override
 	{
 			target.draw(m_sprite, states);
 	}
-	void update()override;
+	void update(float)override;
 
 };
 

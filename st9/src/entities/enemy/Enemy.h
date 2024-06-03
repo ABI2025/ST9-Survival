@@ -11,6 +11,16 @@ enum enemy_type {
 class Enemy :
 	public Entity
 {
+
+public:
+
+	double get_damage() const;
+	Enemy();
+	void die();
+	void attack();
+	void update(float deltatime) override;
+	bool is_alive() const;
+	Utils::Priority get_priority() const;
 private:
 	enemy_type m_enemy_type = Default_Enemy;
 	std::vector<glm::vec3> m_movements;
@@ -22,14 +32,5 @@ private:
 	bool currently_dying = false;
 	double m_speed;
 	friend class EnemyManager;
-public:
-
-	double get_damage() const;
-	Enemy();
-	void die();
-	void attack();
-	void update();
-	bool is_alive() const;
-	Utils::Priority get_priority() const;
 };
 
