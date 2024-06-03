@@ -54,9 +54,7 @@ void Menu::show_menu()
 {
 	Optionen* opt = Optionen::get_instance();
 	Game::erstelle_game(m_window,opt->get_sounds());
-	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("Resources/Sounds/Hitmarker.ogg")) { LOG_ERROR("sound konnte nicht geladen werden"); }
-
+	
 	m_window.setFramerateLimit(60);
 	sf::Clock deltaClock;
 	while (m_window.isOpen())

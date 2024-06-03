@@ -10,8 +10,8 @@ Optionen::Optionen()
 	m_sounds.add_group("player");
 	m_sounds.add_group("music");
 	m_sounds.load_buffer("Resources/Sounds/Heilung.mp3", false, "player");
-	m_sounds.load_buffer("Resources/Sounds/Aufzeichnung(2).mp3", false, "player");
-	m_sounds.load_buffer("Resources/Sounds/hitmarker.ogg", false, "player");
+	m_sounds.load_buffer("Resources/Sounds/Schuss.ogg", false, "player");
+	m_sounds.load_buffer("Resources/Sounds/Hitmarker.ogg", false, "player");
 	m_sounds.load_buffer("Resources/Sounds/record.wav", true, "music");
 	m_sounds.load_buffer("Resources/Sounds/record-1.wav", true, "music");
 	std::ifstream fin("optionen.txt");
@@ -122,12 +122,15 @@ bool Optionen::optionen_exe(sf::RenderWindow& window, bool in_game)
 		{
 			should_do_dockspace = !should_do_dockspace;
 		}
+		ImGui::SameLine();
+		ImGui::Text("%d", should_do_dockspace);
 
 		if (ImGui::Button("rotierung"))
 		{
 			should_rotate = !should_rotate;
 		}
-
+		ImGui::SameLine();
+		ImGui::Text("%d", should_rotate);
 
 
 		ImGui::SliderFloat("Allgemein", &lautstarke[0], 0, 100);

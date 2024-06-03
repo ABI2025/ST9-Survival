@@ -7,7 +7,7 @@
 MainBuilding::MainBuilding() : m_pos_x(135 * 20), m_pos_y(135 * 10)
 {
 	m_pos = { m_pos_x,m_pos_y,0.f };
-	m_texture.loadFromFile("Resources/images/Spawn.png");
+	m_texture.loadFromFile("Resources/Images/Spawn.png");
 	m_sprite.setTexture(m_texture);
 	m_sprite.setOrigin(135.f /2.f, 135.f);
 	m_sprite.setPosition(m_pos_x +135.f/2.f, m_pos_y+135.f);
