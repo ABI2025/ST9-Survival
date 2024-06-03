@@ -68,17 +68,17 @@ Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds
 	m_background_sprites[2].setOrigin(135.0f/2.0f,135.0f/2.0f);
 	m_background_sprites[3].setOrigin(135.0f/2.0f,135.0f/2.0f);
 
-	m_building_textures.resize(4);
+	//m_building_textures.resize(4);
 
-	if (!m_building_textures[0].loadFromFile("Resources/Images/1111.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[1].loadFromFile("Resources/Images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[2].loadFromFile("Resources/Images/buttom.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[3].loadFromFile("Resources/Images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } // Lade building texturen
+	//if (!m_building_textures[0].loadFromFile("Resources/Images/1111.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	//if (!m_building_textures[1].loadFromFile("Resources/Images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	//if (!m_building_textures[2].loadFromFile("Resources/Images/buttom.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	//if (!m_building_textures[3].loadFromFile("Resources/Images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } // Lade building texturen
 
 
 	m_ui_textures.resize(1);
 
-	if (!m_ui_textures[0].loadFromFile("Resources/Images/Alternative_für_Währung.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } //lade V-Buck Texture
+	if (!m_ui_textures[0].loadFromFile("Resources/Images/v-bucks.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } //lade V-Buck Texture
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 	m_EntityMap = std::vector(1, std::vector(height, std::vector<std::shared_ptr<Entity>>(width)));
@@ -88,7 +88,7 @@ Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds
 	LOG_DEBUG("m_map size : {}  ; [0] size: {} ; [0][0] size :{}", m_map.size(), m_map[0].size(), m_map[0][0].size());
 }
 
-void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target, float deltatime)
+void Game::render_map_and_tower(glm::vec3 player_pos, sf::RenderTarget& render_target, float deltatime)
 {
 	//Utils::ScopedTimer ttt("render_map funktion");
 	player_pos = round(player_pos / 135.0f);
@@ -126,54 +126,7 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target, flo
 		}
 	}
 }
-void Game::render_tower(sf::RenderTarget& render_target)
-{
-	sf::Sprite drawable;
 
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			switch (m_map[0][j][i])
-			{
-			case Utils::Cell::WALL:
-			{
-
-				drawable.setTexture(m_building_textures[0]);
-				drawable.setPosition(i * 135.0f
-					, j * 135.0f);
-				render_target.draw(drawable);
-			}
-			break;
-			case Utils::Cell::TURRET: //fallthrough
-			{
-				//		drawable.setTexture(m_building_textures[2]);
-				//		drawable.setPosition(i * 135.0f
-				//			, j * 135.0f);
-				//		m_window.draw(drawable);
-
-				//		drawable.setTexture(m_building_textures[1]);
-				//		drawable.setPosition(i * 135.0f
-				//			, j * 135.0f);
-
-				//		//drawable.setOrigin( 135.0f / 2.0f, 135.0f / 2.0f);
-				//		//drawable.setRotation(45.0f);
-				//		m_window.draw(drawable);
-				//		//drawable.setRotation(0.0f);
-				///*		drawable.setRotation(0.0f);
-				//		drawable.setOrigin(0,0);*/
-
-
-			}
-			break;
-			case Utils::Cell::NOTHING:
-			case Utils::Cell::STAIR:
-				break;
-			}
-		}
-	}
-
-}
 void Game::run_game(int)
 {
 	Wave::wave_counter = 0;
@@ -476,7 +429,7 @@ void Game::run_game(int)
 
 			if (opt->get_should_do_dockspace()) {
 				texture.clear();
-				render_map(p->get_pos(), texture, deltatime); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+				render_map_and_tower(p->get_pos(), texture, deltatime); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				texture.draw(*mb);
 				ma->draw(texture);
 
@@ -493,7 +446,7 @@ void Game::run_game(int)
 			}
 			else
 			{
-				render_map(p->get_pos(), m_window, deltatime); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
+				render_map_and_tower(p->get_pos(), m_window, deltatime); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				m_window.draw(*mb);
 				ma->draw(m_window);
 				if (p->get_hp() > 0)

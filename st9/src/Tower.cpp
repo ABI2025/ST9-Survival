@@ -17,11 +17,11 @@ constexpr glm::vec2 tower_sprite_center{ 135.f/2,135.f / 2 }; //danke simon für 
 
 TowerTexture::TowerTexture()
 {
-	base.loadFromFile("Resources/Images/buttom.png");
+	base.loadFromFile("Resources/Images/tower_base.png");
 	tops[0].loadFromFile("Resources/Images/top.png");
-	tops[1].loadFromFile("Resources/Images/Besser_als_Simon-_Maschienen_Gewehr.png");
-	tops[2].loadFromFile("Resources/Images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
-	tops[3].loadFromFile("Resources/Images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
+	tops[1].loadFromFile("Resources/Images/mg.png");
+	tops[2].loadFromFile("Resources/Images/geld_raffinerie.png");
+	tops[3].loadFromFile("Resources/Images/gold_mg.png");
 	tops[4].loadFromFile("Resources/Images/Gold-Kanone.png");
 	tops[5].loadFromFile("Resources/Images/Basic_Waffe.png");
 }

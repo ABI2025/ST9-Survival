@@ -29,7 +29,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture_sprites.resize(6);
 
 	m_texture_textures[0].loadFromFile("Resources/Images/top.png");
-	m_texture_textures[1].loadFromFile("Resources/Images/buttom.png");
+	m_texture_textures[1].loadFromFile("Resources/Images/tower_base.png");
 	m_texture_sprites[0].setTexture(m_texture_textures[0]);
 	m_texture_sprites[1].setTexture(m_texture_textures[1]);
 	m_texture[0].create(135, 135);
@@ -38,7 +38,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[0].draw(m_texture_sprites[0]);
 	m_texture[0].display();
 
-	m_texture_textures[2].loadFromFile("Resources/Images/Besser_als_Simon-_Maschienen_Gewehr.png");
+	m_texture_textures[2].loadFromFile("Resources/Images/mg.png");
 	m_texture_sprites[2].setTexture(m_texture_textures[2]);
 	m_texture[1].create(135, 135);
 	m_texture[1].clear(sf::Color::Transparent);
@@ -46,7 +46,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[1].draw(m_texture_sprites[2]);
 	m_texture[1].display();
 
-	m_texture_textures[3].loadFromFile("Resources/Images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
+	m_texture_textures[3].loadFromFile("Resources/Images/gold_mg.png");
 	m_texture_sprites[3].setTexture(m_texture_textures[3]);
 	m_texture[2].create(135, 135);
 	m_texture[2].clear(sf::Color::Transparent);
@@ -75,8 +75,8 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_textures[0].loadFromFile("Resources/Images/none.png");
 	m_textures[1] = m_texture[0].getTexture();
 	m_textures[2] = m_texture[1].getTexture();
-	m_textures[3].loadFromFile("Resources/Images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
-	m_textures[4].loadFromFile("Resources/Images/1111.png");
+	m_textures[3].loadFromFile("Resources/Images/geld_raffinerie.png");
+	m_textures[4].loadFromFile("Resources/Images/wall.png");
 	m_textures[5] = m_texture[2].getTexture();
 	m_textures[6] = m_texture[3].getTexture();
 	m_textures[7] = m_texture[4].getTexture();

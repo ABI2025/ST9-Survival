@@ -1,3 +1,7 @@
+
+WINDOWS = os.host() == "windows"
+
+
 project "st9"
    kind "ConsoleApp"
    language "C++"
@@ -22,7 +26,6 @@ project "st9"
     links
 	{
         "imgui",
-        "openal32",
 		"freetype",
 		--"winmm",
 		--"gdi32",
@@ -43,6 +46,7 @@ project "st9"
       defines { "PLATFORM_WINDOWS" }
       links
       {
+          "openal32",
           "opengl32",
           "flac",
       }
@@ -50,32 +54,43 @@ project "st9"
         links
         {
           "stdc++fs",
-          "GL"
+          "GL",
+          "sfml-graphics",
+          "sfml-window",
+          "sfml-system",
+          "sfml-audio",
+          "sfml-network"
         }
 
    filter "configurations:Debug"
       defines { "DEBUG" }
-      links
-      {	
+      if WINDOWS then
+        links
+        {	
           "sfml-graphics-s-d",
           "sfml-window-s-d",
           "sfml-system-s-d",
           "sfml-audio-s-d",
           "sfml-network-s-d"
-      }
+        }
+      end   
+
+
       runtime "Debug"
       symbols "On"
 
    filter "configurations:Release"
       defines { "RELEASE" }
-      links
-      {	
+      if WINDOWS then
+        links
+        {	
           "sfml-graphics-s",
           "sfml-window-s",
           "sfml-system-s",
           "sfml-audio-s",
           "sfml-network-s"
-      }
+        }
+      end  
       runtime "Release"
       optimize "On"
       symbols "On"
@@ -83,14 +98,16 @@ project "st9"
    filter "configurations:Dist"
       kind "WindowedApp"
       defines { "DIST" }
-      links
-      {	
+      if WINDOWS then
+        links
+        {	
           "sfml-graphics-s",
           "sfml-window-s",
           "sfml-system-s",
           "sfml-audio-s",
           "sfml-network-s"
-      }
+        }
+      end
       runtime "Release"
       optimize "On"
       symbols "Off"
