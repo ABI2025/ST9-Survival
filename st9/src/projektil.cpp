@@ -9,7 +9,7 @@
 #endif
 ProjectileTexture::ProjectileTexture()
 {
-	texture.loadFromFile("resources/images/Projektil.png");
+	texture.loadFromFile("Resources/Images/Projektil.png");
 
 }
 

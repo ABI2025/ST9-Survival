@@ -44,7 +44,7 @@ namespace Utils {
 
 	std::vector<glm::vec3> Pathfinding::find_path(const glm::vec3& start, Priority p) const
 	{
-		if((m_player->is_alive() || !is_valid(m_player->get_pos()/135.0f)) && p == Priority::player)
+		if((!m_player->is_alive() || !is_valid(m_player->get_pos()/135.0f)) && p == Priority::player)
 		{
 			p = Priority::nothing;
 		}

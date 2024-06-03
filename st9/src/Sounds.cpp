@@ -21,8 +21,6 @@ void Sounds::change_music()
 		{
 			new_current_music = 0;
 		}
-		LOG_INFO("m_sounds_size {}", m_sounds_size);
-		LOG_INFO("new current_music {}", new_current_music);
 #endif
 		sf::Sound& current_sound = m_sounds["music"][0].first.back();
 		current_sound.setBuffer(m_buffers["music"][new_current_music]);

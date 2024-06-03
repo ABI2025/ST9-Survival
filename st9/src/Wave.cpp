@@ -89,7 +89,7 @@ void WaveManager::spawnening(EnemyManager* ma, const float dt)
 		waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 5.f ,0.f , 4}));
 		waves.push_back(std::make_shared<Wave>(Wave{ Wave::wave_counter * 2.f ,0.f , 1}));
 		done = false;
-		LOG_INFO("boah einfach crazy");
+		//LOG_INFO("boah einfach crazy");
 			
 	}
 
@@ -101,7 +101,7 @@ void WaveManager::spawnening(EnemyManager* ma, const float dt)
 		waves.pop_front();
 		if (waves.empty())
 		{
-			LOG_INFO("done");
+			//LOG_INFO("done");
 			//current_wave = std::make_shared<Wave>(Wave{ Utils::Random::Float(100,200),Utils::Random::Float(10,20) });
 			done = true;
 		}

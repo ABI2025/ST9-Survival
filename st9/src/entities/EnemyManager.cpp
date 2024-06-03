@@ -299,7 +299,7 @@ void EnemyManager::add_enemy()
 	m_enemies.push_back(spawned_enemy);
 
 	spawned_enemy->m_priority = static_cast<Utils::Priority>(Utils::Random::UInt(0, 2));
-	LOG_TRACE("priority: {}", static_cast<int>(spawned_enemy->m_priority));
+	//LOG_TRACE("priority: {}", static_cast<int>(spawned_enemy->m_priority));
 	spawned_enemy->m_id = 0;
 }
 
