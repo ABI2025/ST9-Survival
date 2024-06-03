@@ -24,15 +24,15 @@ project "st9"
         "imgui",
         "openal32",
 		"freetype",
-		"winmm",
-		"gdi32",
-        "flac",
+		--"winmm",
+		--"gdi32",
+       -- "flac",
 		"vorbisenc",
 		"vorbisfile",
 		"vorbis",
 		"ogg",
-		"ws2_32",
-        "legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
+		--"ws2_32",
+        --"legacy_stdio_definitions" --falls was schiefgeht einfach wieder reinmachen
     }
 
    targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
@@ -44,10 +44,12 @@ project "st9"
       links
       {
           "opengl32",
+          "flac",
       }
    filter "system:linux"
         links
         {
+          "stdc++fs",
           "GL"
         }
 

@@ -15,11 +15,11 @@ constexpr float CellSize = 135.0f;
 EnemyManager::EnemyManager()
 {
 	m_textures.resize(5);
-	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
-	m_textures[1].loadFromFile("resources/images/Roter_gegner1-1.png");
-	m_textures[2].loadFromFile("resources/images/Blauer_gegner1-1.png");
-	m_textures[3].loadFromFile("resources/images/Gold_gegner1-1.png");
-	m_textures[4].loadFromFile("resources/images/Schwarzer_gegner1-1.png");
+	m_textures[0].loadFromFile("Resources/Images/gegner1-1.png");
+	m_textures[1].loadFromFile("Resources/Images/Roter_gegner1-1.png");
+	m_textures[2].loadFromFile("Resources/Images/Blauer_gegner1-1.png");
+	m_textures[3].loadFromFile("Resources/Images/Gold_gegner1-1.png");
+	m_textures[4].loadFromFile("Resources/Images/Schwarzer_gegner1-1.png");
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
@@ -150,7 +150,7 @@ void EnemyManager::update(float deltatime)
 
 						e->m_pos = temp;
 						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
-						e->m_sprite.setPosition(e->m_pos.x + 135.0f/2.0, e->m_pos.y + 135.0f / 2.0);
+						e->m_sprite.setPosition(e->m_pos.x + 135.0f/2.0f, e->m_pos.y + 135.0f / 2.0f);
 						return;
 					}
 
@@ -181,16 +181,16 @@ void EnemyManager::update(float deltatime)
 					{
 
 						enemys_per_cell[cell_pos.y][cell_pos.x]++;
-						e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+						e->m_hitbox = e->m_pos + glm::vec3{ 135.f,135.f,0.f };
 						e->attack();
-						e->m_sprite.setPosition(e->m_pos.x + 135.0f / 2.0, e->m_pos.y + 135.0f / 2.0);
+						e->m_sprite.setPosition(e->m_pos.x + 135.0f / 2.0f, e->m_pos.y + 135.0f / 2.0f);
 						tower[0][cell_pos.y][cell_pos.x]->take_damage(e->m_damage);
 						return;
 					}
 
 
 					e->m_pos = temp;
-					e->m_sprite.setPosition(e->m_pos.x + 135.0f / 2.0, e->m_pos.y + 135.0f / 2.0);
+					e->m_sprite.setPosition(e->m_pos.x + 135.0f / 2.0f, e->m_pos.y + 135.0f / 2.0f);
 					e->m_movements.pop_back();
 
 				}
@@ -202,7 +202,7 @@ void EnemyManager::update(float deltatime)
 				enemys_per_cell[temp_pos.y][temp_pos.x]++;
 			}
 
-			e->m_hitbox = e->m_pos + glm::vec3{ 135,135,0 };
+			e->m_hitbox = e->m_pos + glm::vec3{ 135.f,135.f,0.f };
 		}
 	);
 

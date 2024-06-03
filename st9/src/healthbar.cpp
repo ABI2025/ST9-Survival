@@ -46,7 +46,7 @@ void healthbar::draw_healthbar(sf::RenderTarget& target, Player& p) const
 	sf::RectangleShape health_background(sf::Vector2f(292, 32));
 	health_background.setFillColor(sf::Color::Black);
 	health_background.setPosition(sf::Vector2f(target.getView().getCenter().x - target.getSize().x / 2.0f + 50, target.getView().getCenter().y - target.getSize().y / 2.0f + 50));
-	sf::RectangleShape health(sf::Vector2f(abs(292.0f * sin(m_health) * tan(m_health) * cos(m_health)/* / 200.0f*/), 32));
+	sf::RectangleShape health(sf::Vector2f(static_cast<float>(292.0 * m_health / 200.0), 32.f));
 	health.setFillColor(sf::Color::Magenta);
 	health.setPosition(sf::Vector2f(target.getView().getCenter().x - target.getSize().x / 2.0f + 50, target.getView().getCenter().y - target.getSize().y / 2.0f + 50));
 	target.draw(background);

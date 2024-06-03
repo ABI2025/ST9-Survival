@@ -18,10 +18,11 @@ namespace Utils
 	//Pathfinding ist ein Singleton
 	class Pathfinding
 	{
+		struct cell;
 		// Kunstruktor / destruktor
 		Pathfinding(const std::shared_ptr<Player>&, std::vector<std::vector<std::vector<Cell>>>& map);
 	public:
-
+		//deleting constroctur, copy constructor, move constructor and coppy assignment operator and move assignment operator
 		Pathfinding() = delete;
 		Pathfinding(const Pathfinding&) = delete;
 		Pathfinding(Pathfinding&&) = delete;
@@ -30,6 +31,51 @@ namespace Utils
 
 
 		~Pathfinding();
+
+		//public methods
+	public:
+		/*
+		 Init nimmt die Karte und den Player an und speichert sie als referenzen
+		 */
+		static void Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Cell>>>& i_map);
+
+		// Die klasse loeschen, damit keine artifakte und sonstiges dableiben
+		static void Delete();
+
+		// Zuerst Init rufen sonst funktioniert nichts
+		static Pathfinding* get_instance();
+
+
+		[[nodiscard]] const std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
+
+
+		[[nodiscard]] glm::vec3 get_player_pos() const;
+
+		/*
+		 
+		 start ist der anfang (position vom gegner / entity)
+		 Priority ist auf was der gegner/entity gehen soll
+		 Moegliche Prioritaeten sind
+		 Player
+		 Nothing
+		 Tower
+
+		*/
+		[[nodiscard]] std::vector<glm::vec3> find_path(const glm::vec3& start, Priority) const;
+
+		[[nodiscard]] bool is_valid(const glm::vec3&) const;
+
+		void calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers,const std::shared_ptr<MainBuilding>&);
+
+
+		//private methods
+	private:
+		[[nodiscard]] std::vector<glm::vec3>	make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
+		void									dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
+		[[nodiscard]] std::vector<glm::vec3>	bresenham(const glm::vec3& dest, const glm::vec3& start) const;
+		[[nodiscard]] std::vector<cell*>		get_neighbors(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
+		[[nodiscard]] double					get_dist(cell*, const cell*) const;
+
 		//private member
 	private:
 
@@ -48,54 +94,6 @@ namespace Utils
 		std::vector<std::vector<std::vector<cell>>> m_player_cellmap;
 		std::vector<std::vector<std::vector<cell>>> m_tower_cellmap;
 		std::vector<std::vector<std::vector<cell>>> m_nothing_cellmap;
-
-
-		//public methods
-	public:
-		/*
-		 Init nimmt die Karte und den Player an und speichert sie als referenzen
-
-
-
-		 */
-		static void Init(std::shared_ptr<Player> i_player, std::vector<std::vector<std::vector<Cell>>>& i_map);
-
-		// Die klasse loeschen, damit keine artifakte und sonstiges dableiben
-		static void Delete();
-
-		// Zuerst Init rufen sonst funktioniert nichts
-		static Pathfinding* get_instance();
-
-
-		[[nodiscard]] const std::vector<std::vector<std::vector<Cell>>>& get_map() const { return m_map; }
-
-
-		[[nodiscard]] glm::vec3 get_player_pos() const;
-
-		/*
-
-		 start ist der anfang (position vom gegner / entity)
-		 Priority ist auf was der gegner/entity gehen soll
-		 Moegliche Prioritaeten sind
-		 Player
-		 Nothing
-		 Tower
-		 */
-		[[nodiscard]] std::vector<glm::vec3> find_path(const glm::vec3& start, Priority) const;
-
-		[[nodiscard]] bool is_valid(const glm::vec3&) const;
-
-		void calculate_paths(const std::vector<std::shared_ptr<Tower>>& towers,const std::shared_ptr<MainBuilding>&);
-
-
-		//private methods
-	private:
-		[[nodiscard]] std::vector<glm::vec3>	make_path(const glm::vec3& start, const std::vector<std::vector<std::vector<cell>>>& cellmap) const;
-		void									dijkstra(const std::vector<glm::ivec3>& start, std::vector<std::vector<std::vector<cell>>>& cellmap);
-		[[nodiscard]] std::vector<glm::vec3>	bresenham(const glm::vec3& dest, const glm::vec3& start) const;
-		[[nodiscard]] std::vector<cell*>		get_neighbors(const cell*, std::vector<std::vector<std::vector<cell>>>& m_cellmap) const;
-		[[nodiscard]] double					get_dist(cell*, const cell*) const;
-
 	};
 
 

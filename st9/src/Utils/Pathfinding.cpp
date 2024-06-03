@@ -31,7 +31,9 @@ namespace Utils {
 	Pathfinding* Pathfinding::get_instance()
 	{
 		if (!s_instance)
+		{
 			LOG_ERROR("Pathfinding::Init muss vor Pathfinding::get_instance() gerufen werden");
+		}
 		return s_instance;
 	}
 
