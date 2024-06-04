@@ -5,10 +5,10 @@
 WallTexture::WallTexture()
 {
 		
-	textures[0].loadFromFile("resources/images/wall.png");
-	textures[1].loadFromFile("resources/images/wall_slightly_damaged.png");
-	textures[2].loadFromFile("resources/images/wall_moderately_damaged.png");
-	textures[3].loadFromFile("resources/images/wall_highly_damaged.png");
+	textures[0].loadFromFile("Resources/Images/wall.png");
+	textures[1].loadFromFile("Resources/Images/wall_slightly_damaged.png");
+	textures[2].loadFromFile("Resources/Images/wall_moderately_damaged.png");
+	textures[3].loadFromFile("Resources/Images/wall_highly_damaged.png");
 }
 
 WallTexture* WallTexture::get_instance()
