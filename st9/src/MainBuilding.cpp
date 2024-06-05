@@ -6,7 +6,7 @@
 MainBuilding::MainBuilding() : m_pos_x(135 * 20), m_pos_y(135 * 10)
 {
 	m_pos = { m_pos_x,m_pos_y,0.f };
-	m_texture.loadFromFile("Resources/images/Spawn.png");
+	m_texture.loadFromFile("Resources/Images/Spawn.png");
 	m_sprite.setTexture(m_texture);
 	m_sprite.setPosition(m_pos_x, m_pos_y);
 	m_health = 5000;

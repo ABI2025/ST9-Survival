@@ -3,10 +3,10 @@
 WallTexture::WallTexture()
 {
 		
-	textures[0].loadFromFile("resources/images/1111.png");
-	textures[1].loadFromFile("resources/images/1111mit rissen.png");
-	textures[2].loadFromFile("resources/images/1111mit-mehr-rissen.png");
-	textures[3].loadFromFile("resources/images/1111mit-viel-mehr-rissen.png");
+	textures[0].loadFromFile("Resources/images/wall.png");
+	textures[1].loadFromFile("Resources/images/wall_slightly_damaged.png");
+	textures[2].loadFromFile("Resources/images/wall_moderately_damaged.png");
+	textures[3].loadFromFile("Resources/images/wall_highly_damaged.png");
 }
 
 WallTexture* WallTexture::get_instance()

@@ -14,7 +14,7 @@
 #include "BuildSystem.h"
 #include "imgui_internal.h"
 #include "Optionen.h"
-#include "projektil.h" //können wir später löschen, ist nur zum debuggen hier // doch jetzt ist es eine kern funktion
+#include "projektil.h" 
 #include "Sounds.h"
 #include "Tower.h"
 #include "Wave.h"
@@ -45,13 +45,12 @@ std::vector<std::vector<std::array<uint8_t, 2>>> erstelle_map()
 
 Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds(sounds)
 {
-	//window.setFramerateLimit(2);
 	m_background_textures.resize(4);
 	m_geld = 1000;
-	if (!m_background_textures[0].loadFromFile("Resources/images/Background1.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_background_textures[1].loadFromFile("Resources/images/Background2.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_background_textures[2].loadFromFile("Resources/images/Background3.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_background_textures[3].loadFromFile("Resources/images/Background4.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); } // lade background tiles texturen
+	if (!m_background_textures[0].loadFromFile("Resources/Images/Background1.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[1].loadFromFile("Resources/Images/Background2.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[2].loadFromFile("Resources/Images/Background3.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); }
+	if (!m_background_textures[3].loadFromFile("Resources/Images/Background4.jpg")) { LOG_ERROR("texture konnte nicht geladen werden"); } // lade background tiles texturen
 
 	m_background_sprites.resize(4);
 
@@ -61,17 +60,10 @@ Game::Game(sf::RenderWindow& window, Sounds& sounds) :m_window(window), m_sounds
 	m_background_sprites[3].setTexture(m_background_textures[3]);
 
 
-	m_building_textures.resize(4);
-
-	if (!m_building_textures[0].loadFromFile("Resources/images/1111.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[1].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[2].loadFromFile("Resources/images/buttom.png")) { LOG_ERROR("texture konnte nicht geladen werden"); }
-	if (!m_building_textures[3].loadFromFile("Resources/images/Top.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } // Lade building texturen
-
 
 	m_ui_textures.resize(1);
 
-	if (!m_ui_textures[0].loadFromFile("Resources/images/Alternative_für_Währung.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } //lade V-Buck Texture
+	if (!m_ui_textures[0].loadFromFile("Resources/Images/v-bucks.png")) { LOG_ERROR("texture konnte nicht geladen werden"); } //lade V-Buck Texture
 
 	m_map = std::vector(1, std::vector(height, std::vector(width, Utils::Cell::NOTHING)));
 	m_EntityMap = std::vector(1, std::vector(height, std::vector<std::shared_ptr<Entity>>(width)));
@@ -106,54 +98,7 @@ void Game::render_map(glm::vec3 player_pos, sf::RenderTarget& render_target)
 		}
 	}
 }
-void Game::render_tower(sf::RenderTarget& render_target)
-{
-	sf::Sprite drawable;
 
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			switch (m_map[0][j][i])
-			{
-			case Utils::Cell::WALL:
-			{
-
-				drawable.setTexture(m_building_textures[0]);
-				drawable.setPosition(i * 135.0f
-					, j * 135.0f);
-				render_target.draw(drawable);
-			}
-			break;
-			case Utils::Cell::TURRET: //fallthrough
-			{
-				//		drawable.setTexture(m_building_textures[2]);
-				//		drawable.setPosition(i * 135.0f
-				//			, j * 135.0f);
-				//		m_window.draw(drawable);
-
-				//		drawable.setTexture(m_building_textures[1]);
-				//		drawable.setPosition(i * 135.0f
-				//			, j * 135.0f);
-
-				//		//drawable.setOrigin( 135.0f / 2.0f, 135.0f / 2.0f);
-				//		//drawable.setRotation(45.0f);
-				//		m_window.draw(drawable);
-				//		//drawable.setRotation(0.0f);
-				///*		drawable.setRotation(0.0f);
-				//		drawable.setOrigin(0,0);*/
-
-
-			}
-			break;
-			case Utils::Cell::NOTHING:
-			case Utils::Cell::STAIR:
-				break;
-			}
-		}
-	}
-
-}
 void Game::run_game(int)
 {
 	m_geld = 1000;
@@ -188,10 +133,6 @@ void Game::run_game(int)
 
 
 	m_tiles = erstelle_map();
-
-	//m_window.clear();
-	//render_map(p->get_pos(), m_window);
-	//m_window.display();
 
 	Utils::Cell selected = Utils::Cell::NOTHING;
 
@@ -250,12 +191,7 @@ void Game::run_game(int)
 			case sf::Event::KeyPressed: //TODO: nicht alles hier machen bitte und logik weiter unten machen
 				if (event.key.code == sf::Keyboard::Key::Escape)
 				{
-					/*m_sounds.pause_all(false);
-					m_open = showpausemenu();
-					m_sounds.play_all();*/
-
 					show_option_menu = true;
-					//m_open = false;
 				}
 
 				break;
@@ -309,8 +245,6 @@ void Game::run_game(int)
 				player_rem_cooldown -= deltatime;
 				if (player_rem_cooldown <= 0)
 				{
-					hb->regeneration(21);
-
 					p->set_hp(200);
 					p->set_pos(mb->get_pos());
 					player_alive = true;
@@ -433,7 +367,6 @@ void Game::run_game(int)
 
 		{//Spiel Info Fenster
 			ImGui::Begin("Spiel Infos");
-			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime); //zum fps Debuggen 
 			ImGui::TextWrapped("Menge An Lebenden Gegnern: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("V-Bucks %f", m_geld);
 			if (!player_alive)
@@ -472,7 +405,10 @@ void Game::run_game(int)
 				render_map(p->get_pos(), m_window); //als erstes wird der Boden gerendert (weil der immer ganz unten sein sollte)
 				m_window.draw(*mb);
 				ma->draw(m_window);
-				m_window.draw(*p);
+				if (p->get_hp() > 0)
+				{
+					texture.draw(*p);
+				}
 				Projectile::draw_all_projectiles(m_window);
 				hb->draw_healthbar(m_window, *p);
 			}

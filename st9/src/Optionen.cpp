@@ -11,8 +11,8 @@ Optionen::Optionen()
 	m_sounds.add_group("player");
 	m_sounds.add_group("music");
 	m_sounds.load_buffer("Resources/Sounds/Heilung.mp3", false, "player");
-	m_sounds.load_buffer("Resources/Sounds/Aufzeichnung(2).mp3", false, "player");
-	m_sounds.load_buffer("Resources/Sounds/hitmarker.ogg", false, "player");
+	m_sounds.load_buffer("Resources/Sounds/Heilung.mp3", false, "player");
+	m_sounds.load_buffer("Resources/Sounds/Hitmarker.ogg", false, "player");
 	m_sounds.load_buffer("Resources/Sounds/record.wav", true, "music");
 	m_sounds.load_buffer("Resources/Sounds/record-1.wav", true, "music");
 	std::ifstream fin("optionen.txt");

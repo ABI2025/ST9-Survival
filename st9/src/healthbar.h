@@ -17,11 +17,8 @@ public:
 	static void delete_instance();
 
 	~healthbar() = default;
-	void regeneration(double);
-
 	[[nodiscard]] double get_health() const;
 
-	bool damage_input(double);
 	[[nodiscard]] bool alive() const;
 	void draw_healthbar(sf::RenderTarget&, Player&) const;
 

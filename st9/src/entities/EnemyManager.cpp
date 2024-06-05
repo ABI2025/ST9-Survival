@@ -12,11 +12,11 @@ constexpr float CellSize = 135.0f;
 EnemyManager::EnemyManager()
 {
 	m_textures.resize(5);
-	m_textures[0].loadFromFile("resources/images/gegner1-1.png");
-	m_textures[1].loadFromFile("resources/images/Roter_gegner1-1.png");
-	m_textures[2].loadFromFile("resources/images/Blauer_gegner1-1.png");
-	m_textures[3].loadFromFile("resources/images/Gold_gegner1-1.png");
-	m_textures[4].loadFromFile("resources/images/Schwarzer_gegner1-1.png");
+	m_textures[0].loadFromFile("Resources/Images/gegner1-1.png");
+	m_textures[1].loadFromFile("Resources/Images/Roter_gegner1-1.png");
+	m_textures[2].loadFromFile("Resources/Images/Blauer_gegner1-1.png");
+	m_textures[3].loadFromFile("Resources/Images/Gold_gegner1-1.png");
+	m_textures[4].loadFromFile("Resources/Images/Schwarzer_gegner1-1.png");
 
 	const auto& map = Utils::Pathfinding::get_instance()->get_map();
 	enemys_per_cell = std::vector(map[0].size(),
@@ -156,15 +156,11 @@ void EnemyManager::update(float deltatime)
 				e->prev_size = e->m_movements.size();
 			}
 
-			//e->m_sprite.setTexture(this->m_textures[0]); // wird irgendwann so angepasst, dass es per rotation sich verändert
-
 			for (int i = 0; i < 300 * deltatime * e->m_speed; i++)
 			{
 				if (e->m_movements.empty() == false)
 				{
 					const glm::ivec3 temp = e->m_movements.back();
-					/*temp.x *= 135;
-					temp.y *= 135;*/
 					const glm::ivec3 cell_pos = round(e->m_pos / CellSize);
 					if (Utils::Pathfinding::get_instance()->is_valid(cell_pos) && tower[0][cell_pos.y][cell_pos.x] != nullptr)
 					{
@@ -243,7 +239,6 @@ glm::vec2 EnemyManager::enemypos(const double radius, const glm::vec2 tower_posi
 
 	const int check_size_x = static_cast<int>(radius);
 	const int check_size_y = static_cast<int>(radius);
-	//LOG_INFO("tower_cell_position x: {}  tower_cell_position y: {}", tower_cell_position.x, tower_cell_position.y);
 
 	for (int x = static_cast<int>(tower_cell_position.x) - check_size_x; x < static_cast<int>(tower_cell_position.x) + check_size_x; x++)
 	{
@@ -343,26 +338,6 @@ void EnemyManager::draw(sf::RenderTarget& i_window) const
 		prev_pos = m->m_pos;
 	}
 }
-/*
-int EnemyManager::naiveEnemyKiller(Projectile * projectile) {
-	int hitCount = 0;
-	sf::FloatRect projectileBounds = projectile->get_sprite().getGlobalBounds();
-
-	for (auto& enemy : m_enemys) {
-		if (enemy && enemy->isAlive()) {
-			sf::FloatRect enemyBounds = enemy->get_sprite().getGlobalBounds();
-
-			if (projectileBounds.intersects(enemyBounds)) {
-				enemy->die();
-				hitCount++;
-			}
-		}
-	}
-
-	return hitCount;
-}
-*/
-//#include <glm/gtx/string_cast.hpp> // For glm::to_string
 
 int EnemyManager::naive_enemy_killer() {
 	int hit_count = 0;
@@ -375,8 +350,8 @@ int EnemyManager::naive_enemy_killer() {
 		}
 
 		glm::vec3 projectile_pos = projectile->get_pos();
-		glm::vec3 projectile_hitbox = projectile->get_hit_box(); // Using the new get_hitBox method
-		glm::vec3 projectile_min = projectile_pos; // warum????
+		glm::vec3 projectile_hitbox = projectile->get_hit_box();
+		glm::vec3 projectile_min = projectile_pos;
 		glm::vec3 projectile_max = projectile_hitbox;
 
 		for (auto& enemy : m_enemys) {
@@ -385,9 +360,9 @@ int EnemyManager::naive_enemy_killer() {
 			}
 
 			glm::vec3 enemy_pos = enemy->get_pos();
-			glm::vec3 enemy_hitbox = enemy->get_hit_box(); // Using the new get_hitBox method
+			glm::vec3 enemy_hitbox = enemy->get_hit_box();
 			glm::vec3 enemy_min = enemy_pos;
-			glm::vec3 enemy_max = enemy_hitbox; // btw chat gpt ist richtig inkompetent
+			glm::vec3 enemy_max = enemy_hitbox;
 
 			// Check if hitboxes intersect
 			const bool collision = projectile_max.x > enemy_min.x &&

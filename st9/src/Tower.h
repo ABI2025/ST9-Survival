@@ -36,10 +36,9 @@ class Tower
 	: public Entity
 {
 	int m_ressourcen;
-	//double m_hp;
 	float m_radius{6};
 	int m_penetration{5};
-	float m_speed{5};//i show speed
+	float m_speed{5};
 	double m_damage{1};
 	float m_angle{};
 	glm::vec3 m_prev_bullet_dir{ 1,0,0 };
@@ -58,8 +57,7 @@ public:
 	void fire(const EnemyManager& em,Sounds& sounds ,float deltatime);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	double get_value() const;
-	//glm::vec3 get_pos()const { return m_pos; }
-	//warten auf hinzufügen von projectile klasse
+
 
 
 };

@@ -102,7 +102,6 @@ void WaveManager::spawnening(EnemyManager* ma, float dt)
 		if (waves.empty())
 		{
 			LOG_INFO("done");
-			//current_wave = std::make_shared<Wave>(Wave{ Utils::Random::Float(100,200),Utils::Random::Float(10,20) });
 			done = true;
 		}
 		else

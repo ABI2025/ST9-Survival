@@ -8,7 +8,7 @@
 #endif
 ProjectileTexture::ProjectileTexture()
 {
-	texture.loadFromFile("resources/images/Projektil.png");
+	texture.loadFromFile("Resources/Images/Projektil.png");
 
 }
 
@@ -36,8 +36,8 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 speed, int lifetime, double dama
 	sprite.setTexture(ProjectileTexture::get_instance()->texture);
 	sprite.setOrigin(4.0f, 12.5f);
 	sprite.setPosition(m_pos.x + 4.0f, m_pos.y + 12.5f);
-	// Calculate the angle for rotation
-	float angle = std::atan2(speed.y, speed.x) * 180.0f / M_PI; //Herr John wäre stolz
+	// Winkel für die Rotation berechnen
+	float angle = std::atan2(speed.y, speed.x) * 180.0f / M_PI; 
 	angle += 90;
 
 	sprite.setRotation(angle);
@@ -58,9 +58,6 @@ void Projectile::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (m_lifetime > 0)
 	{
-		//sf::RectangleShape projectile_shape(sf::Vector2f(20, 20));
-		//projectile_shape.setFillColor(sf::Color::Red);
-		//projectile_shape.setPosition(get_pos().x, get_pos().y);
 		target.draw(sprite, states);
 	}
 }
@@ -87,7 +84,7 @@ void Projectile::update_all(float deltatime)
 	clean_up();
 }
 
-void Projectile::draw_all_projectiles(sf::RenderTarget& target, const sf::RenderStates& states) //von Elias (Seinem ego gehts gut)
+void Projectile::draw_all_projectiles(sf::RenderTarget& target, const sf::RenderStates& states)
 {
 	for (const Projectile* proj : s_projectiles)
 	{

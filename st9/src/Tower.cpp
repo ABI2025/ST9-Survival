@@ -11,18 +11,18 @@
 #define M_PI 3.14159265358979323846f
 #endif
 
-constexpr glm::vec2 tower_sprite_center{ 135.f/2,135.f / 2 }; //danke simon für unsymmetrische texturen
+constexpr glm::vec2 tower_sprite_center{ 135.f/2,135.f / 2 }; 
 
 
 TowerTexture::TowerTexture()
 {
-	base.loadFromFile("resources/images/buttom.png");
-	tops[0].loadFromFile("resources/images/top.png");
-	tops[1].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
-	tops[2].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
-	tops[3].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
-	tops[4].loadFromFile("resources/images/Gold-Kanone.png");
-	tops[5].loadFromFile("resources/images/Basic_Waffe.png");
+	base.loadFromFile("Resources/Images/tower_base.png");
+	tops[0].loadFromFile("Resources/Images/top.png");
+	tops[1].loadFromFile("Resources/Images/mg.png");
+	tops[2].loadFromFile("Resources/Images/geld_raffinerie.png");
+	tops[3].loadFromFile("Resources/Images/gold_mg.png");
+	tops[4].loadFromFile("Resources/Images/Gold-Kanone.png");
+	tops[5].loadFromFile("Resources/Images/Basic_Waffe.png");
 }
 
 TowerTexture* TowerTexture::get_instance()

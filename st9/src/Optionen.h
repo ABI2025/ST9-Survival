@@ -23,9 +23,5 @@ private:
 	bool should_do_dockspace;
 	Optionen();
 	Sounds m_sounds;
-	//std::vector<std::string> m_name_button;
-	//std::pair<sf::FloatRect, bool> m_buttons[11];
-	//sf::Font m_font;
-
 };
 

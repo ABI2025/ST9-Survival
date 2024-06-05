@@ -23,13 +23,12 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_costs.insert({3,2500});
 	m_costs.insert({4,6000});
 	m_costs.insert({5,600});
-	//prophesionallen coding
 
 	m_texture_textures.resize(6);
 	m_texture_sprites.resize(6);
 
-	m_texture_textures[0].loadFromFile("resources/images/top.png");
-	m_texture_textures[1].loadFromFile("resources/images/buttom.png");
+	m_texture_textures[0].loadFromFile("Resources/Images/top.png");
+	m_texture_textures[1].loadFromFile("Resources/Images/tower_base.png");
 	m_texture_sprites[0].setTexture(m_texture_textures[0]);
 	m_texture_sprites[1].setTexture(m_texture_textures[1]);
 	m_texture[0].create(135, 135);
@@ -38,7 +37,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[0].draw(m_texture_sprites[0]);
 	m_texture[0].display();
 
-	m_texture_textures[2].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gewehr.png");
+	m_texture_textures[2].loadFromFile("Resources/Images/mg.png");
 	m_texture_sprites[2].setTexture(m_texture_textures[2]);
 	m_texture[1].create(135, 135);
 	m_texture[1].clear(sf::Color::Transparent);
@@ -46,7 +45,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[1].draw(m_texture_sprites[2]);
 	m_texture[1].display();
 
-	m_texture_textures[3].loadFromFile("resources/images/Besser_als_Simon-_Maschienen_Gold_Gewehr.png");
+	m_texture_textures[3].loadFromFile("Resources/Images/gold_mg.png");
 	m_texture_sprites[3].setTexture(m_texture_textures[3]);
 	m_texture[2].create(135, 135);
 	m_texture[2].clear(sf::Color::Transparent);
@@ -54,7 +53,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[2].draw(m_texture_sprites[3]);
 	m_texture[2].display();
 
-	m_texture_textures[4].loadFromFile("resources/images/Gold-Kanone.png");
+	m_texture_textures[4].loadFromFile("Resources/Images/Gold-Kanone.png");
 	m_texture_sprites[4].setTexture(m_texture_textures[4]);
 	m_texture[3].create(135, 135);
 	m_texture[3].clear(sf::Color::Transparent);
@@ -63,7 +62,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 
 
 
-	m_texture_textures[5].loadFromFile("resources/images/Basic_Waffe.png");
+	m_texture_textures[5].loadFromFile("Resources/Images/Basic_Waffe.png");
 	m_texture_sprites[5].setTexture(m_texture_textures[5]);
 	m_texture[4].create(135, 135);
 	m_texture[4].clear(sf::Color::Transparent);
@@ -72,11 +71,11 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_texture[4].display();
 	m_textures.resize(8);
 
-	m_textures[0].loadFromFile("resources/images/none.png");
+	m_textures[0].loadFromFile("Resources/Images/none.png");
 	m_textures[1] = m_texture[0].getTexture();
 	m_textures[2] = m_texture[1].getTexture();
-	m_textures[3].loadFromFile("resources/images/Dinge_die_Simon_machen_sollte_Geld_Ding_Kopie.png");
-	m_textures[4].loadFromFile("resources/images/1111.png");
+	m_textures[3].loadFromFile("Resources/Images/geld_raffinerie.png");
+	m_textures[4].loadFromFile("Resources/Images/wall.png");
 	m_textures[5] = m_texture[2].getTexture();
 	m_textures[6] = m_texture[3].getTexture();
 	m_textures[7] = m_texture[4].getTexture();
@@ -85,7 +84,7 @@ BuildSystem::BuildSystem() : m_selected(Utils::Cell::NOTHING)
 	m_sprites[0].setTexture(m_textures[0]);
 	m_sprites[0].setColor(sf::Color::Transparent);
 	
-	m_sprites[1].setTexture(m_textures[7]);//turm 1, brauch eine neue textur
+	m_sprites[1].setTexture(m_textures[7]);//turm 1
 	m_sprites[2].setTexture(m_textures[2]);//turm 2
 	m_sprites[3].setTexture(m_textures[3]);//turm 3
 	m_sprites[4].setTexture(m_textures[5]);//turm 4
@@ -117,13 +116,6 @@ void BuildSystem::delete_instance()
 
 Utils::Cell BuildSystem::display()
 {
-	//texture.clear(sf::Color::Transparent);
-	//texture.draw(m_texture_sprites[1]);
-	//texture.draw(m_texture_sprites[0]);
-	//texture.display();
-	//m_textures[1] = texture.getTexture();
-	//m_sprites[1].setTexture(m_textures[1]);
-	//m_sprites[2].setTexture(m_textures[1]);
 	ImGui::Begin("Build System");
 	const float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 	const ImGuiStyle& style = ImGui::GetStyle();
@@ -135,8 +127,6 @@ Utils::Cell BuildSystem::display()
 		ImGui::PushID(current_button_id);
 		if (ImGui::ImageButton(button_id.c_str(), m_sprites[current_button_id], { 135.0f,135.0f },m_sprites[current_button_id].getColor()))
 		{
-
-			//LOG_INFO("it works ig");
 			int temp;
 			if (current_button_id == 0)
 			{
@@ -168,7 +158,7 @@ Utils::Cell BuildSystem::display()
 				break;
 			case 1:
 				ImGui::BeginTooltip();
-				ImGui::Text("Basic:"); // Brauch noch einen besseren sprite
+				ImGui::Text("Basic:");
 				ImGui::Text("150 leben");
 				ImGui::Text("%.0f V-Bucks",m_costs[0]);
 				ImGui::SameLine();
