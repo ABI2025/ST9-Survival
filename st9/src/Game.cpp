@@ -7,13 +7,11 @@
 #include <SFML/Audio.hpp>
 
 #include "BuildSystem.h"
-#include "BuildSystem.h"
 #include "camera.h"
 #include "imgui-SFML.h"
 #include "entities/Player/Player.h"
 #include "entities/EnemyManager.h"
 #include "MainBuilding.h"
-#include "BuildSystem.h"
 #include "imgui_internal.h"
 #include "Optionen.h"
 #include "projektil.h" //können wir später löschen, ist nur zum debuggen hier // doch jetzt ist es eine kern funktion
@@ -413,12 +411,12 @@ void Game::run_game(int)
 			//ImGui::TextWrapped("MS: %f\nFPS: %2.2f", deltatime * 1000.0f, 1.0f / deltatime); //zum fps Debuggen 
 			ImGui::TextWrapped("Menge An Lebenden Gegnern: %llu", ma->get_enemies().size());
 			ImGui::TextWrapped("V-Bucks %f", m_geld);
-			if (!player_alive)
-				ImGui::TextWrapped("Wiederbelebungs Zeit %f", player_rem_cooldown);
 			ImGui::SameLine();
 			sf::Sprite temp_drawable(m_ui_textures[0]);
 			temp_drawable.setScale(0.1f, 0.1f);
 			ImGui::Image(temp_drawable);
+			if (!player_alive)
+				ImGui::TextWrapped("Wiederbelebungs Zeit %f s", player_rem_cooldown);
 			ImGui::End();
 		}
 
